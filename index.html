@@ -51,7 +51,7 @@
             text-shadow: 4px 4px 0px #D1623A;
         }
         
-        /* Animación para el Modal de Login */
+        /* Animación para el Modal */
         @keyframes modalFadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -82,8 +82,8 @@
             
             <!-- Menú Escritorio -->
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
-                <a href="#modalidades" class="hover:text-xul_terra transition">Modalidades</a>
                 <a href="#schole" class="hover:text-xul_terra transition">Scholē</a>
+                <a href="#modalidades" class="hover:text-xul_terra transition">Modalidades</a>
                 <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Mazos</a>
                 <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
                 <!-- Botón de Ingreso Principal -->
@@ -102,8 +102,8 @@
         
         <!-- Panel Menú Móvil Desplegable -->
         <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
-            <a href="#modalidades" class="mobile-link hover:text-xul_terra transition block">Modalidades</a>
             <a href="#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="#modalidades" class="mobile-link hover:text-xul_terra transition block">Modalidades</a>
             <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Ver Mazos</a>
             <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
             <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full block uppercase">
@@ -163,8 +163,74 @@
         </div>
     </header>
 
-    <!-- SECCIÓN 1: MODALIDADES -->
-    <section id="modalidades" class="py-24 px-6 relative">
+    <!-- SECCIÓN 1: FORMACIÓN Y SCHOLĒ (Ahora va primero) -->
+    <section id="schole" class="py-24 px-6 bg-white relative">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#2A2A2A 1px, transparent 1px), linear-gradient(90deg, #2A2A2A 1px, transparent 1px); background-size: 30px 30px;"></div>
+        
+        <div class="max-w-6xl mx-auto relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="font-sans font-black text-xul_blue uppercase tracking-widest text-sm mb-2 border-b-2 border-xul_blue inline-block pb-1">Más allá del juego</h2>
+                <h3 class="xul-title text-4xl md:text-5xl font-bold text-xul_ink mt-4">Scholē de Ludosofía</h3>
+                <p class="font-serif text-xl text-gray-600 mt-4 max-w-2xl mx-auto">Espacios de entrenamiento profundo para quienes buscan dominar las reglas, crear sus propios tableros o llevar la filosofía lúdica a las aulas y empresas.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Cursos Interactivos -->
+                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_yellow transition-colors group flex flex-col items-start">
+                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
+                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
+                            <path d="M 10 35 L 40 35 L 40 15 L 10 15 Z" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M 25 15 V 35" stroke="currentColor" stroke-width="2"/>
+                            <polyline points="15,25 20,25 20,20 25,20" fill="none" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Cursos interactivos</h4>
+                    <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6 flex-grow">
+                        Recorridos teóricos sobre la historia de las ideas, estructurados con mecánicas de juego. Aprender con nosotros es una aventura por niveles.
+                    </p>
+                    <button onclick="toggleCursosModal()" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline focus:outline-none">
+                        Ver Programa →
+                    </button>
+                </div>
+
+                <!-- Talleres de Juego -->
+                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_terra transition-colors group">
+                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
+                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
+                            <polygon points="15,35 25,15 35,35" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <rect x="20" y="25" width="10" height="10" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Atelier de juegos</h4>
+                    <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
+                        Sesiones prácticas donde desarmamos juegos de mesa filosóficos para entender sus mecánicas. Ven a diseñar tus propios prototipos.
+                    </p>
+                    <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Próximo Taller →</a>
+                </div>
+
+                <!-- Capacitaciones -->
+                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_blue transition-colors group">
+                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
+                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
+                            <circle cx="25" cy="20" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="25" y1="30" x2="25" y2="40" stroke="currentColor" stroke-width="2"/>
+                            <line x1="15" y1="10" x2="20" y2="15" stroke="currentColor" stroke-width="2"/>
+                            <line x1="35" y1="10" x2="30" y2="15" stroke="currentColor" stroke-width="2"/>
+                            <line x1="10" y1="20" x2="15" y2="20" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Capacitaciones y consultoría</h4>
+                    <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
+                        Capacitaciones exclusivas para educadores, líderes y facilitadores que buscan herramientas lúdicas para fomentar el pensamiento crítico.
+                    </p>
+                    <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Solicitar Info →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN 2: MODALIDADES (Ahora va segunda) -->
+    <section id="modalidades" class="py-24 px-6 border-t-[3px] border-xul_ink relative">
         <div class="max-w-6xl mx-auto">
             
             <div class="text-center mb-16">
@@ -266,70 +332,6 @@
                     </p>
                 </div>
 
-            </div>
-        </div>
-    </section>
-
-    <!-- SECCIÓN 2: FORMACIÓN Y SCHOLĒ -->
-    <section id="schole" class="py-24 px-6 border-t-[3px] border-xul_ink bg-white relative">
-        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#2A2A2A 1px, transparent 1px), linear-gradient(90deg, #2A2A2A 1px, transparent 1px); background-size: 30px 30px;"></div>
-        
-        <div class="max-w-6xl mx-auto relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="font-sans font-black text-xul_blue uppercase tracking-widest text-sm mb-2 border-b-2 border-xul_blue inline-block pb-1">Más allá del juego</h2>
-                <h3 class="xul-title text-4xl md:text-5xl font-bold text-xul_ink mt-4">Scholē de Ludosofía</h3>
-                <p class="font-serif text-xl text-gray-600 mt-4 max-w-2xl mx-auto">Espacios de entrenamiento profundo para quienes buscan dominar las reglas, crear sus propios tableros o llevar la filosofía lúdica a las aulas y empresas.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Cursos -->
-                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_yellow transition-colors group">
-                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
-                            <path d="M 10 35 L 40 35 L 40 15 L 10 15 Z" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <path d="M 25 15 V 35" stroke="currentColor" stroke-width="2"/>
-                            <polyline points="15,25 20,25 20,20 25,20" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Cursos interactivos</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
-                        Recorridos teóricos sobre la historia de las ideas, estructurados con mecánicas de juego. Aprender con nosotros es una aventura por niveles.
-                    </p>
-                    <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Ver Programa →</a>
-                </div>
-
-                <!-- Talleres de Juego -->
-                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_terra transition-colors group">
-                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
-                            <polygon points="15,35 25,15 35,35" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <rect x="20" y="25" width="10" height="10" fill="currentColor"/>
-                        </svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Atelier de juegos</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
-                        Sesiones prácticas donde desarmamos juegos de mesa filosóficos para entender sus mecánicas. Ven a diseñar tus propios prototipos.
-                    </p>
-                    <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Próximo Taller →</a>
-                </div>
-
-                <!-- Capacitaciones -->
-                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_blue transition-colors group">
-                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
-                            <circle cx="25" cy="20" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <line x1="25" y1="30" x2="25" y2="40" stroke="currentColor" stroke-width="2"/>
-                            <line x1="15" y1="10" x2="20" y2="15" stroke="currentColor" stroke-width="2"/>
-                            <line x1="35" y1="10" x2="30" y2="15" stroke="currentColor" stroke-width="2"/>
-                            <line x1="10" y1="20" x2="15" y2="20" stroke="currentColor" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Capacitaciones y consultoría</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
-                        Capacitaciones exclusivas para educadores, líderes y facilitadores que buscan herramientas lúdicas para fomentar el pensamiento crítico.
-                    </p>
-                    <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Solicitar Info →</a>
-                </div>
             </div>
         </div>
     </section>
@@ -437,7 +439,9 @@
         </div>
     </footer>
 
-    <!-- VENTANA MODAL DE LOGIN (INTERFAZ "EL ÁGORA") -->
+    <!-- ============================================== -->
+    <!-- VENTANA MODAL DE LOGIN (INTERFAZ "EL ÁGORA")   -->
+    <!-- ============================================== -->
     <div id="login-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
         <!-- Fondo oscuro semitransparente -->
         <div id="login-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer"></div>
@@ -484,6 +488,102 @@
         </div>
     </div>
 
+
+    <!-- ============================================== -->
+    <!-- VENTANA MODAL DE CURSOS (PROGRAMA Y ALUMNI)    -->
+    <!-- ============================================== -->
+    <div id="cursos-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <!-- Fondo oscuro semitransparente -->
+        <div id="cursos-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer"></div>
+        
+        <!-- Caja del Modal -->
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-6 md:p-10 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-[12px_12px_0px_#6BA4C4] transform transition-all">
+            
+            <!-- Botón de Cerrar (X) -->
+            <button id="close-cursos-modal" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+
+            <!-- Título del Modal -->
+            <div class="text-center mb-10">
+                <h3 class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase">Programa de Cursos</h3>
+                <p class="font-sans text-sm text-gray-600 mt-2 font-bold tracking-widest uppercase">Scholē de Ludosofía</p>
+            </div>
+
+            <!-- SECCIÓN 1: Cursos Actuales -->
+            <div class="mb-10">
+                <div class="flex items-center gap-3 mb-4 border-b-2 border-xul_ink pb-2">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-xul_terra"></i>
+                    <h4 class="font-sans font-black text-xl text-xul_ink uppercase tracking-widest">Cursos Actuales</h4>
+                </div>
+                
+                <!-- Tarjeta de Curso Actual -->
+                <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
+                    <div>
+                        <span class="inline-block bg-xul_yellow text-xul_ink text-[10px] font-black uppercase px-2 py-1 tracking-widest mb-2 border border-xul_ink">Inscripciones Abiertas</span>
+                        <h5 class="xul-title font-bold text-2xl text-xul_ink leading-none mb-1">Ontología del Azar</h5>
+                        <p class="font-serif text-sm text-gray-600">La metáfora de la tirada de dados en la filosofía.</p>
+                    </div>
+                    <a href="seminario_azar.html" class="w-full sm:w-auto bg-xul_ink text-white font-bold text-xs text-center uppercase tracking-widest px-5 py-3 hover:bg-xul_blue transition-colors flex-shrink-0">
+                        Ver Programa
+                    </a>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: Histórico de Cursos -->
+            <div>
+                <div class="flex items-center gap-3 mb-4 border-b-2 border-gray-300 pb-2">
+                    <i data-lucide="history" class="w-5 h-5 text-gray-500"></i>
+                    <h4 class="font-sans font-black text-lg text-gray-600 uppercase tracking-widest">Histórico (Últimos 3)</h4>
+                </div>
+                
+                <div class="space-y-3">
+                    <!-- Histórico 1 -->
+                    <div class="flex justify-between items-center bg-gray-50 border-2 border-gray-200 p-4 hover:border-xul_blue transition-colors cursor-pointer group">
+                        <div>
+                            <h5 class="font-sans font-bold text-xul_ink group-hover:text-xul_blue transition-colors">Ética para el Fin del Mundo</h5>
+                            <p class="font-serif text-xs text-gray-500 mt-1">Dictado en Marzo 2026</p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[10px] font-bold text-xul_green uppercase tracking-widest mb-1 hidden sm:block">Completado</span>
+                            <i data-lucide="lock" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Histórico 2 -->
+                    <div class="flex justify-between items-center bg-gray-50 border-2 border-gray-200 p-4 hover:border-xul_blue transition-colors cursor-pointer group">
+                        <div>
+                            <h5 class="font-sans font-bold text-xul_ink group-hover:text-xul_blue transition-colors">Deleuze y los Juegos de Mesa</h5>
+                            <p class="font-serif text-xs text-gray-500 mt-1">Dictado en Noviembre 2025</p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[10px] font-bold text-xul_green uppercase tracking-widest mb-1 hidden sm:block">Completado</span>
+                            <i data-lucide="lock" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                    </div>
+
+                    <!-- Histórico 3 -->
+                    <div class="flex justify-between items-center bg-gray-50 border-2 border-gray-200 p-4 hover:border-xul_blue transition-colors cursor-pointer group">
+                        <div>
+                            <h5 class="font-sans font-bold text-xul_ink group-hover:text-xul_blue transition-colors">Introducción a la Dialéctica</h5>
+                            <p class="font-serif text-xs text-gray-500 mt-1">Dictado en Agosto 2025</p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[10px] font-bold text-xul_green uppercase tracking-widest mb-1 hidden sm:block">Completado</span>
+                            <i data-lucide="lock" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-center font-sans text-xs text-gray-500 mt-6 italic">
+                    El material de los cursos históricos es exclusivo para miembros activos del Club.
+                </p>
+            </div>
+            
+        </div>
+    </div>
+
+
     <script>
         lucide.createIcons();
 
@@ -504,7 +604,7 @@
             });
         });
 
-        // --- LÓGICA DE LA VENTANA DE INGRESO (MODAL) ---
+        // --- LÓGICA DE LA VENTANA DE INGRESO (MODAL LOGIN) ---
         const loginModal = document.getElementById('login-modal');
         const loginBtnDesktop = document.getElementById('login-btn-desktop');
         const loginBtnMobile = document.getElementById('login-btn-mobile');
@@ -522,6 +622,23 @@
         loginBtnMobile.addEventListener('click', toggleLoginModal);
         closeModalBtn.addEventListener('click', toggleLoginModal);
         loginOverlay.addEventListener('click', toggleLoginModal);
+
+
+        // --- LÓGICA DE LA VENTANA DE CURSOS (MODAL CURSOS) ---
+        const cursosModal = document.getElementById('cursos-modal');
+        const closeCursosBtn = document.getElementById('close-cursos-modal');
+        const cursosOverlay = document.getElementById('cursos-overlay');
+
+        function toggleCursosModal() {
+            cursosModal.classList.toggle('hidden');
+        }
+
+        // Se hace global para poder llamarla desde el onclick del HTML
+        window.toggleCursosModal = toggleCursosModal;
+
+        closeCursosBtn.addEventListener('click', toggleCursosModal);
+        cursosOverlay.addEventListener('click', toggleCursosModal);
+
     </script>
 </body>
 </html>
