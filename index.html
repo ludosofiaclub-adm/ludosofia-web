@@ -83,15 +83,13 @@
             <!-- Menú Escritorio -->
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
                 <a href="#modalidades" class="hover:text-xul_terra transition">Modalidades</a>
-                <a href="#schole" class="hover:text-xul_terra transition">La Scholē</a>
+                <a href="#schole" class="hover:text-xul_terra transition">Scholē</a>
                 <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Mazos</a>
-                <!-- Botón de Ingreso -->
-                <button id="login-btn-desktop" class="text-xul_blue hover:text-xul_terra transition ml-2">
-                    INGRESAR
+                <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
+                <!-- Botón de Ingreso Principal -->
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase">
+                    Ingresar
                 </button>
-                <a href="#unirse" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all">
-                    Jugar Ahora
-                </a>
             </div>
             
             <!-- Botón Menú Móvil -->
@@ -104,15 +102,13 @@
         
         <!-- Panel Menú Móvil Desplegable -->
         <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
-            <button id="login-btn-mobile" class="mobile-link text-left text-xul_blue hover:text-xul_terra transition block w-full">
-                INGRESAR
-            </button>
             <a href="#modalidades" class="mobile-link hover:text-xul_terra transition block">Modalidades</a>
-            <a href="#schole" class="mobile-link hover:text-xul_terra transition block">La Scholē</a>
+            <a href="#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
             <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Ver Mazos</a>
-            <a href="#unirse" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full block">
-                Jugar Ahora
-            </a>
+            <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full block uppercase">
+                Ingresar
+            </button>
         </div>
     </nav>
 
@@ -153,15 +149,15 @@
             </div>
 
             <p class="xul-title text-2xl md:text-3xl italic text-gray-700 mb-10 max-w-2xl px-4 leading-relaxed">
-                "El conocimiento no se lee, se juega."
+                "Una propuesta diferente todas las semanas."
                 <span class="block mt-4 font-sans text-lg font-light text-gray-600 not-italic">
-                    Un espacio donde las grandes ideas de la humanidad se transforman en dinámicas, tableros y dilemas interactivos.
+                    Un espacio donde las ideas se transforman en dinámicas, tableros y dilemas interactivos. Un espacio para jugar.
                 </span>
             </p>
             
             <div class="flex flex-col sm:flex-row gap-6 w-full sm:w-auto px-6 justify-center">
                 <a href="#unirse" class="w-full sm:w-auto bg-xul_green border-[3px] border-xul_ink text-xul_ink font-bold text-xl py-4 px-10 shadow-[6px_6px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#2A2A2A] transition-all text-center">
-                    Tirar los Dados
+                    TIRAR LOS DADOS
                 </a>
             </div>
         </div>
@@ -187,7 +183,7 @@
                             <circle cx="32" cy="25" r="2" fill="currentColor"/>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Juego de Rol</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Juegos de rol</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
                         Ponte la máscara de los grandes maestros. Encarna a un pensador y defiende su visión del mundo en debates inmersivos, asumiendo su filosofía como propia.
                     </p>
@@ -201,7 +197,7 @@
                             <polygon points="5,20 25,30 25,50 5,40" fill="none" stroke="currentColor" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Juegos de Tablero</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Juegos de tablero</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
                         Despliega tus ideas. Gestiona recursos lógicos, conecta conceptos y mueve tus premisas sobre tableros isométricos para cartografiar el pensamiento humano.
                     </p>
@@ -215,9 +211,9 @@
                             <path d="M 15 10 L 35 10 L 30 20 L 20 20 Z" fill="none" stroke="currentColor" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink group-hover:text-xul_terra transition-colors">Mazos de Situaciones</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink group-hover:text-xul_terra transition-colors">Cartas para jugar y pensar</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Abre paquetes de figuritas conceptuales para armar escenarios únicos. Combina cartas para construir situaciones complejas y desbloquear nuevas variantes de juego.
+                        Colección de cartas con infinidad de posibilidades. Arma escenarios únicos, resuelve dilemas y desbloquea nuevas variantes de juego.
                     </p>
                     <div class="mt-4 text-xul_yellow font-bold uppercase text-sm flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
                         Ver Colección →
@@ -232,22 +228,26 @@
                             <path d="M 20 40 L 25 25 L 30 40 Z" fill="none" stroke="currentColor" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Clásicos Hackeados</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Clásicos hackeados</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Juega partidas de Ajedrez Hegelhiano, descubre el Go Taoísta o apuesta premisas en el Póker Dialéctico.
+                        Variantes filosóficas de juegos clásicos y no tanto. Ajedrez Hegelhiano, Go Taoísta, Póker Dialéctico y mucho más.
                     </p>
                 </div>
 
                 <div class="bg-white p-8 xul-border flex flex-col" style="box-shadow: 6px 6px 0px #2A2A2A;">
-                    <div class="w-16 h-16 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#EBB134]">
+                    <div class="w-16 h-16 bg-xul_paper border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#D1623A]">
                         <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink">
-                            <path d="M 10 15 h 20 v 15 h -10 l -5 5 v -5 h -5 z" fill="#6BA4C4" stroke="currentColor" stroke-width="2"/>
-                            <path d="M 20 25 h 20 v 15 h -5 v 5 l -5 -5 h -10 z" fill="#D9A3B4" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="25" cy="25" r="15" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="25" cy="25" r="5" fill="currentColor"/>
+                            <line x1="25" y1="5" x2="25" y2="10" stroke="currentColor" stroke-width="2"/>
+                            <line x1="25" y1="40" x2="25" y2="45" stroke="currentColor" stroke-width="2"/>
+                            <line x1="5" y1="25" x2="10" y2="25" stroke="currentColor" stroke-width="2"/>
+                            <line x1="40" y1="25" x2="45" y2="25" stroke="currentColor" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Modo Caos</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Todos los juegos, el juego</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Defiende argumentos absurdos contra reloj, adivina la corriente filosófica con mímica o debátelo todo a los gritos.
+                        Recursos teóricos y ficcionales para conocer más sobre las relaciones entre filosofía y juego.
                     </p>
                 </div>
                 
@@ -260,9 +260,9 @@
                             <text x="28" y="37" font-family="'Cormorant Garamond', serif" font-weight="bold" font-size="12" fill="currentColor">Ω</text>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Alquimia de Letras</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Alquimia de letras</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Mezcla conceptos en nuestro Scrabble Filosófico, inventa neologismos para describir emociones modernas y encadena ideas en duelos de asociación libre.
+                        Juegos, actividades y propuestas para todo el mundo. Mezcla conceptos e inventa neologismos en duelos de asociación libre.
                     </p>
                 </div>
 
@@ -277,11 +277,12 @@
         <div class="max-w-6xl mx-auto relative z-10">
             <div class="text-center mb-16">
                 <h2 class="font-sans font-black text-xul_blue uppercase tracking-widest text-sm mb-2 border-b-2 border-xul_blue inline-block pb-1">Más allá del juego</h2>
-                <h3 class="xul-title text-4xl md:text-5xl font-bold text-xul_ink mt-4">La Scholē de Ludosofía</h3>
+                <h3 class="xul-title text-4xl md:text-5xl font-bold text-xul_ink mt-4">Scholē de Ludosofía</h3>
                 <p class="font-serif text-xl text-gray-600 mt-4 max-w-2xl mx-auto">Espacios de entrenamiento profundo para quienes buscan dominar las reglas, crear sus propios tableros o llevar la filosofía lúdica a las aulas y empresas.</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Cursos -->
                 <div class="bg-xul_paper p-8 xul-border hover:bg-xul_yellow transition-colors group">
                     <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
                         <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
@@ -290,13 +291,14 @@
                             <polyline points="15,25 20,25 20,20 25,20" fill="none" stroke="currentColor" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Cursos Interactivos</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Cursos interactivos</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
                         Recorridos teóricos sobre la historia de las ideas, estructurados con mecánicas de juego. Aprender con nosotros es una aventura por niveles.
                     </p>
                     <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Ver Programa →</a>
                 </div>
 
+                <!-- Talleres de Juego -->
                 <div class="bg-xul_paper p-8 xul-border hover:bg-xul_terra transition-colors group">
                     <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
                         <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
@@ -304,13 +306,14 @@
                             <rect x="20" y="25" width="10" height="10" fill="currentColor"/>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Talleres de Creación</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Atelier de juegos</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
                         Sesiones prácticas donde desarmamos juegos de mesa filosóficos para entender sus mecánicas. Ven a diseñar tus propios prototipos.
                     </p>
                     <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Próximo Taller →</a>
                 </div>
 
+                <!-- Capacitaciones -->
                 <div class="bg-xul_paper p-8 xul-border hover:bg-xul_blue transition-colors group">
                     <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
                         <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
@@ -321,7 +324,7 @@
                             <line x1="10" y1="20" x2="15" y2="20" stroke="currentColor" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Entrenamiento Táctico</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Capacitaciones y consultoría</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
                         Capacitaciones exclusivas para educadores, líderes y facilitadores que buscan herramientas lúdicas para fomentar el pensamiento crítico.
                     </p>
@@ -358,15 +361,15 @@
                     <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow">
                         <li class="flex items-start gap-3">
                             <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
-                            <span>Acceso a la biblioteca de reglas y tableros.</span>
+                            <span>Cursos gratuitos.</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
-                            <span>1 Mazo de Situaciones digital nuevo al mes.</span>
+                            <span>Acceso a ludoteca completa.</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
-                            <span>Acceso al foro de la comunidad (El Ágora).</span>
+                            <span>Atelier de juegos: acompañamiento para crear tus juegos.</span>
                         </li>
                     </ul>
                     <button class="w-full bg-white border-[3px] border-xul_ink text-xul_ink font-black text-xl py-4 uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors">
@@ -424,7 +427,8 @@
             
             <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
                 <a href="#" class="hover:text-xul_yellow transition">Reglas del Juego</a>
-                <a href="#schole" class="hover:text-xul_yellow transition">La Scholē</a>
+                <a href="#schole" class="hover:text-xul_yellow transition">Scholē</a>
+                <a href="#faqs" class="hover:text-xul_yellow transition">FAQs</a>
                 <a href="#" class="hover:text-xul_yellow transition">Manifiesto</a>
             </div>
         </div>
@@ -452,7 +456,7 @@
                     <line x1="25" y1="35" x2="35" y2="35" stroke="currentColor" stroke-width="3"/>
                     <line x1="25" y1="42" x2="32" y2="42" stroke="currentColor" stroke-width="3"/>
                 </svg>
-                <h3 class="xul-title text-4xl font-black text-xul_ink tracking-tight uppercase">Entrar al Ágora</h3>
+                <h3 class="xul-title text-4xl font-black text-xul_ink tracking-tight uppercase">Entrar al CLUB</h3>
                 <p class="font-sans text-sm text-gray-600 mt-2">Identifícate para continuar tu partida.</p>
             </div>
 
