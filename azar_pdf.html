@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Programa - Historia Filosófica del Juego</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            background-color: #e5e7eb; /* Gris de fondo para la pantalla */
+            font-family: 'Cormorant Garamond', serif; 
+            color: #2A2A2A;
+        }
+        
+        /* Contenedor tamaño A4 para visualización en pantalla */
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            background-color: #FDF8ED; /* xul_paper */
+            margin: 2rem auto;
+            padding: 15mm 20mm;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        /* Patrón de fondo opcional para el papel */
+        .a4-page::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.05;
+            pointer-events: none;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+            z-index: 0;
+        }
+
+        .content-layer {
+            position: relative;
+            z-index: 10;
+        }
+
+        .xul-title {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        .xul-border {
+            border: 2px solid #2A2A2A;
+        }
+
+        .praxis-box {
+            background-image: linear-gradient(45deg, #FDF8ED 25%, transparent 25%, transparent 75%, #FDF8ED 75%, #FDF8ED), 
+                              linear-gradient(45deg, #FDF8ED 25%, transparent 25%, transparent 75%, #FDF8ED 75%, #FDF8ED);
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+        }
+
+        /* Configuración específica para imprimir/exportar a PDF */
+        @media print {
+            @page {
+                size: A4;
+                margin: 0; 
+            }
+            body {
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            .a4-page {
+                margin: 0;
+                box-shadow: none;
+                width: 100%;
+                min-height: 100vh;
+                padding: 15mm 20mm; 
+                page-break-after: always;
+            }
+            .no-print {
+                display: none !important;
+            }
+            /* ¡CLAVE! Fuerza a los navegadores a imprimir colores de fondo y sombras */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Botón Flotante para Exportar -->
+    <div class="fixed top-6 right-6 no-print z-50">
+        <button onclick="window.print()" class="bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#2A2A2A] transition-all font-sans font-bold uppercase tracking-widest text-sm flex items-center gap-2 cursor-pointer">
+            <i data-lucide="printer" class="w-5 h-5"></i> Exportar a PDF
+        </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- PÁGINA 1: PORTADA Y PRIMERAS CLASES        -->
+    <!-- ========================================== -->
+    <div class="a4-page">
+        <div class="content-layer">
+            
+            <!-- Cabecera -->
+            <header class="border-b-[3px] border-xul_ink pb-5 mb-8 flex justify-between items-end">
+                <div class="flex items-center space-x-4">
+                    <!-- Logo de Ludosofía -->
+                    <svg viewBox="0 0 100 100" class="w-12 h-12">
+                        <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                        <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                        <circle cx="32.5" cy="65" r="6" fill="#FFFFFF" stroke="#2A2A2A" stroke-width="2"/>
+                        <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                    </svg>
+                    <div class="flex flex-col">
+                        <span class="xul-title font-black text-3xl leading-none text-xul_ink">LUDOSOFÍA</span>
+                        <span class="font-sans text-[10px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                    </div>
+                </div>
+                <div class="text-right mb-1">
+                    <span class="font-sans font-bold text-xs uppercase tracking-widest bg-xul_ink text-xul_paper px-3 py-1 shadow-[2px_2px_0px_#D1623A]">Programa Oficial</span>
+                </div>
+            </header>
+
+            <!-- Título del Curso -->
+            <div class="mb-10">
+                <h1 class="xul-title text-5xl font-black text-xul_ink tracking-tight leading-none mb-3 uppercase" style="text-shadow: 2px 2px 0px #EBB134;">
+                    ONTOLOGÍA<br>DEL AZAR
+                </h1>
+                <div class="inline-block bg-xul_yellow border-2 border-xul_ink px-4 py-1 shadow-[3px_3px_0px_#2A2A2A] mb-6 transform -rotate-1">
+                    <h2 class="font-sans font-black text-lg uppercase tracking-widest text-xul_ink">Historia Filosófica del Juego</h2>
+                </div>
+                
+                <p class="text-xl leading-relaxed text-gray-800 border-l-4 border-xul_terra pl-4 mb-6">
+                    Un recorrido donde la filosofía y el juego convergen. Desde Heráclito hasta Deleuze, exploraremos cómo la filosofía ha pensado al juego a través de la <em>metáfora del dado</em>.
+                </p>
+
+                <div class="grid grid-cols-2 gap-4 font-sans text-sm font-bold uppercase tracking-widest text-xul_ink bg-white border-2 border-xul_ink p-4 shadow-[4px_4px_0px_#6BA4C4]">
+                    <div>
+                        <span class="text-xul_terra block text-[10px] mb-1">Modalidad</span>
+                        Curso Virtual
+                    </div>
+                    <div>
+                        <span class="text-xul_terra block text-[10px] mb-1">Encuentros</span>
+                        6 Clases (1h 30m c/u)
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cronograma P1 -->
+            <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink border-b-2 border-xul_ink pb-2 mb-8">El Tablero (Parte I)</h3>
+
+            <div class="space-y-8">
+                
+                <!-- Clase 1 (Amarillo) -->
+                <div class="bg-white p-5 xul-border flex flex-col relative" style="box-shadow: 6px 6px 0px #EBB134;">
+                    <div class="absolute -top-4 -left-4 bg-xul_yellow border-2 border-xul_ink w-10 h-10 flex items-center justify-center font-black text-xl xul-title rotate-[-5deg] shadow-[3px_3px_0px_#2A2A2A]">1</div>
+                    
+                    <div class="ml-4 mb-3 border-b-2 border-gray-200 pb-3">
+                        <p class="font-sans font-black text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MIÉRCOLES 22/06/2026 • 20.00 a 21.30</p>
+                        <h4 class="xul-title font-bold text-2xl leading-tight text-xul_ink mb-1">Heráclito y la Infancia del Cosmos</h4>
+                        <p class="font-serif text-gray-700 text-base leading-relaxed">
+                            La inauguración de la metáfora cosmológica. El tiempo (Aión) desprovisto de teleología y el universo como un terreno de juego constante.
+                        </p>
+                    </div>
+
+                    <div class="ml-4 flex items-center gap-2 mb-4 text-sm font-sans font-bold text-xul_ink">
+                        <i data-lucide="book-open" class="w-4 h-4 text-xul_terra"></i>
+                        <span>Lectura: Frag. 52 / Donegana (2020)</span>
+                    </div>
+                    
+                    <div class="ml-4 mt-auto bg-white border-2 border-xul_ink p-3 relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-xul_yellow praxis-box"></div>
+                        <div class="relative z-10">
+                            <h5 class="font-sans font-black uppercase text-[10px] tracking-widest text-xul_terra mb-1 flex items-center gap-1">
+                                <i data-lucide="dices" class="w-3 h-3"></i> ADEMÁS VAMOS A JUGAR
+                            </h5>
+                            <p class="font-sans font-bold text-xul_ink text-base mb-0">Pesseia (Tabas)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clase 2 (Azul) -->
+                <div class="bg-white p-5 xul-border flex flex-col relative" style="box-shadow: 6px 6px 0px #6BA4C4;">
+                    <div class="absolute -top-4 -left-4 bg-xul_blue border-2 border-xul_ink text-white w-10 h-10 flex items-center justify-center font-black text-xl xul-title rotate-[5deg] shadow-[3px_3px_0px_#2A2A2A]">2</div>
+                    
+                    <div class="ml-4 mb-3 border-b-2 border-gray-200 pb-3">
+                        <p class="font-sans font-black text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MIÉRCOLES 29/06/2026 • 20.00 a 21.30</p>
+                        <h4 class="xul-title font-bold text-2xl leading-tight text-xul_ink mb-1">Nietzsche y el Tablero del Lenguaje</h4>
+                        <p class="font-serif text-gray-700 text-base leading-relaxed">
+                            Etapa temprana. Crítica a la epistemología occidental: el lenguaje no como reflejo de la verdad, sino como un juego de convenciones y ficciones.
+                        </p>
+                    </div>
+
+                    <div class="ml-4 flex items-center gap-2 mb-4 text-sm font-sans font-bold text-xul_ink">
+                        <i data-lucide="book-open" class="w-4 h-4 text-xul_terra"></i>
+                        <span>Lectura: Sobre verdad y mentira en sentido extramoral</span>
+                    </div>
+                    
+                    <div class="ml-4 mt-auto bg-white border-2 border-xul_ink p-3 relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-xul_blue praxis-box"></div>
+                        <div class="relative z-10">
+                            <h5 class="font-sans font-black uppercase text-[10px] tracking-widest text-xul_terra mb-1 flex items-center gap-1">
+                                <i data-lucide="dices" class="w-3 h-3"></i> ADEMÁS VAMOS A JUGAR
+                            </h5>
+                            <p class="font-sans font-bold text-xul_ink text-base mb-0">Dados de los Conceptos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clase 3 (Terra) -->
+                <div class="bg-white p-5 xul-border flex flex-col relative" style="box-shadow: 6px 6px 0px #D1623A;">
+                    <div class="absolute -top-4 -left-4 bg-xul_terra border-2 border-xul_ink text-white w-10 h-10 flex items-center justify-center font-black text-xl xul-title rotate-[-3deg] shadow-[3px_3px_0px_#2A2A2A]">3</div>
+                    
+                    <div class="ml-4 mb-3 border-b-2 border-gray-200 pb-3">
+                        <p class="font-sans font-black text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MIÉRCOLES 06/07/2026 • 20.00 a 21.30</p>
+                        <h4 class="xul-title font-bold text-2xl leading-tight text-xul_ink mb-1">Nietzsche y la Apuesta del Retorno</h4>
+                        <p class="font-serif text-gray-700 text-base leading-relaxed">
+                            Etapa madura. El universo como mesa de juego divina. La afirmación dionisíaca (Amor Fati) y la asunción de todas las contingencias posibles.
+                        </p>
+                    </div>
+
+                    <div class="ml-4 flex items-center gap-2 mb-4 text-sm font-sans font-bold text-xul_ink">
+                        <i data-lucide="book-open" class="w-4 h-4 text-xul_terra"></i>
+                        <span>Lectura: Así habló Zaratustra / Fink, E.</span>
+                    </div>
+                    
+                    <div class="ml-4 mt-auto bg-white border-2 border-xul_ink p-3 relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-xul_terra praxis-box"></div>
+                        <div class="relative z-10">
+                            <h5 class="font-sans font-black uppercase text-[10px] tracking-widest text-xul_terra mb-1 flex items-center gap-1">
+                                <i data-lucide="dices" class="w-3 h-3"></i> ADEMÁS VAMOS A JUGAR
+                            </h5>
+                            <p class="font-sans font-bold text-xul_ink text-base mb-0">El Juego de los Dioses</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ========================================== -->
+    <!-- PÁGINA 2: CONTINUACIÓN Y PIE               -->
+    <!-- ========================================== -->
+    <div class="a4-page">
+        <div class="content-layer h-full flex flex-col">
+
+            <!-- Cronograma P2 -->
+            <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink border-b-2 border-xul_ink pb-2 mb-8 mt-2">El Tablero (Parte II)</h3>
+
+            <div class="space-y-8 flex-grow">
+                
+                <!-- Clase 4 (Rosa) -->
+                <div class="bg-white p-5 xul-border flex flex-col relative" style="box-shadow: 6px 6px 0px #C96B8C;">
+                    <div class="absolute -top-4 -left-4 bg-xul_pink border-2 border-xul_ink text-white w-10 h-10 flex items-center justify-center font-black text-xl xul-title rotate-[4deg] shadow-[3px_3px_0px_#2A2A2A]">4</div>
+                    
+                    <div class="ml-4 mb-3 border-b-2 border-gray-200 pb-3">
+                        <p class="font-sans font-black text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MIÉRCOLES 13/07/2026 • 20.00 a 21.30</p>
+                        <h4 class="xul-title font-bold text-2xl leading-tight text-xul_ink mb-1">Mallarmé y la Poética del Abismo</h4>
+                        <p class="font-serif text-gray-700 text-base leading-relaxed">
+                            Transición estética. El pensamiento creador concebido como un riesgo incalculable contra el vacío cósmico y el azar.
+                        </p>
+                    </div>
+
+                    <div class="ml-4 flex items-center gap-2 mb-4 text-sm font-sans font-bold text-xul_ink">
+                        <i data-lucide="book-open" class="w-4 h-4 text-xul_terra"></i>
+                        <span>Lectura: Un coup de dés jamais n'abolira le hasard</span>
+                    </div>
+                    
+                    <div class="ml-4 mt-auto bg-white border-2 border-xul_ink p-3 relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-xul_pink praxis-box"></div>
+                        <div class="relative z-10">
+                            <h5 class="font-sans font-black uppercase text-[10px] tracking-widest text-xul_terra mb-1 flex items-center gap-1">
+                                <i data-lucide="dices" class="w-3 h-3"></i> ADEMÁS VAMOS A JUGAR
+                            </h5>
+                            <p class="font-sans font-bold text-xul_ink text-base mb-0">El Coup de Dés</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clase 5 (Verde) -->
+                <div class="bg-white p-5 xul-border flex flex-col relative" style="box-shadow: 6px 6px 0px #75B07E;">
+                    <div class="absolute -top-4 -left-4 bg-xul_green border-2 border-xul_ink text-white w-10 h-10 flex items-center justify-center font-black text-xl xul-title rotate-[-4deg] shadow-[3px_3px_0px_#2A2A2A]">5</div>
+                    
+                    <div class="ml-4 mb-3 border-b-2 border-gray-200 pb-3">
+                        <p class="font-sans font-black text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MIÉRCOLES 20/07/2026 • 20.00 a 21.30</p>
+                        <h4 class="xul-title font-bold text-2xl leading-tight text-xul_ink mb-1">Derrida y la Ruleta del Significado</h4>
+                        <p class="font-serif text-gray-700 text-base leading-relaxed">
+                            La deconstrucción como apuesta contra el logocentrismo. El juego inestable e infinito de los signos frente a la ilusión de un significado cerrado.
+                        </p>
+                    </div>
+
+                    <div class="ml-4 flex items-center gap-2 mb-4 text-sm font-sans font-bold text-xul_ink">
+                        <i data-lucide="book-open" class="w-4 h-4 text-xul_terra"></i>
+                        <span>Lectura: De la gramatología (1967)</span>
+                    </div>
+                    
+                    <div class="ml-4 mt-auto bg-white border-2 border-xul_ink p-3 relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10 bg-xul_green praxis-box"></div>
+                        <div class="relative z-10">
+                            <h5 class="font-sans font-black uppercase text-[10px] tracking-widest text-xul_terra mb-1 flex items-center gap-1">
+                                <i data-lucide="dices" class="w-3 h-3"></i> ADEMÁS VAMOS A JUGAR
+                            </h5>
+                            <p class="font-sans font-bold text-xul_ink text-base mb-0">Scrabble Deconstructivo</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Clase 6 (Oscuro) -->
+                <div class="bg-white p-5 xul-border flex flex-col relative" style="box-shadow: 6px 6px 0px #2A2A2A;">
+                    <div class="absolute -top-4 -left-4 bg-white border-2 border-xul_ink text-xul_ink w-10 h-10 flex items-center justify-center font-black text-xl xul-title rotate-[3deg] shadow-[3px_3px_0px_#2A2A2A]">6</div>
+                    
+                    <div class="ml-4 mb-3 border-b-2 border-gray-200 pb-3">
+                        <p class="font-sans font-black text-[10px] uppercase tracking-[0.2em] text-gray-500 mb-1">MIÉRCOLES 27/07/2026 • 20.00 a 21.30</p>
+                        <h4 class="xul-title font-bold text-2xl leading-tight text-xul_ink mb-1">Deleuze y el Juego Ideal</h4>
+                        <p class="font-serif text-gray-700 text-base leading-relaxed">
+                            La ontología del acontecimiento. El acto desfundacional y la máquina dionisíaca de producir sentido analizada a través de Lewis Carroll.
+                        </p>
+                    </div>
+
+                    <div class="ml-4 flex items-center gap-2 mb-4 text-sm font-sans font-bold text-xul_ink">
+                        <i data-lucide="book-open" class="w-4 h-4 text-xul_terra"></i>
+                        <span>Lectura: Lógica del sentido (1969)</span>
+                    </div>
+                    
+                    <div class="ml-4 mt-auto bg-white border-2 border-xul_ink p-3 relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-5 bg-xul_ink praxis-box"></div>
+                        <div class="relative z-10">
+                            <h5 class="font-sans font-black uppercase text-[10px] tracking-widest text-xul_terra mb-1 flex items-center gap-1">
+                                <i data-lucide="dices" class="w-3 h-3"></i> ADEMÁS VAMOS A JUGAR
+                            </h5>
+                            <p class="font-sans font-bold text-xul_ink text-base mb-0">El Juego Ideal (Alicia)</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Información Adicional -->
+            <div class="mt-8 p-6 bg-xul_yellow border-[3px] border-xul_ink shadow-[6px_6px_0px_#2A2A2A] transform rotate-1">
+                <h4 class="font-sans font-black text-sm uppercase tracking-widest text-xul_ink mb-4 border-b-2 border-xul_ink pb-2">Información para los participantes</h4>
+                <ul class="text-sm space-y-3 font-sans font-medium text-xul_ink">
+                    <li class="flex gap-2 items-start"><i data-lucide="video" class="w-4 h-4 mt-0.5 flex-shrink-0 text-xul_terra"></i> <span><strong>Plataforma:</strong> Las clases sincrónicas se dictarán a través de Google Meet. El enlace se enviará 24hs antes.</span></li>
+                    <li class="flex gap-2 items-start"><i data-lucide="file-text" class="w-4 h-4 mt-0.5 flex-shrink-0 text-xul_terra"></i> <span><strong>Materiales:</strong> Todos los fragmentos bibliográficos serán provistos en formato digital al concretar la inscripción.</span></li>
+                    <li class="flex gap-2 items-start"><i data-lucide="award" class="w-4 h-4 mt-0.5 flex-shrink-0 text-xul_terra"></i> <span><strong>Certificación:</strong> Se entregará certificado emitido por Ludosofía a quienes asistan al 80% de los encuentros.</span></li>
+                    <li class="flex gap-2 items-start"><i data-lucide="mail" class="w-4 h-4 mt-0.5 flex-shrink-0 text-xul_terra"></i> <span><strong>Contacto:</strong> coordinacion@ludosofia.com</span></li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
