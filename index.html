@@ -59,6 +59,16 @@
         .modal-animate {
             animation: modalFadeIn 0.3s ease-out forwards;
         }
+
+        /* Animación para el Cartel Destacado del Curso */
+        @keyframes cartelWiggle {
+            0% { transform: rotate(-2deg) scale(1); }
+            50% { transform: rotate(2deg) scale(1.05); }
+            100% { transform: rotate(-2deg) scale(1); }
+        }
+        .animate-cartel {
+            animation: cartelWiggle 2.5s ease-in-out infinite;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-xul_yellow selection:text-xul_ink">
@@ -84,8 +94,8 @@
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
                 <a href="#schole" class="hover:text-xul_terra transition">Scholē</a>
                 <a href="#modalidades" class="hover:text-xul_terra transition">Modalidades</a>
-                <a href="curso_azar.html" class="text-xul_terra hover:text-xul_ink transition flex items-center gap-1">
-                    <i data-lucide="sparkles" class="w-4 h-4"></i> Cursos
+                <a href="seccion_mazos.html" class="bg-xul_terra text-white border-2 border-xul_ink px-4 py-1.5 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all flex items-center gap-2 font-black">
+                    <i data-lucide="layers" class="w-4 h-4"></i> Cartas
                 </a>
                 <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
                 <!-- Botón de Ingreso Principal -->
@@ -106,7 +116,9 @@
         <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
             <a href="#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
             <a href="#modalidades" class="mobile-link hover:text-xul_terra transition block">Modalidades</a>
-            <a href="curso_azar.html" class="mobile-link text-xul_terra transition block">Ver Cursos Virtuales</a>
+            <a href="seccion_mazos.html" class="mobile-link text-xul_terra font-black transition flex items-center gap-2">
+                <i data-lucide="layers" class="w-5 h-5"></i> Cartas
+            </a>
             <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
             <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full block uppercase">
                 Ingresar
@@ -125,10 +137,10 @@
 
         <div class="relative z-10 flex flex-col items-center max-w-4xl mx-auto text-center mt-8">
             
-            <!-- ENLACE DESTACADO A CARTAS -->
-            <a href="seccion_mazos.html" class="inline-flex items-center gap-2 bg-xul_yellow border-2 border-xul_ink px-5 py-2.5 mb-6 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all font-bold text-xs md:text-sm uppercase tracking-widest text-xul_ink group">
-                <i data-lucide="layers" class="w-4 h-4 text-xul_terra group-hover:animate-bounce"></i>
-                Nuevo Mazo Disponible: Cartas para jugar y pensar →
+            <!-- CARTEL DE INSCRIPCIÓN CON MOVIMIENTO -->
+            <a href="seminario_azar.html" class="animate-cartel inline-flex items-center gap-3 bg-xul_yellow border-[3px] border-xul_ink px-6 py-3 mb-10 shadow-[6px_6px_0px_#2A2A2A] hover:bg-white transition-colors font-black text-sm md:text-lg uppercase tracking-widest text-xul_ink group">
+                <i data-lucide="zap" class="w-6 h-6 text-xul_terra group-hover:text-xul_ink transition-colors"></i>
+                ¡Inscripción abierta al curso!
             </a>
 
             <div class="flex flex-col items-center mb-8 relative">
