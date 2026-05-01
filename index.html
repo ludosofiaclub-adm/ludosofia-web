@@ -84,7 +84,9 @@
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
                 <a href="#schole" class="hover:text-xul_terra transition">Scholē</a>
                 <a href="#modalidades" class="hover:text-xul_terra transition">Modalidades</a>
-                <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Mazos</a>
+                <a href="curso_azar.html" class="text-xul_terra hover:text-xul_ink transition flex items-center gap-1">
+                    <i data-lucide="sparkles" class="w-4 h-4"></i> Cursos
+                </a>
                 <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
                 <!-- Botón de Ingreso Principal -->
                 <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase">
@@ -104,7 +106,7 @@
         <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
             <a href="#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
             <a href="#modalidades" class="mobile-link hover:text-xul_terra transition block">Modalidades</a>
-            <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Ver Mazos</a>
+            <a href="curso_azar.html" class="mobile-link text-xul_terra transition block">Ver Cursos Virtuales</a>
             <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
             <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full block uppercase">
                 Ingresar
@@ -122,6 +124,13 @@
         </div>
 
         <div class="relative z-10 flex flex-col items-center max-w-4xl mx-auto text-center mt-8">
+            
+            <!-- ENLACE DESTACADO AL NUEVO CURSO -->
+            <a href="curso_azar.html" class="inline-flex items-center gap-2 bg-xul_yellow border-2 border-xul_ink px-5 py-2.5 mb-6 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all font-bold text-xs md:text-sm uppercase tracking-widest text-xul_ink group">
+                <i data-lucide="zap" class="w-4 h-4 text-xul_terra group-hover:animate-pulse"></i>
+                Inscripciones Abiertas: Curso Historia Filosófica del Juego →
+            </a>
+
             <div class="flex flex-col items-center mb-8 relative">
                 <svg viewBox="0 0 100 100" class="w-48 h-48 md:w-64 md:h-64 mb-4 hover:scale-105 transition-transform duration-500">
                     <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="1.5" stroke-linejoin="round"/>
@@ -163,7 +172,7 @@
         </div>
     </header>
 
-    <!-- SECCIÓN 1: FORMACIÓN Y SCHOLĒ (Ahora va primero) -->
+    <!-- SECCIÓN 1: FORMACIÓN Y SCHOLĒ -->
     <section id="schole" class="py-24 px-6 bg-white relative">
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#2A2A2A 1px, transparent 1px), linear-gradient(90deg, #2A2A2A 1px, transparent 1px); background-size: 30px 30px;"></div>
         
@@ -176,19 +185,19 @@
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <!-- Cursos Interactivos -->
-                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_yellow transition-colors group flex flex-col items-start">
-                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
+                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_yellow transition-colors group flex flex-col items-start cursor-pointer" onclick="toggleCursosModal()">
+                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A] group-hover:scale-110 transition-transform">
                         <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
                             <path d="M 10 35 L 40 35 L 40 15 L 10 15 Z" fill="none" stroke="currentColor" stroke-width="2"/>
                             <path d="M 25 15 V 35" stroke="currentColor" stroke-width="2"/>
                             <polyline points="15,25 20,25 20,20 25,20" fill="none" stroke="currentColor" stroke-width="2"/>
                         </svg>
                     </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Cursos interactivos</h4>
+                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Cursos Virtuales</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6 flex-grow">
                         Recorridos teóricos sobre la historia de las ideas, estructurados con mecánicas de juego. Aprender con nosotros es una aventura por niveles.
                     </p>
-                    <button onclick="toggleCursosModal()" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline focus:outline-none">
+                    <button class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline focus:outline-none">
                         Ver Programa →
                     </button>
                 </div>
@@ -229,7 +238,7 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 2: MODALIDADES (Ahora va segunda) -->
+    <!-- SECCIÓN 2: MODALIDADES -->
     <section id="modalidades" class="py-24 px-6 border-t-[3px] border-xul_ink relative">
         <div class="max-w-6xl mx-auto">
             
@@ -269,7 +278,7 @@
                     </p>
                 </div>
 
-                <div class="bg-white p-8 xul-border flex flex-col relative group cursor-pointer" onclick="window.location.href='seccion_mazos.html'" style="box-shadow: 6px 6px 0px #EBB134;">
+                <div class="bg-white p-8 xul-border flex flex-col relative group cursor-pointer" style="box-shadow: 6px 6px 0px #EBB134;">
                     <div class="w-16 h-16 bg-xul_yellow border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A] group-hover:scale-110 transition-transform">
                         <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink">
                             <rect x="10" y="20" width="30" height="20" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -520,11 +529,11 @@
                 <!-- Tarjeta de Curso Actual -->
                 <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
                     <div>
-                        <span class="inline-block bg-xul_yellow text-xul_ink text-[10px] font-black uppercase px-2 py-1 tracking-widest mb-2 border border-xul_ink">Inscripciones Abiertas</span>
-                        <h5 class="xul-title font-bold text-2xl text-xul_ink leading-none mb-1">Ontología del Azar</h5>
-                        <p class="font-serif text-sm text-gray-600">La metáfora de la tirada de dados en la filosofía.</p>
+                        <span class="inline-block bg-xul_yellow text-xul_ink text-[10px] font-black uppercase px-2 py-1 tracking-widest mb-2 border border-xul_ink">Inicia 22/06/2026</span>
+                        <h5 class="xul-title font-bold text-2xl text-xul_ink leading-none mb-1">Historia Filosófica del Juego</h5>
+                        <p class="font-serif text-sm text-gray-600">Ontología del Azar: La metáfora de la tirada de dados.</p>
                     </div>
-                    <a href="seminario_azar.html" class="w-full sm:w-auto bg-xul_ink text-white font-bold text-xs text-center uppercase tracking-widest px-5 py-3 hover:bg-xul_blue transition-colors flex-shrink-0">
+                    <a href="curso_azar.html" class="w-full sm:w-auto bg-xul_ink text-white font-bold text-xs text-center uppercase tracking-widest px-5 py-3 hover:bg-xul_blue transition-colors flex-shrink-0">
                         Ver Programa
                     </a>
                 </div>
