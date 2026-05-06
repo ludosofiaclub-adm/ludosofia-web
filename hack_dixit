@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual: Dixit Socrático | LUDOSOFÍA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_silver: '#C4CAD0'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #e5dfd3; /* Un fondo un poco más oscuro para que el "papel" resalte */
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.04"/%3E%3C/svg%3E');
+        }
+        .xul-border {
+            border: 3px solid #2A2A2A;
+            box-shadow: 6px 6px 0px #2A2A2A;
+            transition: all 0.2s ease;
+        }
+        .xul-title {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        /* Animaciones Personalizadas */
+        @keyframes owlPulse {
+            0% { background-color: #2A2A2A; transform: translateY(0); }
+            33% { background-color: #6BA4C4; transform: translateY(-4px); }
+            66% { background-color: #D1623A; transform: translateY(2px); }
+            100% { background-color: #2A2A2A; transform: translateY(0); }
+        }
+        .owl-magic {
+            animation: owlPulse 4s infinite ease-in-out;
+        }
+
+        @keyframes badgeHover {
+            0% { transform: translateY(0px) rotate(2deg); }
+            50% { transform: translateY(-4px) rotate(4deg); }
+            100% { transform: translateY(0px) rotate(2deg); }
+        }
+        @keyframes badgeHoverSidebar {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+            100% { transform: translateY(0px); }
+        }
+        .badge-float {
+            animation: badgeHover 3.5s infinite ease-in-out;
+            transform-origin: center;
+        }
+        .badge-float-sidebar {
+            animation: badgeHoverSidebar 3.5s infinite ease-in-out;
+        }
+
+        /* Estilos específicos para la lectura del documento */
+        .doc-content h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2A2A2A;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #2A2A2A;
+            padding-bottom: 0.5rem;
+        }
+        .doc-content h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .doc-content p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 1.25rem;
+            text-align: justify;
+        }
+        .doc-content ul.bullet-list {
+            list-style-type: none;
+            margin-bottom: 1.5rem;
+        }
+        .doc-content ul.bullet-list li {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        .doc-content ul.bullet-list li::before {
+            content: '■';
+            color: #6BA4C4;
+            font-size: 0.8rem;
+            margin-right: 10px;
+            margin-top: 4px;
+        }
+        
+        /* Tabla del Glosario */
+        .xul-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 3px solid #2A2A2A;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .xul-table th, .xul-table td {
+            border: 2px solid #2A2A2A;
+            padding: 1rem;
+            text-align: left;
+        }
+        .xul-table th {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            background-color: #6BA4C4;
+            color: #FDF8ED;
+        }
+        .xul-table tr:nth-child(even) {
+            background-color: #FDF8ED;
+        }
+        .xul-table tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        /* Animación Modal */
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate {
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_blue selection:text-white">
+
+    <!-- Navbar Minimalista (Estilo Lector) -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center py-2 px-6">
+            <a href="index_hack.html" class="flex items-center space-x-3 cursor-pointer group hover:text-xul_terra transition-colors">
+                <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                <span class="font-sans font-bold uppercase tracking-widest text-sm">Volver al Catálogo</span>
+            </a>
+            
+            <div class="flex items-center space-x-3">
+                <span class="xul-title font-bold text-xl md:text-2xl">LUDOSOFÍA</span>
+                <span class="bg-xul_ink text-white px-2 py-1 text-[10px] font-black uppercase tracking-widest hidden sm:inline-block">Juegos Hackeados</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENEDOR PRINCIPAL DEL LECTOR -->
+    <div class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 items-start">
+        
+        <!-- SIDEBAR IZQUIERDO (Índice y Descarga PDF) -->
+        <aside class="w-full lg:w-1/4 lg:sticky lg:top-24 space-y-6">
+            
+            <!-- Botón de Descarga Principal -->
+            <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[6px_6px_0px_#6BA4C4] hover:-translate-y-1 hover:shadow-[8px_8px_0px_#6BA4C4] transition-all">
+                <h4 class="font-sans font-black text-lg uppercase text-xul_ink mb-2 flex items-center gap-2">
+                    <i data-lucide="file-text" class="w-5 h-5 text-xul_blue"></i> Versión Offline
+                </h4>
+                <p class="font-serif text-gray-600 text-sm mb-4 leading-snug">
+                    Descarga el manual oficial maquetado en A4, listo para imprimir y jugar.
+                </p>
+                <button onclick="descargarPDF()" class="w-full bg-xul_blue border-2 border-xul_ink text-white font-black text-sm py-3 uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-xul_ink transition-colors group">
+                    <i data-lucide="download" class="w-4 h-4 group-hover:animate-bounce"></i>
+                    Descargar PDF
+                </button>
+                <div class="mt-2 text-center text-[9px] font-bold text-gray-400 uppercase tracking-widest">
+                    Expansión 01 | 2.4 MB
+                </div>
+            </div>
+
+            <!-- Índice de Navegación -->
+            <div class="bg-xul_paper border-[3px] border-xul_ink p-5 hidden md:block">
+                <h4 class="font-sans font-black text-sm uppercase tracking-widest text-xul_ink mb-4 pb-2 border-b-2 border-xul_ink">
+                    Índice del Documento
+                </h4>
+                <nav class="flex flex-col space-y-3 font-sans font-medium text-sm text-gray-600">
+                    <a href="#intro" class="hover:text-xul_blue hover:font-bold transition-colors">1. Introducción</a>
+                    <a href="#componentes" class="hover:text-xul_blue hover:font-bold transition-colors">2. Componentes</a>
+                    <a href="#reglas" class="hover:text-xul_blue hover:font-bold transition-colors">3. Las Nuevas Reglas</a>
+                    <a href="#premisa" class="ml-4 hover:text-xul_terra hover:font-bold transition-colors">A. La Premisa del Narrador</a>
+                    <a href="#juicio" class="ml-4 hover:text-xul_terra hover:font-bold transition-colors">B. El Juicio Socrático</a>
+                    <a href="#glosario" class="hover:text-xul_blue hover:font-bold transition-colors">4. Glosario del Oráculo</a>
+                </nav>
+            </div>
+            
+            <!-- Banner Decorativo -->
+            <div class="bg-xul_ink border-[3px] border-xul_ink p-4 text-center text-white relative overflow-hidden hidden lg:block">
+                <div class="absolute -right-4 -bottom-4 opacity-20">
+                    <i data-lucide="eye" class="w-24 h-24 text-xul_blue"></i>
+                </div>
+                <div class="relative z-10 mb-3 flex justify-center">
+                    <!-- INSIGNIAS SIDEBAR (Controladas por JS) -->
+                    <span class="insignia-publico hidden bg-xul_blue text-white border border-white px-2 py-1 text-[9px] font-black uppercase tracking-widest items-center gap-1 badge-float-sidebar" title="Acceso libre">
+                        <i data-lucide="unlock" class="w-3 h-3"></i> Acceso Público
+                    </span>
+                    <span class="insignia-socio hidden bg-xul_silver text-xul_ink border border-xul_ink px-2 py-1 text-[9px] font-black uppercase tracking-widest items-center gap-1 badge-float-sidebar" title="Solo Socios">
+                        <i data-lucide="user-check" class="w-3 h-3"></i> Socio Activo
+                    </span>
+                    <span class="insignia-fundador hidden bg-xul_yellow text-xul_ink border border-xul_ink px-2 py-1 text-[9px] font-black uppercase tracking-widest items-center gap-1 badge-float-sidebar" title="Socios Fundadores">
+                        <i data-lucide="crown" class="w-3 h-3"></i> Socio Fundador
+                    </span>
+                </div>
+                <h5 class="font-sans font-bold text-sm uppercase tracking-widest mb-1 relative z-10">Hack de Tablero</h5>
+                <p class="font-serif text-xs text-gray-300 relative z-10 italic">
+                    "Habla para que yo te conozca." - Sócrates
+                </p>
+            </div>
+
+        </aside>
+
+        <!-- ÁREA DEL DOCUMENTO (Página de Papel) -->
+        <main class="w-full lg:w-3/4 bg-white border-[3px] border-xul_ink p-8 md:p-16 shadow-[12px_12px_0px_#2A2A2A] relative doc-content">
+            
+            <!-- Decoración de la hoja -->
+            <div class="absolute top-0 right-0 w-16 h-16 bg-xul_blue border-b-[3px] border-l-[3px] border-xul_ink"></div>
+            <div class="absolute top-2 right-2 w-12 h-12 border-2 border-dashed border-white"></div>
+
+            <!-- Título del Documento -->
+            <div class="text-center mb-12 border-b-4 border-double border-gray-300 pb-8">
+                <div class="flex justify-center gap-4 mb-4">
+                    <div class="inline-block bg-xul_yellow border-2 border-xul_ink px-3 py-1 shadow-[3px_3px_0px_#2A2A2A] rotate-[-2deg]">
+                        <span class="font-sans font-black text-xs uppercase tracking-widest text-xul_ink">Documento Oficial</span>
+                    </div>
+                    
+                    <!-- INSIGNIAS MAIN (Controladas por JS) -->
+                    <div class="insignia-publico hidden bg-xul_blue border-2 border-xul_ink px-3 py-1 shadow-[3px_3px_0px_#2A2A2A] rotate-[2deg] badge-float" title="Acceso libre">
+                        <span class="font-sans font-black text-xs uppercase tracking-widest text-white flex items-center gap-1">
+                            <i data-lucide="unlock" class="w-3 h-3"></i> Acceso Público
+                        </span>
+                    </div>
+                    <div class="insignia-socio hidden bg-xul_silver border-2 border-xul_ink px-3 py-1 shadow-[3px_3px_0px_#2A2A2A] rotate-[2deg] badge-float" title="Solo Socios">
+                        <span class="font-sans font-black text-xs uppercase tracking-widest text-xul_ink flex items-center gap-1">
+                            <i data-lucide="user-check" class="w-3 h-3"></i> Socio Activo
+                        </span>
+                    </div>
+                    <div class="insignia-fundador hidden bg-xul_yellow border-2 border-xul_ink px-3 py-1 shadow-[3px_3px_0px_#2A2A2A] rotate-[2deg] badge-float" title="Socios Fundadores">
+                        <span class="font-sans font-black text-xs uppercase tracking-widest text-xul_ink flex items-center gap-1">
+                            <i data-lucide="crown" class="w-3 h-3"></i> Socio Fundador
+                        </span>
+                    </div>
+                </div>
+                <h1 class="xul-title text-5xl md:text-7xl font-black text-xul_ink leading-none mb-2">DIXIT</h1>
+                <h2 class="font-sans text-2xl md:text-3xl font-black text-xul_terra uppercase tracking-widest !border-0 !mt-0 !mb-0">El Oráculo Socrático</h2>
+            </div>
+
+            <section id="intro">
+                <p class="text-xl font-medium">
+                    <span class="text-4xl font-bold float-left mr-2 leading-none text-xul_blue">E</span>ste documento contiene las reglas oficiales para la variante "El Oráculo Socrático", un hack filosófico del aclamado juego de mesa Dixit. El objetivo de esta variante es transformar la mecánica de asociación libre de imágenes en un divertido ejercicio de mayéutica y argumentación.
+                </p>
+            </section>
+
+            <section id="componentes">
+                <h2>Componentes Necesarios</h2>
+                <p class="font-serif text-xl text-gray-700 leading-relaxed mb-6">
+                    Para jugar necesitarás 1 copia del juego base <strong>Dixit</strong> (incluyendo tablero, cartas, fichas de voto y conejos de madera), de 3 a 6 jugadores dispuestos a debatir sus ideas, y el <strong>Glosario del Oráculo</strong> (disponible al final de este documento).
+                </p>
+            </section>
+
+            <section id="reglas">
+                <h2>Las Nuevas Reglas</h2>
+                <p>
+                    El juego transcurre de forma normal según el reglamento estándar: en cada ronda, el narrador elige una carta de su mano en secreto, da una pista en voz alta, los demás jugadores seleccionan una carta de sus manos que coincida con la pista, se mezclan todas y se procede a la votación.
+                </p>
+                <p>
+                    Sin embargo, para introducir la tensión filosófica, se aplicarán <strong>dos modificaciones cruciales</strong> que alteran por completo la dinámica de las deducciones y el puntaje:
+                </p>
+
+                <div id="premisa" class="bg-xul_paper border-[3px] border-xul_ink p-6 my-8 relative">
+                    <div class="absolute -left-4 top-6 w-8 h-8 bg-xul_blue border-[3px] border-xul_ink flex items-center justify-center rotate-45">
+                        <span class="font-bold text-white -rotate-45">1</span>
+                    </div>
+                    <h3><span class="text-xul_blue">A.</span> La Premisa del Narrador</h3>
+                    <p>
+                        En lugar de dar pistas libres (como ruidos, canciones, refranes o palabras sueltas descriptivas), el narrador de turno <strong>debe usar exclusivamente un concepto filosófico, un dilema moral o una premisa abstracta</strong> para describir su carta secreta.
+                    </p>
+                    <ul class="bullet-list">
+                        <li><strong class="text-xul_terra">Ejemplos válidos:</strong> "El justo medio", "La banalidad del mal", "El mito de la caverna", "Determinismo", "La angustia existencial".</li>
+                        <li><strong class="text-red-600">No está permitido:</strong> Describir literalmente lo que se ve en la imagen (ej. "Un barco volando" o "Color rojo").</li>
+                    </ul>
+                </div>
+
+                <div id="juicio" class="bg-xul_paper border-[3px] border-xul_ink p-6 my-8 relative">
+                    <div class="absolute -left-4 top-6 w-8 h-8 bg-xul_terra border-[3px] border-xul_ink flex items-center justify-center rotate-45">
+                        <span class="font-bold text-white -rotate-45">2</span>
+                    </div>
+                    <div class="flex justify-between items-start gap-4">
+                        <h3><span class="text-xul_terra">B.</span> El Juicio Socrático</h3>
+                        <button onclick="toggleSocratesModal()" class="flex-shrink-0 text-white p-2 border-2 border-xul_ink shadow-[2px_2px_0px_#2A2A2A] group owl-magic cursor-pointer" title="El Juicio de Sócrates">
+                            <!-- SVG del Búho de la Sabiduría -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 group-hover:scale-110 transition-transform">
+                                <path d="M5 9c0 -4 3 -5 3 -7 1 1 3 2 4 2s3 -1 4 -2c0 2 3 3 3 7a8 8 0 1 1 -14 0z"></path>
+                                <circle cx="9" cy="11" r="2"></circle>
+                                <circle cx="15" cy="11" r="2"></circle>
+                                <path d="M12 14l-1 2h2l-1-2z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <p>
+                        Aquí radica la magia de esta variante. Una vez reveladas todas las cartas jugadas en la mesa y habiendo finalizado la fase de votación con fichas, <strong>los jugadores que no acertaron</strong> cuál era la carta original del narrador tienen derecho a apelar al tribunal mediante el "Juicio".
+                    </p>
+                    <p>
+                        El procedimiento del Juicio es el siguiente:
+                    </p>
+                    <ul class="space-y-4 mt-4">
+                        <li>
+                            <div class="flex-1">
+                                <strong class="text-xul_terra uppercase tracking-wider text-sm font-sans block mb-1">1. El Argumento</strong>
+                                El jugador apelante debe <strong>argumentar brevemente</strong> (con un tiempo máximo de 1 minuto) por qué la carta que <em>él mismo jugó</em> representaba de mejor manera el concepto filosófico dado que la carta original del narrador.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="flex-1">
+                                <strong class="text-xul_terra uppercase tracking-wider text-sm font-sans block mb-1">2. El Jurado</strong>
+                                El resto de la mesa (excluyendo al apelante y al narrador, quienes son las partes en disputa) oficia de jurado.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="flex-1">
+                                <strong class="text-xul_terra uppercase tracking-wider text-sm font-sans block mb-1">3. La Votación</strong>
+                                Tras escuchar el argumento, el jurado vota simultáneamente con el pulgar hacia arriba (aprobado) o hacia abajo (rechazado).
+                            </div>
+                        </li>
+                        <li>
+                            <div class="flex-1">
+                                <strong class="text-xul_terra uppercase tracking-wider text-sm font-sans block mb-1">4. La Sentencia</strong>
+                                Si la mayoría aprueba el argumento por considerarlo lógicamente superior o más poético, se ejecuta la sentencia: <strong>el apelante suma inmediatamente 2 puntos</strong> en esa ronda, y el narrador se queda en cero.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="glosario">
+                <h2>Glosario del Oráculo</h2>
+                <p>
+                    Utiliza esta tabla de referencia rápida como inspiración cuando sea tu turno de ser el Narrador. No estás obligado a ceñirte estrictamente a estos términos, pero contienen las llaves para abrir grandes debates socráticos al momento de bajar tu carta al tablero.
+                </p>
+
+                <!-- VERSIÓN ESCRITORIO: Tabla Clásica -->
+                <div class="hidden md:block overflow-x-auto">
+                    <table class="xul-table">
+                        <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Rama / Autor</th>
+                                <th>Breve Definición (Para inspirar imágenes)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>El Justo Medio</strong></td>
+                                <td>Aristóteles</td>
+                                <td>La virtud como equilibrio perfecto entre dos vicios extremos (ej. la valentía se encuentra entre la cobardía y la temeridad).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Solipsismo</strong></td>
+                                <td>Epistemología</td>
+                                <td>La creencia radical de que solo la propia mente existe con seguridad; todo el resto del universo puede ser una ilusión.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Amor Fati</strong></td>
+                                <td>F. Nietzsche</td>
+                                <td>"Amor al destino". La actitud vital de abrazar y aceptar todo lo que ocurre en la vida, sea bueno o malo, sin querer cambiarlo.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Velo de la Ignorancia</strong></td>
+                                <td>John Rawls</td>
+                                <td>El experimento de diseñar las reglas de la sociedad sin saber qué posición ocuparemos en ella, forzando así la equidad absoluta.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Imperativo Categórico</strong></td>
+                                <td>Immanuel Kant</td>
+                                <td>El deber moral de actuar solo según aquellas máximas que desearías firmemente que se convirtieran en leyes universales para todos.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mito de la Caverna</strong></td>
+                                <td>Platón</td>
+                                <td>La ignorancia humana: confundir las sombras proyectadas en la pared con la realidad verdadera del mundo exterior.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Síntesis Dialéctica</strong></td>
+                                <td>G.W.F. Hegel</td>
+                                <td>La resolución y superación (Aufhebung) del conflicto entre dos fuerzas, ideas o épocas históricas opuestas (tesis y antítesis).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- VERSIÓN CELULAR: Bloques de Texto -->
+                <div class="block md:hidden space-y-6 mt-8">
+                    
+                    <div class="border-l-[4px] border-xul_blue pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">El Justo Medio</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_terra mb-2 shadow-[2px_2px_0px_#2A2A2A]">Aristóteles</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">La virtud como equilibrio perfecto entre dos vicios extremos (ej. la valentía se encuentra entre la cobardía y la temeridad).</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_terra pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Solipsismo</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_blue mb-2 shadow-[2px_2px_0px_#2A2A2A]">Epistemología</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">La creencia radical de que solo la propia mente existe con seguridad; todo el resto del universo puede ser una ilusión.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_yellow pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Amor Fati</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_pink mb-2 shadow-[2px_2px_0px_#2A2A2A]">F. Nietzsche</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">"Amor al destino". La actitud vital de abrazar y aceptar todo lo que ocurre en la vida, sea bueno o malo, sin querer cambiarlo.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_green pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Velo de la Ignorancia</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_terra mb-2 shadow-[2px_2px_0px_#2A2A2A]">John Rawls</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">El experimento de diseñar las reglas de la sociedad sin saber qué posición ocuparemos en ella, forzando así la equidad absoluta.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_pink pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Imperativo Categórico</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_blue mb-2 shadow-[2px_2px_0px_#2A2A2A]">Immanuel Kant</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">El deber moral de actuar solo según aquellas máximas que desearías firmemente que se convirtieran en leyes universales para todos.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_ink pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Mito de la Caverna</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_terra mb-2 shadow-[2px_2px_0px_#2A2A2A]">Platón</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">La ignorancia humana: confundir las sombras proyectadas en la pared con la realidad verdadera del mundo exterior.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_blue pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Síntesis Dialéctica</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_yellow mb-2 shadow-[2px_2px_0px_#2A2A2A]">G.W.F. Hegel</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">La resolución y superación (Aufhebung) del conflicto entre dos fuerzas, ideas o épocas históricas opuestas (tesis y antítesis).</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Firma del documento -->
+            <div class="mt-16 flex flex-col items-center justify-center opacity-50">
+                <svg viewBox="0 0 100 100" class="w-12 h-12 mb-2">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="#2A2A2A" stroke-width="4"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="#2A2A2A" stroke-width="4"/>
+                </svg>
+                <span class="font-sans font-bold tracking-widest text-xs uppercase">Documento Lúdico de Ludosofía</span>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- MODAL DEL JUICIO DE SÓCRATES -->
+    <div id="socrates-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div id="socrates-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="toggleSocratesModal()"></div>
+        
+        <div class="modal-animate relative bg-white border-[3px] border-xul_ink p-8 max-w-xl w-full shadow-[12px_12px_0px_#6BA4C4] z-10 max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleSocratesModal()" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+
+            <div class="flex items-center gap-4 mb-6 border-b-2 border-xul_ink pb-4">
+                <div class="w-12 h-12 bg-xul_yellow border-2 border-xul_ink flex items-center justify-center shadow-[3px_3px_0px_#2A2A2A]">
+                    <i data-lucide="scale" class="w-6 h-6 text-xul_ink"></i>
+                </div>
+                <h3 class="xul-title text-3xl font-black text-xul_ink leading-none">El Juicio de Sócrates</h3>
+            </div>
+            
+            <p class="font-sans font-bold text-xul_terra uppercase tracking-widest text-xs mb-4">¿Buscador de la verdad o traidor?</p>
+            
+            <p class="font-serif text-lg text-gray-700 mb-4">
+                En el año 399 a.C., Atenas sentó en el banquillo a su ciudadano más incómodo. Sócrates no fue juzgado por un crimen común, sino por su palabra.
+            </p>
+            
+            <ul class="space-y-3 mb-6 font-serif text-lg">
+                <li class="leading-snug"><strong class="font-sans text-xul_ink">Los Cargos:</strong> Corromper a la juventud y no creer en los dioses de la ciudad.</li>
+                <li class="leading-snug"><strong class="font-sans text-xul_ink">La Defensa:</strong> Lejos de pedir clemencia, Sócrates afirmó que su labor era un regalo divino: actuar como un "tábano" que aguijonea a una sociedad adormecida para que despierte a la virtud.</li>
+                <li class="leading-snug"><strong class="font-sans text-xul_ink">El Desenlace:</strong> Prefería morir antes que dejar de filosofar. Su condena a beber cicuta lo convirtió en el primer mártir de la libertad de pensamiento.</li>
+            </ul>
+
+            <div class="bg-xul_paper border-l-4 border-xul_blue p-4 mb-6">
+                <p class="font-serif text-xl italic text-gray-800">"Una vida sin examen no merece la pena ser vivida."</p>
+            </div>
+
+            <a href="apologia.html" class="block w-full text-center bg-xul_ink text-white font-bold uppercase tracking-widest py-3 border-2 border-xul_ink hover:bg-xul_terra transition-colors shadow-[4px_4px_0px_#2A2A2A]">
+                Más Información: La Apología
+            </a>
+        </div>
+    </div>
+
+    <!-- Script para simular descarga y modales -->
+    <script>
+        // ========================================================
+        // CONFIGURACIÓN DE NIVELES DE ACCESO
+        // Simplemente cambia a 'true' el nivel que deseas mostrar.
+        // Asegúrate de que los otros dos estén en 'false'.
+        // ========================================================
+        const CONFIG_ACCESO = {
+            PUBLICO: true,     // <--- Actualmente configurado para ver
+            SOCIO: false,
+            FUNDADOR: false
+        };
+
+        // Función para aplicar la insignia correcta al cargar la página
+        function aplicarInsignias() {
+            const publicos = document.querySelectorAll('.insignia-publico');
+            const socios = document.querySelectorAll('.insignia-socio');
+            const fundadores = document.querySelectorAll('.insignia-fundador');
+
+            const setDisplay = (elements, isVisible) => {
+                elements.forEach(el => {
+                    if (isVisible) {
+                        el.classList.remove('hidden');
+                        if (el.classList.contains('badge-float-sidebar')) {
+                            el.classList.add('inline-flex'); // Para sidebar
+                        } else {
+                            el.classList.add('inline-block'); // Para el título main
+                        }
+                    } else {
+                        el.classList.add('hidden');
+                        el.classList.remove('inline-flex', 'inline-block');
+                    }
+                });
+            };
+
+            setDisplay(publicos, CONFIG_ACCESO.PUBLICO);
+            setDisplay(socios, CONFIG_ACCESO.SOCIO);
+            setDisplay(fundadores, CONFIG_ACCESO.FUNDADOR);
+        }
+
+        // Ejecutamos la lógica de insignias apenas carga el documento
+        document.addEventListener('DOMContentLoaded', aplicarInsignias);
+
+        lucide.createIcons();
+
+        function toggleSocratesModal() {
+            const modal = document.getElementById('socrates-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function descargarPDF() {
+            const btn = event.currentTarget;
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Generando PDF...';
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                alert("¡Descarga iniciada! (Simulación: En producción se descargará el archivo 'Reglas_Dixit_Socratico.pdf' generado en LaTeX)");
+                btn.innerHTML = originalText;
+                lucide.createIcons();
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
+
+
