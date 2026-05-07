@@ -52,7 +52,6 @@
             text-shadow: 4px 4px 0px #D1623A;
         }
         
-        /* Animaciones para Modales */
         @keyframes modalFadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -89,7 +88,7 @@
                 <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
                 <!-- Botón de Ingreso Principal -->
                 <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
-                    <span id="badge-icon-desktop" class="hidden items-center justify-center"></span>
+                    <div id="badge-icon-desktop" class="flex items-center justify-center"></div>
                     <span id="login-text-desktop">Ingresar</span>
                 </button>
             </div>
@@ -109,7 +108,7 @@
             <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
             <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
             <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
-                <span id="badge-icon-mobile" class="hidden items-center justify-center"></span>
+                <div id="badge-icon-mobile" class="flex items-center justify-center"></div>
                 <span id="login-text-mobile">Ingresar</span>
             </button>
         </div>
@@ -362,9 +361,12 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                 <!-- MEMBRESÍA 1: PÚBLICO -->
                 <div class="bg-white border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
-                    <div class="mb-6 border-b-2 border-xul_ink pb-6">
-                        <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Público</h3>
-                        <p class="font-serif text-gray-700">Para los curiosos que recién llegan.</p>
+                    <div class="mb-6 border-b-2 border-xul_ink pb-6 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Público</h3>
+                            <p class="font-serif text-gray-700">Para los curiosos que recién llegan.</p>
+                        </div>
+                        <i data-lucide="user" class="w-10 h-10 text-xul_blue"></i>
                     </div>
                     <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow text-sm">
                         <li class="flex items-start gap-3">
@@ -372,16 +374,20 @@
                             <span>Newsletter semanal.</span>
                         </li>
                     </ul>
-                    <button class="w-full bg-white border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-xul_blue hover:text-white transition-colors mt-auto">
+                    <!-- Para el público, el registro es en la propia web -->
+                    <button onclick="document.getElementById('login-modal').classList.remove('hidden')" class="w-full bg-white border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-xul_blue hover:text-white transition-colors mt-auto">
                         Sumarse
                     </button>
                 </div>
 
                 <!-- MEMBRESÍA 2: SOCIO -->
                 <div class="bg-[#FDE4D0] border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
-                    <div class="mb-6 border-b-2 border-xul_ink pb-6">
-                        <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Socio</h3>
-                        <p class="font-serif text-gray-700">Para sumarse a la mesa de juego.</p>
+                    <div class="mb-6 border-b-2 border-xul_ink pb-6 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Socio</h3>
+                            <p class="font-serif text-gray-700">Para sumarse a la mesa de juego.</p>
+                        </div>
+                        <i data-lucide="award" class="w-10 h-10 text-xul_orange"></i>
                     </div>
                     <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow text-sm">
                         <li class="flex items-start gap-3">
@@ -401,6 +407,7 @@
                             <span>Participación en atelier de juegos.</span>
                         </li>
                     </ul>
+                    <!-- Aquí irá su link de MercadoPago -->
                     <button class="w-full bg-xul_orange border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
                         Ser Socio
                     </button>
@@ -411,9 +418,12 @@
                     <div class="absolute -top-4 -right-4 bg-xul_terra border-[3px] border-xul_ink px-4 py-1 font-black text-white uppercase text-xs tracking-widest shadow-[4px_4px_0px_#2A2A2A] rotate-3">
                         Cupos Limitados
                     </div>
-                    <div class="mb-6 border-b-2 border-gray-600 pb-6">
-                        <h3 class="font-sans font-black text-3xl text-[#FDF8ED] tracking-tight uppercase mb-2">Socio Fundador</h3>
-                        <p class="font-serif text-gray-400">Para impulsar el pensamiento.</p>
+                    <div class="mb-6 border-b-2 border-gray-600 pb-6 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-sans font-black text-3xl text-[#FDF8ED] tracking-tight uppercase mb-2">Fundador</h3>
+                            <p class="font-serif text-gray-400">Para impulsar el pensamiento.</p>
+                        </div>
+                        <i data-lucide="crown" class="w-10 h-10 text-xul_yellow"></i>
                     </div>
                     <ul class="font-sans text-[#FDF8ED] space-y-4 mb-8 flex-grow text-sm">
                         <li class="flex items-start gap-3">
@@ -441,8 +451,9 @@
                             <span>Consultoría mensual incluida.</span>
                         </li>
                     </ul>
+                    <!-- Aquí irá su link de MercadoPago -->
                     <button class="w-full bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
-                        Ser Socio Fundador
+                        Ser Fundador
                     </button>
                 </div>
             </div>
@@ -658,7 +669,6 @@
             getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, 
             GoogleAuthProvider, FacebookAuthProvider, OAuthProvider, onAuthStateChanged, signOut 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        // Importamos Firestore (Base de datos)
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         // 2. CONFIGURACIÓN
@@ -720,24 +730,15 @@
 
         // --- SISTEMA DE ÍCONOS DE MEMBRESÍA ---
         function getIconByRole(role) {
-            if (role === 'SOCIO FUNDADOR') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
-            if (role === 'SOCIO') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
-            return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+            if (role === 'SOCIO FUNDADOR') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink flex-shrink-0"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            if (role === 'SOCIO') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink flex-shrink-0"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink flex-shrink-0"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
         }
 
         function updateUIWithRole(rol) {
             const iconHtml = getIconByRole(rol);
-            const iconDesk = document.getElementById('badge-icon-desktop');
-            const iconMob = document.getElementById('badge-icon-mobile');
-            
-            iconDesk.innerHTML = iconHtml;
-            iconMob.innerHTML = iconHtml;
-            
-            // Forzamos CSS para asegurar visibilidad
-            iconDesk.classList.remove('hidden');
-            iconDesk.style.display = 'flex';
-            iconMob.classList.remove('hidden');
-            iconMob.style.display = 'flex';
+            document.getElementById('badge-icon-desktop').innerHTML = iconHtml;
+            document.getElementById('badge-icon-mobile').innerHTML = iconHtml;
         }
 
         // 4. LÓGICA DE USUARIO Y BASE DE DATOS
@@ -746,7 +747,6 @@
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 usuarioActual = user;
-                
                 const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
                 
                 document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
@@ -778,19 +778,15 @@
                     }
                 } catch (error) {
                     console.error("Error al obtener rol:", error);
-                    updateUIWithRole('PUBLICO'); // Fallback si falla la base de datos
+                    updateUIWithRole('PUBLICO'); 
                 }
             } else {
                 usuarioActual = null;
                 document.getElementById('login-text-desktop').innerText = 'INGRESAR';
                 document.getElementById('login-text-mobile').innerText = 'INGRESAR';
                 
-                const iconDesk = document.getElementById('badge-icon-desktop');
-                const iconMob = document.getElementById('badge-icon-mobile');
-                iconDesk.classList.add('hidden');
-                iconDesk.style.display = 'none';
-                iconMob.classList.add('hidden');
-                iconMob.style.display = 'none';
+                document.getElementById('badge-icon-desktop').innerHTML = '';
+                document.getElementById('badge-icon-mobile').innerHTML = '';
                 
                 loginBtnDesktop.onclick = toggleLoginModal;
                 loginBtnMobile.onclick = toggleLoginModal;
@@ -801,7 +797,6 @@
         // 5. ACCIONES DE INGRESO Y REGISTRO
         let isLoginMode = true;
 
-        // Alternar entre modo Ingreso y Registro
         document.getElementById('btn-toggle-mode').addEventListener('click', (e) => {
             e.preventDefault();
             isLoginMode = !isLoginMode;
@@ -829,7 +824,6 @@
             });
         }
 
-        // Procesar el formulario (Ingresar o Registrar)
         document.getElementById('login-form').addEventListener('submit', (event) => {
             event.preventDefault();
             const email = event.target.querySelectorAll('input')[0].value;
