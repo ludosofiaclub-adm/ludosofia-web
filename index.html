@@ -83,8 +83,8 @@
             <!-- Menú Escritorio -->
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
                 <a href="#schole" class="hover:text-xul_terra transition">Scholē</a>
-                <a href="#modalidades" class="hover:text-xul_terra transition">Modalidades</a>
-                <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Mazos</a>
+                <a href="#ludoteca" class="hover:text-xul_terra transition">Ludoteca</a>
+                <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Cartas</a>
                 <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
                 <!-- Botón de Ingreso Principal -->
                 <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase">
@@ -103,8 +103,8 @@
         <!-- Panel Menú Móvil Desplegable -->
         <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
             <a href="#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
-            <a href="#modalidades" class="mobile-link hover:text-xul_terra transition block">Modalidades</a>
-            <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Ver Mazos</a>
+            <a href="#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
             <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
             <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full block uppercase">
                 Ingresar
@@ -163,7 +163,7 @@
         </div>
     </header>
 
-    <!-- SECCIÓN 1: FORMACIÓN Y SCHOLĒ (Ahora va primero) -->
+    <!-- SECCIÓN 1: FORMACIÓN Y SCHOLĒ -->
     <section id="schole" class="py-24 px-6 bg-white relative">
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#2A2A2A 1px, transparent 1px), linear-gradient(90deg, #2A2A2A 1px, transparent 1px); background-size: 30px 30px;"></div>
         
@@ -229,13 +229,13 @@
         </div>
     </section>
 
-    <!-- SECCIÓN 2: MODALIDADES (Ahora va segunda) -->
-    <section id="modalidades" class="py-24 px-6 border-t-[3px] border-xul_ink relative">
+    <!-- SECCIÓN 2: LUDOTECA -->
+    <section id="ludoteca" class="py-24 px-6 border-t-[3px] border-xul_ink relative">
         <div class="max-w-6xl mx-auto">
             
             <div class="text-center mb-16">
                 <h2 class="font-sans font-black text-xul_terra uppercase tracking-widest text-sm mb-2 border-b-2 border-xul_terra inline-block pb-1">El Menú del Club</h2>
-                <h3 class="xul-title text-4xl md:text-5xl font-bold text-xul_ink mt-4">Modalidades de Pensamiento</h3>
+                <h3 class="xul-title text-4xl md:text-5xl font-bold text-xul_ink mt-4">Nuestra Ludoteca</h3>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -348,68 +348,97 @@
             </svg>
         </div>
 
-        <div class="max-w-5xl mx-auto relative z-10">
+        <div class="max-w-6xl mx-auto relative z-10">
             <div class="text-center mb-16">
-                <h2 class="xul-title text-4xl md:text-6xl font-bold text-xul_ink mb-4">El tablero está listo.</h2>
-                <p class="font-sans text-xl text-xul_ink font-medium max-w-xl mx-auto">
-                    Elige tu nivel de acceso al Ágora y desbloquea manuales, mazos de situaciones y nuestra comunidad de jugadores.
+                <h2 class="xul-title text-4xl md:text-6xl font-bold text-xul_ink mb-4">Ayudanos a expandir el tablero.</h2>
+                <p class="font-sans text-xl text-xul_ink font-medium max-w-2xl mx-auto">
+                    Tu aporte es fundamental para hacer crecer este proyecto. Elegí cómo sumarte, accedé a beneficios exclusivos y acompañanos a llevar la filosofía lúdica mucho más lejos.
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <!-- MEMBRESÍA 1: SOCIO -->
-                <div class="bg-[#FDF8ED] border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                <!-- MEMBRESÍA 1: PÚBLICO -->
+                <div class="bg-white border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
                     <div class="mb-6 border-b-2 border-xul_ink pb-6">
-                        <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Socio</h3>
-                        <p class="font-serif text-gray-700">Acceso completo al club.</p>
+                        <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Público</h3>
+                        <p class="font-serif text-gray-700">Para los curiosos que recién llegan.</p>
                     </div>
-                    <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow">
+                    <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow text-sm">
                         <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
-                            <span>Cursos gratuitos.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
-                            <span>Acceso a ludoteca completa.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
-                            <span>Atelier de juegos: acompañamiento para crear tus juegos.</span>
+                            <i data-lucide="check-square" class="w-5 h-5 text-xul_blue mt-0.5 flex-shrink-0"></i>
+                            <span>Newsletter semanal.</span>
                         </li>
                     </ul>
-                    <button class="w-full bg-white border-[3px] border-xul_ink text-xul_ink font-black text-xl py-4 uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors">
-                        Suscribirse
+                    <button class="w-full bg-white border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-xul_blue hover:text-white transition-colors mt-auto">
+                        Sumarse
                     </button>
                 </div>
 
-                <!-- MEMBRESÍA 2: SOCIO FUNDADOR -->
+                <!-- MEMBRESÍA 2: SOCIO -->
+                <div class="bg-[#FDF8ED] border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
+                    <div class="mb-6 border-b-2 border-xul_ink pb-6">
+                        <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Socio</h3>
+                        <p class="font-serif text-gray-700">Para sumarse a la mesa de juego.</p>
+                    </div>
+                    <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow text-sm">
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
+                            <span>Newsletter con todas novedades.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
+                            <span>Acceso a catálogo de juegos.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
+                            <span>Descuentos 40% en cursos.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="check-square" class="w-5 h-5 text-xul_terra mt-0.5 flex-shrink-0"></i>
+                            <span>Participación en atelier de juegos.</span>
+                        </li>
+                    </ul>
+                    <button class="w-full bg-xul_terra border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
+                        Ser Socio
+                    </button>
+                </div>
+
+                <!-- MEMBRESÍA 3: FUNDADOR -->
                 <div class="bg-xul_ink border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#D1623A] hover:-translate-y-2 transition-transform relative">
                     <div class="absolute -top-4 -right-4 bg-xul_terra border-[3px] border-xul_ink px-4 py-1 font-black text-white uppercase text-xs tracking-widest shadow-[4px_4px_0px_#2A2A2A] rotate-3">
                         Cupos Limitados
                     </div>
                     <div class="mb-6 border-b-2 border-gray-600 pb-6">
-                        <h3 class="font-sans font-black text-3xl text-[#FDF8ED] tracking-tight uppercase mb-2">Socio Fundador</h3>
-                        <p class="font-serif text-gray-400">Para los pioneros del pensamiento.</p>
+                        <h3 class="font-sans font-black text-3xl text-[#FDF8ED] tracking-tight uppercase mb-2">Fundador</h3>
+                        <p class="font-serif text-gray-400">Para impulsar el pensamiento.</p>
                     </div>
-                    <ul class="font-sans text-[#FDF8ED] space-y-4 mb-8 flex-grow">
+                    <ul class="font-sans text-[#FDF8ED] space-y-4 mb-8 flex-grow text-sm">
                         <li class="flex items-start gap-3">
                             <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span><strong class="text-xul_yellow">Todo lo del pase Socio.</strong></span>
+                            <span>Newsletter con todas novedades.</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span><strong>Pase vitalicio:</strong> Pago único, sin suscripciones.</span>
+                            <span>Acceso a catálogo de juegos.</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span>Acceso a prototipos de juegos antes que nadie.</span>
+                            <span>Plataforma de juego.</span>
                         </li>
                         <li class="flex items-start gap-3">
                             <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span>Insignia dorada "Fundador" en la comunidad.</span>
+                            <span>Cursos gratuitos.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
+                            <span>Focus group para creación de juegos.</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
+                            <span>Consultoría mensual incluida.</span>
                         </li>
                     </ul>
-                    <button class="w-full bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-xl py-4 uppercase tracking-widest hover:bg-white transition-colors">
+                    <button class="w-full bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
                         Ser Fundador
                     </button>
                 </div>
