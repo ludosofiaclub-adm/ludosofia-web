@@ -89,7 +89,7 @@
                 <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
                 <!-- Botón de Ingreso Principal -->
                 <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
-                    <span id="badge-icon-desktop" class="hidden"></span>
+                    <span id="badge-icon-desktop" class="hidden items-center justify-center"></span>
                     <span id="login-text-desktop">Ingresar</span>
                 </button>
             </div>
@@ -109,7 +109,7 @@
             <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
             <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
             <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
-                <span id="badge-icon-mobile" class="hidden"></span>
+                <span id="badge-icon-mobile" class="hidden items-center justify-center"></span>
                 <span id="login-text-mobile">Ingresar</span>
             </button>
         </div>
@@ -528,24 +528,23 @@
                     <line x1="25" y1="35" x2="35" y2="35" stroke="currentColor" stroke-width="3"/>
                     <line x1="25" y1="42" x2="32" y2="42" stroke="currentColor" stroke-width="3"/>
                 </svg>
-                <h3 class="xul-title text-4xl font-black text-xul_ink tracking-tight uppercase">Entrar al CLUB</h3>
+                <h3 id="modal-main-title" class="xul-title text-4xl font-black text-xul_ink tracking-tight uppercase">Entrar al CLUB</h3>
                 <p class="font-sans text-sm text-gray-600 mt-2">Identifícate para continuar tu partida.</p>
             </div>
 
             <!-- Formulario de Correo/Clave -->
             <form id="login-form" class="mb-6">
                 <div class="mb-5">
-                    <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Usuario o Correo</label>
-                    <input type="text" placeholder="Ej: socrates@mail.com" required class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all">
+                    <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Correo Electrónico</label>
+                    <input type="email" placeholder="Ej: socrates@mail.com" required class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all">
                 </div>
                 <div class="mb-6">
                     <div class="flex justify-between items-end mb-2">
                         <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink">Clave Secreta</label>
-                        <a href="#" class="text-xs text-xul_terra hover:underline font-bold">¿Olvidaste tu clave?</a>
                     </div>
-                    <input type="password" placeholder="••••••••" required class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all">
+                    <input type="password" placeholder="••••••••" required minlength="6" class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all">
                 </div>
-                <button type="submit" class="w-full bg-xul_yellow border-[3px] border-xul_ink py-3 font-black text-lg uppercase tracking-widest text-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
+                <button id="modal-submit-btn" type="submit" class="w-full bg-xul_yellow border-[3px] border-xul_ink py-3 font-black text-lg uppercase tracking-widest text-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
                     Entrar con Clave
                 </button>
             </form>
@@ -577,8 +576,8 @@
             </div>
             
             <div class="mt-2 text-center">
-                <span class="font-sans text-sm text-gray-600">¿Aún no eres miembro?</span>
-                <a href="#unirse" onclick="document.getElementById('login-modal').classList.add('hidden')" class="font-bold text-xul_ink hover:text-xul_terra uppercase text-sm tracking-wide ml-1">Únete al Club</a>
+                <span id="toggle-question" class="font-sans text-sm text-gray-600">¿Aún no eres miembro?</span>
+                <a href="#" id="btn-toggle-mode" class="font-bold text-xul_ink hover:text-xul_terra uppercase text-sm tracking-wide ml-1">Regístrate aquí</a>
             </div>
         </div>
     </div>
@@ -656,8 +655,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { 
-            getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, 
-            FacebookAuthProvider, OAuthProvider, onAuthStateChanged, signOut 
+            getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, 
+            GoogleAuthProvider, FacebookAuthProvider, OAuthProvider, onAuthStateChanged, signOut 
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         // Importamos Firestore (Base de datos)
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -721,72 +720,77 @@
 
         // --- SISTEMA DE ÍCONOS DE MEMBRESÍA ---
         function getIconByRole(role) {
-            // Corona para FUNDADOR
             if (role === 'SOCIO FUNDADOR') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
-            // Medalla/Escarapela para SOCIO
             if (role === 'SOCIO') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
-            // Usuario clásico para PÚBLICO
             return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
         }
 
         function updateUIWithRole(rol) {
             const iconHtml = getIconByRole(rol);
-            document.getElementById('badge-icon-desktop').innerHTML = iconHtml;
-            document.getElementById('badge-icon-mobile').innerHTML = iconHtml;
-            document.getElementById('badge-icon-desktop').classList.remove('hidden');
-            document.getElementById('badge-icon-mobile').classList.remove('hidden');
+            const iconDesk = document.getElementById('badge-icon-desktop');
+            const iconMob = document.getElementById('badge-icon-mobile');
+            
+            iconDesk.innerHTML = iconHtml;
+            iconMob.innerHTML = iconHtml;
+            
+            // Forzamos CSS para asegurar visibilidad
+            iconDesk.classList.remove('hidden');
+            iconDesk.style.display = 'flex';
+            iconMob.classList.remove('hidden');
+            iconMob.style.display = 'flex';
         }
 
         // 4. LÓGICA DE USUARIO Y BASE DE DATOS
         let usuarioActual = null;
 
-        // Escáner: Detecta si alguien inicia sesión o sale
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 usuarioActual = user;
                 
-                // Extraer el nombre o el correo antes de la @
                 const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
                 
-                // Cambiar el texto del botón al estar logueado
                 document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
                 document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
                 
-                // Cambiar a dónde lleva el botón
                 loginBtnDesktop.onclick = toggleProfileModal;
                 loginBtnMobile.onclick = toggleProfileModal;
 
-                // Actualizar info del perfil
                 document.getElementById('profile-email').innerText = user.email;
 
-                // Buscar Rol en la base de datos Firestore
-                const userRef = doc(db, "usuarios", user.uid);
-                const docSnap = await getDoc(userRef);
+                try {
+                    const userRef = doc(db, "usuarios", user.uid);
+                    const docSnap = await getDoc(userRef);
 
-                if (docSnap.exists()) {
-                    const datos = docSnap.data();
-                    localStorage.setItem('rol_usuario', datos.rol);
-                    document.getElementById('profile-role').innerText = datos.rol;
-                    updateUIWithRole(datos.rol);
-                } else {
-                    // Si es nuevo, lo anotamos en la base de datos como PUBLICO
-                    await setDoc(userRef, {
-                        email: user.email,
-                        rol: 'PUBLICO',
-                        fechaRegistro: new Date()
-                    });
-                    localStorage.setItem('rol_usuario', 'PUBLICO');
-                    document.getElementById('profile-role').innerText = 'PÚBLICO';
-                    updateUIWithRole('PUBLICO');
+                    if (docSnap.exists()) {
+                        const datos = docSnap.data();
+                        localStorage.setItem('rol_usuario', datos.rol);
+                        document.getElementById('profile-role').innerText = datos.rol;
+                        updateUIWithRole(datos.rol);
+                    } else {
+                        await setDoc(userRef, {
+                            email: user.email,
+                            rol: 'PUBLICO',
+                            fechaRegistro: new Date()
+                        });
+                        localStorage.setItem('rol_usuario', 'PUBLICO');
+                        document.getElementById('profile-role').innerText = 'PÚBLICO';
+                        updateUIWithRole('PUBLICO');
+                    }
+                } catch (error) {
+                    console.error("Error al obtener rol:", error);
+                    updateUIWithRole('PUBLICO'); // Fallback si falla la base de datos
                 }
             } else {
-                // Nadie logueado
                 usuarioActual = null;
                 document.getElementById('login-text-desktop').innerText = 'INGRESAR';
                 document.getElementById('login-text-mobile').innerText = 'INGRESAR';
                 
-                document.getElementById('badge-icon-desktop').classList.add('hidden');
-                document.getElementById('badge-icon-mobile').classList.add('hidden');
+                const iconDesk = document.getElementById('badge-icon-desktop');
+                const iconMob = document.getElementById('badge-icon-mobile');
+                iconDesk.classList.add('hidden');
+                iconDesk.style.display = 'none';
+                iconMob.classList.add('hidden');
+                iconMob.style.display = 'none';
                 
                 loginBtnDesktop.onclick = toggleLoginModal;
                 loginBtnMobile.onclick = toggleLoginModal;
@@ -794,28 +798,48 @@
             }
         });
 
-        // 5. ACCIONES DE INGRESO
+        // 5. ACCIONES DE INGRESO Y REGISTRO
+        let isLoginMode = true;
+
+        // Alternar entre modo Ingreso y Registro
+        document.getElementById('btn-toggle-mode').addEventListener('click', (e) => {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+            document.getElementById('modal-main-title').innerText = isLoginMode ? 'ENTRAR AL CLUB' : 'CREAR CUENTA';
+            document.getElementById('modal-submit-btn').innerText = isLoginMode ? 'ENTRAR CON CLAVE' : 'REGISTRARSE';
+            document.getElementById('toggle-question').innerText = isLoginMode ? '¿Aún no eres miembro?' : '¿Ya tienes cuenta?';
+            e.target.innerText = isLoginMode ? 'REGÍSTRATE AQUÍ' : 'INGRESA AQUÍ';
+        });
+
         function procesarIngreso(promesaIngreso) {
             promesaIngreso.then((result) => {
-                // Extraemos el nombre para saludarlo
                 const nombreMostrar = result.user.displayName ? result.user.displayName.split(' ')[0] : result.user.email.split('@')[0];
-                
-                mostrarAlerta('Ingreso Exitoso', `¡Todo listo para jugar, ${nombreMostrar}!`, '#75B07E');
+                mostrarAlerta('Acceso Concedido', `¡Todo listo para jugar, ${nombreMostrar}!`, '#75B07E');
                 loginModal.classList.add('hidden');
             }).catch((error) => {
                 if (error.code === 'auth/invalid-credential') {
                     mostrarAlerta('Error de Ingreso', 'Las credenciales no son válidas. Verifique su correo o clave.');
+                } else if (error.code === 'auth/email-already-in-use') {
+                    mostrarAlerta('Atención', 'Ese correo ya está registrado. Por favor, intenta ingresar.');
+                } else if (error.code === 'auth/weak-password') {
+                    mostrarAlerta('Clave Débil', 'La contraseña debe tener al menos 6 caracteres.');
                 } else {
                     mostrarAlerta('Error', 'Hubo un problema: ' + error.message);
                 }
             });
         }
 
+        // Procesar el formulario (Ingresar o Registrar)
         document.getElementById('login-form').addEventListener('submit', (event) => {
             event.preventDefault();
             const email = event.target.querySelectorAll('input')[0].value;
             const password = event.target.querySelectorAll('input')[1].value;
-            procesarIngreso(signInWithEmailAndPassword(auth, email, password));
+            
+            if (isLoginMode) {
+                procesarIngreso(signInWithEmailAndPassword(auth, email, password));
+            } else {
+                procesarIngreso(createUserWithEmailAndPassword(auth, email, password));
+            }
         });
 
         document.getElementById('btn-google').addEventListener('click', () => procesarIngreso(signInWithPopup(auth, providerGoogle)));
