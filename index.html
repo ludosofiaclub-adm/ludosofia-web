@@ -87,13 +87,12 @@
                 <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Cartas</a>
                 <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
                 
-                <!-- MEDALLA DE MEMBRESÍA (Aparece al loguearse) -->
+                <!-- MEDALLA DE MEMBRESÍA -->
                 <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía">
-                    <!-- El ícono se inyecta por JS -->
                 </div>
 
                 <!-- Botón de Ingreso Principal -->
-                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase">
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
                     <span id="login-text-desktop">Ingresar</span>
                 </button>
             </div>
@@ -116,7 +115,7 @@
             <!-- MEDALLA DE MEMBRESÍA MÓVIL -->
             <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
 
-            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase">
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
                 <span id="login-text-mobile">Ingresar</span>
             </button>
         </div>
@@ -288,7 +287,7 @@
         </div>
     </section>
 
-    <!-- CALL TO ACTION: MEMBRESÍAS (AQUÍ PONGA SUS LINKS DE MERCADOPAGO) -->
+    <!-- CALL TO ACTION: MEMBRESÍAS -->
     <section id="unirse" class="py-24 px-6 border-y-[3px] border-xul_ink bg-[#EBB134] relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -353,7 +352,6 @@
                             <span>Participación en atelier de juegos.</span>
                         </li>
                     </ul>
-                    <!-- Ponga aquí su URL de cobro de Mercado Pago en el href="" -->
                     <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
                         Ser Socio
                     </a>
@@ -397,7 +395,6 @@
                             <span>Consultoría mensual incluida.</span>
                         </li>
                     </ul>
-                    <!-- Ponga aquí su URL de cobro de Mercado Pago en el href="" -->
                     <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
                         Ser Socio Fundador
                     </a>
@@ -489,7 +486,6 @@
                 <p class="font-sans text-sm text-gray-600 mt-2">Identifícate para continuar tu partida.</p>
             </div>
 
-            <!-- Formulario de Correo/Clave -->
             <form id="login-form" class="mb-6">
                 <div class="mb-5">
                     <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Correo Electrónico</label>
@@ -535,6 +531,73 @@
             <div class="mt-2 text-center">
                 <span id="toggle-question" class="font-sans text-sm text-gray-600">¿Aún no eres miembro?</span>
                 <a href="#" id="btn-toggle-mode" class="font-bold text-xul_ink hover:text-xul_terra uppercase text-sm tracking-wide ml-1">Regístrate aquí</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ============================================== -->
+    <!-- VENTANA MODAL DE CURSOS (PROGRAMA Y ALUMNI)    -->
+    <!-- ============================================== -->
+    <div id="cursos-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <!-- Fondo oscuro semitransparente -->
+        <div id="cursos-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer"></div>
+        
+        <!-- Caja del Modal -->
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-6 md:p-10 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-[12px_12px_0px_#6BA4C4] transform transition-all">
+            <button id="close-cursos-modal" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+
+            <!-- Título del Modal -->
+            <div class="text-center mb-10">
+                <h3 class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase">Programa de Cursos</h3>
+                <p class="font-sans text-sm text-gray-600 mt-2 font-bold tracking-widest uppercase">Scholē de Ludosofía</p>
+            </div>
+
+            <!-- SECCIÓN 1: Cursos Actuales -->
+            <div class="mb-10">
+                <div class="flex items-center gap-3 mb-4 border-b-2 border-xul_ink pb-2">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-xul_terra"></i>
+                    <h4 class="font-sans font-black text-xl text-xul_ink uppercase tracking-widest">Cursos Actuales</h4>
+                </div>
+                
+                <!-- Tarjeta de Curso Actual -->
+                <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
+                    <div>
+                        <span class="inline-block bg-xul_yellow text-xul_ink text-[10px] font-black uppercase px-2 py-1 tracking-widest mb-2 border border-xul_ink">Inscripciones Abiertas</span>
+                        <h5 class="xul-title font-bold text-2xl text-xul_ink leading-none mb-1">Ontología del Azar</h5>
+                        <p class="font-serif text-sm text-gray-600">La metáfora de la tirada de dados en la filosofía.</p>
+                    </div>
+                    <a href="seminario_azar.html" class="w-full sm:w-auto bg-xul_ink text-white font-bold text-xs text-center uppercase tracking-widest px-5 py-3 hover:bg-xul_blue transition-colors flex-shrink-0">
+                        Ver Programa
+                    </a>
+                </div>
+            </div>
+
+            <!-- SECCIÓN 2: Histórico de Cursos -->
+            <div>
+                <div class="flex items-center gap-3 mb-4 border-b-2 border-gray-300 pb-2">
+                    <i data-lucide="history" class="w-5 h-5 text-gray-500"></i>
+                    <h4 class="font-sans font-black text-lg text-gray-600 uppercase tracking-widest">Histórico (Últimos 3)</h4>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center bg-gray-50 border-2 border-gray-200 p-4 hover:border-xul_blue transition-colors cursor-pointer group">
+                        <div>
+                            <h5 class="font-sans font-bold text-xul_ink group-hover:text-xul_blue transition-colors">Ética para el Fin del Mundo</h5>
+                            <p class="font-serif text-xs text-gray-500 mt-1">Dictado en Marzo 2026</p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[10px] font-bold text-xul_green uppercase tracking-widest mb-1 hidden sm:block">Completado</span>
+                            <i data-lucide="lock" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                
+                <p class="text-center font-sans text-xs text-gray-500 mt-6 italic">
+                    El material de los cursos históricos es exclusivo para miembros activos del Club.
+                </p>
             </div>
         </div>
     </div>
@@ -587,6 +650,10 @@
         const loginBtnDesktop = document.getElementById('login-btn-desktop');
         const loginBtnMobile = document.getElementById('login-btn-mobile');
 
+        // ASIGNAMOS LA ACCIÓN DE ABRIR MODAL POR DEFECTO PARA QUE EL BOTÓN FUNCIONE SIEMPRE
+        loginBtnDesktop.onclick = toggleLoginModal;
+        loginBtnMobile.onclick = toggleLoginModal;
+
         function toggleLoginModal() {
             loginModal.classList.toggle('hidden');
             if(!menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
@@ -604,7 +671,7 @@
         window.toggleCursosModal = () => cursosModal.classList.toggle('hidden');
         document.getElementById('close-cursos-modal').addEventListener('click', toggleCursosModal);
 
-        // --- SISTEMA DE ÍCONOS DE MEMBRESÍA ---
+        // --- SISTEMA DE ÍCONOS DE MEMBRESÍA (SEPARADOS DEL BOTÓN) ---
         function getIconByRole(role) {
             if (role === 'SOCIO FUNDADOR') {
                 return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
@@ -623,6 +690,7 @@
             deskBadge.innerHTML = iconHtml;
             mobBadge.innerHTML = iconHtml;
             
+            // Forzamos visibilidad
             deskBadge.style.display = 'flex';
             mobBadge.style.display = 'flex';
         }
