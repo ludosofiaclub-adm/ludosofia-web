@@ -19,7 +19,7 @@
                         xul_yellow: '#EBB134',
                         xul_green: '#75B07E',
                         xul_pink: '#C96B8C',
-                        xul_orange: '#E87524' /* Nuevo tono anaranjado */
+                        xul_orange: '#E87524' /* Nuevo tono anaranjado para SOCIO */
                     },
                     fontFamily: {
                         serif: ['"Cormorant Garamond"', 'serif'],
@@ -375,7 +375,7 @@
                     </button>
                 </div>
 
-                <!-- MEMBRESÍA 2: SOCIO (AHORA CON TONOS ANARANJADOS) -->
+                <!-- MEMBRESÍA 2: SOCIO -->
                 <div class="bg-[#FDE4D0] border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
                     <div class="mb-6 border-b-2 border-xul_ink pb-6">
                         <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Socio</h3>
@@ -497,24 +497,51 @@
                 <p class="font-sans text-sm text-gray-600 mt-2">Identifícate para continuar tu partida.</p>
             </div>
 
-            <form id="login-form" onsubmit="event.preventDefault(); alert('¡Sistema conectado! Próximamente se integrará con la base de datos.');">
+            <!-- Formulario de Correo/Clave -->
+            <form id="login-form" class="mb-6">
                 <div class="mb-5">
                     <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Usuario o Correo</label>
-                    <input type="text" placeholder="Ej: Sócrates99" required class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all">
+                    <input type="text" placeholder="Ej: socrates@mail.com" required class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all">
                 </div>
-                <div class="mb-8">
+                <div class="mb-6">
                     <div class="flex justify-between items-end mb-2">
                         <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink">Clave Secreta</label>
                         <a href="#" class="text-xs text-xul_terra hover:underline font-bold">¿Olvidaste tu clave?</a>
                     </div>
                     <input type="password" placeholder="••••••••" required class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all">
                 </div>
-                <button type="submit" class="w-full bg-xul_yellow border-[3px] border-xul_ink py-4 font-black text-xl uppercase tracking-widest text-xul_ink shadow-[6px_6px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#2A2A2A] transition-all">
-                    Abrir Puertas
+                <button type="submit" class="w-full bg-xul_yellow border-[3px] border-xul_ink py-3 font-black text-lg uppercase tracking-widest text-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
+                    Entrar con Clave
                 </button>
             </form>
+
+            <div class="flex items-center my-4">
+                <div class="flex-grow border-t-2 border-xul_ink"></div>
+                <span class="px-3 font-bold text-xs uppercase tracking-widest text-gray-500">O ingresa con</span>
+                <div class="flex-grow border-t-2 border-xul_ink"></div>
+            </div>
+
+            <!-- Botones Sociales -->
+            <div class="grid grid-cols-2 gap-3 mb-6">
+                <button id="btn-google" class="flex items-center justify-center gap-2 bg-white border-2 border-xul_ink p-2 font-bold text-sm hover:bg-gray-100 transition-colors">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                    Google
+                </button>
+                <button id="btn-microsoft" class="flex items-center justify-center gap-2 bg-white border-2 border-xul_ink p-2 font-bold text-sm hover:bg-gray-100 transition-colors">
+                    <svg viewBox="0 0 21 21" class="w-5 h-5"><path fill="#f35325" d="M1 1h9v9H1z"/><path fill="#81bc06" d="M11 1h9v9h-9z"/><path fill="#05a6f0" d="M1 11h9v9H1z"/><path fill="#ffba08" d="M11 11h9v9h-9z"/></svg>
+                    Microsoft
+                </button>
+                <button id="btn-facebook" class="flex items-center justify-center gap-2 bg-[#1877F2] border-2 border-xul_ink p-2 font-bold text-sm text-white hover:bg-[#166fe5] transition-colors">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    Facebook
+                </button>
+                <button id="btn-apple" class="flex items-center justify-center gap-2 bg-black border-2 border-xul_ink p-2 font-bold text-sm text-white hover:bg-gray-800 transition-colors">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.641-.026 2.669-1.48 3.665-2.94.114-.165.234-.343.35-.531-1.636-.666-2.825-2.434-2.766-4.453.072-2.316 1.831-3.693 1.942-3.765-1.127-1.657-2.898-1.89-3.524-1.928-1.906-.15-3.682 1.163-4.632 1.163-.949 0-2.443-1.082-3.32-1.01zM15.984 4.545c.801-.97 1.341-2.321 1.194-3.666-1.159.047-2.585.772-3.42 1.769-.675.795-1.285 2.181-1.111 3.493 1.294.1 2.541-.628 3.337-1.596z"/></svg>
+                    Apple
+                </button>
+            </div>
             
-            <div class="mt-6 text-center">
+            <div class="mt-2 text-center">
                 <span class="font-sans text-sm text-gray-600">¿Aún no eres miembro?</span>
                 <a href="#unirse" onclick="document.getElementById('login-modal').classList.add('hidden')" class="font-bold text-xul_ink hover:text-xul_terra uppercase text-sm tracking-wide ml-1">Únete al Club</a>
             </div>
@@ -617,27 +644,47 @@
     </div>
 
 
-    <script>
-        lucide.createIcons();
+    <script type="module">
+        // 1. IMPORTAMOS LAS HERRAMIENTAS DIRECTO DESDE LOS SERVIDORES DE GOOGLE
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword, 
+            signInWithPopup, 
+            GoogleAuthProvider, 
+            FacebookAuthProvider, 
+            OAuthProvider 
+        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-        // --- LÓGICA DEL MENÚ MÓVIL ---
+        // 2. SU CONFIGURACIÓN REAL DE LUDOSOFÍA
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7",
+            storageBucket: "ludosofia-1cdc7.firebasestorage.app",
+            messagingSenderId: "542040294003",
+            appId: "1:542040294003:web:466f0156db6665a2482006",
+            measurementId: "G-MY88C9F4B0"
+        };
+
+        // 3. INICIAMOS EL MOTOR Y LA ANALÍTICA
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+
+        // Proveedores Sociales
+        const providerGoogle = new GoogleAuthProvider();
+        const providerFacebook = new FacebookAuthProvider();
+        const providerApple = new OAuthProvider('apple.com');
+        const providerMicrosoft = new OAuthProvider('microsoft.com');
+
+        // --- INTERFAZ BÁSICA (Menús y Modales) ---
+        lucide.createIcons();
         const btnMenu = document.getElementById('mobile-menu-btn');
         const menuMobile = document.getElementById('mobile-menu');
-        const linksMobile = document.querySelectorAll('.mobile-link');
+        btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
 
-        btnMenu.addEventListener('click', () => {
-            menuMobile.classList.toggle('hidden');
-        });
-
-        linksMobile.forEach(link => {
-            link.addEventListener('click', () => {
-                if(link.id !== 'login-btn-mobile') {
-                    menuMobile.classList.add('hidden');
-                }
-            });
-        });
-
-        // --- LÓGICA DE LA VENTANA DE INGRESO (MODAL LOGIN) ---
         const loginModal = document.getElementById('login-modal');
         const loginBtnDesktop = document.getElementById('login-btn-desktop');
         const loginBtnMobile = document.getElementById('login-btn-mobile');
@@ -646,9 +693,7 @@
 
         function toggleLoginModal() {
             loginModal.classList.toggle('hidden');
-            if(!menuMobile.classList.contains('hidden')) {
-                menuMobile.classList.add('hidden');
-            }
+            if(!menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
         }
 
         loginBtnDesktop.addEventListener('click', toggleLoginModal);
@@ -656,21 +701,67 @@
         closeModalBtn.addEventListener('click', toggleLoginModal);
         loginOverlay.addEventListener('click', toggleLoginModal);
 
-
-        // --- LÓGICA DE LA VENTANA DE CURSOS (MODAL CURSOS) ---
         const cursosModal = document.getElementById('cursos-modal');
         const closeCursosBtn = document.getElementById('close-cursos-modal');
-        const cursosOverlay = document.getElementById('cursos-overlay');
+        window.toggleCursosModal = () => cursosModal.classList.toggle('hidden');
+        closeCursosBtn.addEventListener('click', toggleCursosModal);
 
-        function toggleCursosModal() {
-            cursosModal.classList.toggle('hidden');
+        // --- LÓGICA DE LOGIN ---
+        
+        // Función general para procesar el ingreso exitoso
+        function procesarIngresoExitoso(usuario) {
+            // Asignamos "FUNDADOR" temporalmente para que pueda navegar sin bloqueos
+            // hasta que conectemos la base de datos de roles.
+            localStorage.setItem('rol_usuario', 'FUNDADOR');
+            alert(`¡Bienvenido al Ágora, ${usuario.displayName || usuario.email}!`);
+            toggleLoginModal();
+            window.location.reload(); 
         }
 
-        // Se hace global para poder llamarla desde el onclick del HTML
-        window.toggleCursosModal = toggleCursosModal;
+        // Ingreso por Correo y Contraseña
+        document.getElementById('login-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const email = event.target.querySelectorAll('input')[0].value;
+            const password = event.target.querySelectorAll('input')[1].value;
 
-        closeCursosBtn.addEventListener('click', toggleCursosModal);
-        cursosOverlay.addEventListener('click', toggleCursosModal);
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => procesarIngresoExitoso(userCredential.user))
+                .catch((error) => {
+                    if (error.code === 'auth/invalid-credential') {
+                        alert('Las credenciales no son válidas. Verifique su correo o clave secreta.');
+                    } else {
+                        alert('Error al ingresar: ' + error.message);
+                    }
+                });
+        });
+
+        // Ingreso con Google
+        document.getElementById('btn-google').addEventListener('click', () => {
+            signInWithPopup(auth, providerGoogle)
+                .then((result) => procesarIngresoExitoso(result.user))
+                .catch((error) => alert('Error con Google: ' + error.message));
+        });
+
+        // Ingreso con Facebook
+        document.getElementById('btn-facebook').addEventListener('click', () => {
+            signInWithPopup(auth, providerFacebook)
+                .then((result) => procesarIngresoExitoso(result.user))
+                .catch((error) => alert('Error con Facebook. Asegúrese de haber configurado el App ID en Firebase.'));
+        });
+
+        // Ingreso con Apple
+        document.getElementById('btn-apple').addEventListener('click', () => {
+            signInWithPopup(auth, providerApple)
+                .then((result) => procesarIngresoExitoso(result.user))
+                .catch((error) => alert('Error con Apple. Requiere configuración de cuenta de desarrollador.'));
+        });
+
+        // Ingreso con Microsoft
+        document.getElementById('btn-microsoft').addEventListener('click', () => {
+            signInWithPopup(auth, providerMicrosoft)
+                .then((result) => procesarIngresoExitoso(result.user))
+                .catch((error) => alert('Error con Microsoft. Requiere registro en Azure AD.'));
+        });
 
     </script>
 </body>
