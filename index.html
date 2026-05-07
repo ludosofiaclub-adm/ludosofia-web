@@ -287,7 +287,7 @@
         </div>
     </section>
 
-    <!-- CALL TO ACTION: MEMBRESÍAS -->
+    <!-- CALL TO ACTION: MEMBRESÍAS (AQUÍ PONGA SUS LINKS DE MERCADOPAGO) -->
     <section id="unirse" class="py-24 px-6 border-y-[3px] border-xul_ink bg-[#EBB134] relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -352,6 +352,7 @@
                             <span>Participación en atelier de juegos.</span>
                         </li>
                     </ul>
+                    <!-- Ponga aquí su URL de cobro de Mercado Pago en el href="" -->
                     <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
                         Ser Socio
                     </a>
@@ -395,6 +396,7 @@
                             <span>Consultoría mensual incluida.</span>
                         </li>
                     </ul>
+                    <!-- Ponga aquí su URL de cobro de Mercado Pago en el href="" -->
                     <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
                         Ser Socio Fundador
                     </a>
@@ -486,6 +488,7 @@
                 <p class="font-sans text-sm text-gray-600 mt-2">Identifícate para continuar tu partida.</p>
             </div>
 
+            <!-- Formulario de Correo/Clave -->
             <form id="login-form" class="mb-6">
                 <div class="mb-5">
                     <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Correo Electrónico</label>
@@ -650,7 +653,6 @@
         const loginBtnDesktop = document.getElementById('login-btn-desktop');
         const loginBtnMobile = document.getElementById('login-btn-mobile');
 
-        // ASIGNAMOS LA ACCIÓN DE ABRIR MODAL POR DEFECTO PARA QUE EL BOTÓN FUNCIONE SIEMPRE
         loginBtnDesktop.onclick = toggleLoginModal;
         loginBtnMobile.onclick = toggleLoginModal;
 
@@ -671,14 +673,18 @@
         window.toggleCursosModal = () => cursosModal.classList.toggle('hidden');
         document.getElementById('close-cursos-modal').addEventListener('click', toggleCursosModal);
 
-        // --- SISTEMA DE ÍCONOS DE MEMBRESÍA (SEPARADOS DEL BOTÓN) ---
+        // --- SISTEMA DE ÍCONOS DE MEMBRESÍA INTELIGENTE ---
         function getIconByRole(role) {
-            if (role === 'SOCIO FUNDADOR') {
+            // Buscamos la palabra sin importar mayúsculas, minúsculas o si faltó "Socio"
+            const r = (role || '').toUpperCase().trim();
+            
+            if (r.includes('FUNDADOR')) {
                 return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
             }
-            if (role === 'SOCIO') {
+            if (r.includes('SOCIO')) {
                 return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
             }
+            // Por defecto: PÚBLICO
             return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
         }
 
@@ -690,7 +696,6 @@
             deskBadge.innerHTML = iconHtml;
             mobBadge.innerHTML = iconHtml;
             
-            // Forzamos visibilidad
             deskBadge.style.display = 'flex';
             mobBadge.style.display = 'flex';
         }
