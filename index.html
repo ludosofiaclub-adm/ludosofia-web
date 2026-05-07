@@ -19,7 +19,7 @@
                         xul_yellow: '#EBB134',
                         xul_green: '#75B07E',
                         xul_pink: '#C96B8C',
-                        xul_orange: '#E87524' /* Tono anaranjado para SOCIO */
+                        xul_orange: '#E87524'
                     },
                     fontFamily: {
                         serif: ['"Cormorant Garamond"', 'serif'],
@@ -88,8 +88,9 @@
                 <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Cartas</a>
                 <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
                 <!-- Botón de Ingreso Principal -->
-                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase">
-                    Ingresar
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="badge-icon-desktop" class="hidden"></span>
+                    <span id="login-text-desktop">Ingresar</span>
                 </button>
             </div>
             
@@ -107,8 +108,9 @@
             <a href="#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
             <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
             <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
-            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full block uppercase">
-                Ingresar
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="badge-icon-mobile" class="hidden"></span>
+                <span id="login-text-mobile">Ingresar</span>
             </button>
         </div>
     </nav>
@@ -717,6 +719,24 @@
         window.toggleCursosModal = () => cursosModal.classList.toggle('hidden');
         document.getElementById('close-cursos-modal').addEventListener('click', toggleCursosModal);
 
+        // --- SISTEMA DE ÍCONOS DE MEMBRESÍA ---
+        function getIconByRole(role) {
+            // Corona para FUNDADOR
+            if (role === 'SOCIO FUNDADOR') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            // Medalla/Escarapela para SOCIO
+            if (role === 'SOCIO') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            // Usuario clásico para PÚBLICO
+            return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+        }
+
+        function updateUIWithRole(rol) {
+            const iconHtml = getIconByRole(rol);
+            document.getElementById('badge-icon-desktop').innerHTML = iconHtml;
+            document.getElementById('badge-icon-mobile').innerHTML = iconHtml;
+            document.getElementById('badge-icon-desktop').classList.remove('hidden');
+            document.getElementById('badge-icon-mobile').classList.remove('hidden');
+        }
+
         // 4. LÓGICA DE USUARIO Y BASE DE DATOS
         let usuarioActual = null;
 
@@ -728,9 +748,9 @@
                 // Extraer el nombre o el correo antes de la @
                 const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
                 
-                // Cambiar el botón al estar logueado
-                loginBtnDesktop.innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
-                loginBtnMobile.innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
+                // Cambiar el texto del botón al estar logueado
+                document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
+                document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
                 
                 // Cambiar a dónde lleva el botón
                 loginBtnDesktop.onclick = toggleProfileModal;
@@ -747,6 +767,7 @@
                     const datos = docSnap.data();
                     localStorage.setItem('rol_usuario', datos.rol);
                     document.getElementById('profile-role').innerText = datos.rol;
+                    updateUIWithRole(datos.rol);
                 } else {
                     // Si es nuevo, lo anotamos en la base de datos como PUBLICO
                     await setDoc(userRef, {
@@ -756,12 +777,17 @@
                     });
                     localStorage.setItem('rol_usuario', 'PUBLICO');
                     document.getElementById('profile-role').innerText = 'PÚBLICO';
+                    updateUIWithRole('PUBLICO');
                 }
             } else {
                 // Nadie logueado
                 usuarioActual = null;
-                loginBtnDesktop.innerText = 'INGRESAR';
-                loginBtnMobile.innerText = 'INGRESAR';
+                document.getElementById('login-text-desktop').innerText = 'INGRESAR';
+                document.getElementById('login-text-mobile').innerText = 'INGRESAR';
+                
+                document.getElementById('badge-icon-desktop').classList.add('hidden');
+                document.getElementById('badge-icon-mobile').classList.add('hidden');
+                
                 loginBtnDesktop.onclick = toggleLoginModal;
                 loginBtnMobile.onclick = toggleLoginModal;
                 localStorage.removeItem('rol_usuario');
@@ -771,7 +797,7 @@
         // 5. ACCIONES DE INGRESO
         function procesarIngreso(promesaIngreso) {
             promesaIngreso.then((result) => {
-                // Extraemos el nombre para saludarlo amablemente
+                // Extraemos el nombre para saludarlo
                 const nombreMostrar = result.user.displayName ? result.user.displayName.split(' ')[0] : result.user.email.split('@')[0];
                 
                 mostrarAlerta('Ingreso Exitoso', `¡Todo listo para jugar, ${nombreMostrar}!`, '#75B07E');
