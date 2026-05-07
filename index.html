@@ -86,9 +86,14 @@
                 <a href="#ludoteca" class="hover:text-xul_terra transition">Ludoteca</a>
                 <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Cartas</a>
                 <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
+                
+                <!-- MEDALLA DE MEMBRESÍA (Aparece al loguearse) -->
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía">
+                    <!-- El ícono se inyecta por JS -->
+                </div>
+
                 <!-- Botón de Ingreso Principal -->
-                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
-                    <div id="badge-icon-desktop" class="flex items-center justify-center"></div>
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase">
                     <span id="login-text-desktop">Ingresar</span>
                 </button>
             </div>
@@ -107,8 +112,11 @@
             <a href="#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
             <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
             <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
-            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
-                <div id="badge-icon-mobile" class="flex items-center justify-center"></div>
+            
+            <!-- MEDALLA DE MEMBRESÍA MÓVIL -->
+            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
+
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase">
                 <span id="login-text-mobile">Ingresar</span>
             </button>
         </div>
@@ -177,14 +185,9 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Cursos Interactivos -->
                 <div class="bg-xul_paper p-8 xul-border hover:bg-xul_yellow transition-colors group flex flex-col items-start">
                     <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
-                            <path d="M 10 35 L 40 35 L 40 15 L 10 15 Z" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <path d="M 25 15 V 35" stroke="currentColor" stroke-width="2"/>
-                            <polyline points="15,25 20,25 20,20 25,20" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </svg>
+                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink"><path d="M 10 35 L 40 35 L 40 15 L 10 15 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M 25 15 V 35" stroke="currentColor" stroke-width="2"/><polyline points="15,25 20,25 20,20 25,20" fill="none" stroke="currentColor" stroke-width="2"/></svg>
                     </div>
                     <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Cursos interactivos</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6 flex-grow">
@@ -195,13 +198,9 @@
                     </button>
                 </div>
 
-                <!-- Talleres de Juego -->
                 <div class="bg-xul_paper p-8 xul-border hover:bg-xul_terra transition-colors group">
                     <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
-                            <polygon points="15,35 25,15 35,35" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <rect x="20" y="25" width="10" height="10" fill="currentColor"/>
-                        </svg>
+                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink"><polygon points="15,35 25,15 35,35" fill="none" stroke="currentColor" stroke-width="2"/><rect x="20" y="25" width="10" height="10" fill="currentColor"/></svg>
                     </div>
                     <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Atelier de juegos</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
@@ -210,16 +209,9 @@
                     <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Próximo Taller →</a>
                 </div>
 
-                <!-- Capacitaciones -->
                 <div class="bg-xul_paper p-8 xul-border hover:bg-xul_blue transition-colors group">
                     <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink">
-                            <circle cx="25" cy="20" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <line x1="25" y1="30" x2="25" y2="40" stroke="currentColor" stroke-width="2"/>
-                            <line x1="15" y1="10" x2="20" y2="15" stroke="currentColor" stroke-width="2"/>
-                            <line x1="35" y1="10" x2="30" y2="15" stroke="currentColor" stroke-width="2"/>
-                            <line x1="10" y1="20" x2="15" y2="20" stroke="currentColor" stroke-width="2"/>
-                        </svg>
+                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink"><circle cx="25" cy="20" r="10" fill="none" stroke="currentColor" stroke-width="2"/><line x1="25" y1="30" x2="25" y2="40" stroke="currentColor" stroke-width="2"/><line x1="15" y1="10" x2="20" y2="15" stroke="currentColor" stroke-width="2"/><line x1="35" y1="10" x2="30" y2="15" stroke="currentColor" stroke-width="2"/><line x1="10" y1="20" x2="15" y2="20" stroke="currentColor" stroke-width="2"/></svg>
                     </div>
                     <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Capacitaciones y consultoría</h4>
                     <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
@@ -244,104 +236,59 @@
                 
                 <div class="bg-white p-8 xul-border flex flex-col" style="box-shadow: 6px 6px 0px #C96B8C;">
                     <div class="w-16 h-16 bg-xul_pink border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink">
-                            <path d="M10 15 Q25 5 40 15 L45 35 Q25 45 5 35 Z" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <line x1="20" y1="20" x2="30" y2="20" stroke="currentColor" stroke-width="2"/>
-                            <circle cx="18" cy="25" r="2" fill="currentColor"/>
-                            <circle cx="32" cy="25" r="2" fill="currentColor"/>
-                        </svg>
+                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><path d="M10 15 Q25 5 40 15 L45 35 Q25 45 5 35 Z" fill="none" stroke="currentColor" stroke-width="2"/><line x1="20" y1="20" x2="30" y2="20" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="25" r="2" fill="currentColor"/><circle cx="32" cy="25" r="2" fill="currentColor"/></svg>
                     </div>
                     <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Juegos de rol</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Ponte la máscara de los grandes maestros. Encarna a un pensador y defiende su visión del mundo en debates inmersivos, asumiendo su filosofía como propia.
-                    </p>
+                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Ponte la máscara de los grandes maestros. Encarna a un pensador y defiende su visión del mundo en debates inmersivos, asumiendo su filosofía como propia.</p>
                 </div>
 
                 <div class="bg-white p-8 xul-border flex flex-col" style="box-shadow: 6px 6px 0px #6BA4C4;">
                     <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink">
-                            <polygon points="25,10 45,20 25,30 5,20" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <polygon points="25,30 45,20 45,40 25,50" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <polygon points="5,20 25,30 25,50 5,40" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </svg>
+                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><polygon points="25,10 45,20 25,30 5,20" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="25,30 45,20 45,40 25,50" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="5,20 25,30 25,50 5,40" fill="none" stroke="currentColor" stroke-width="2"/></svg>
                     </div>
                     <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Juegos de tablero</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Despliega tus ideas. Gestiona recursos lógicos, conecta conceptos y mueve tus premisas sobre tableros isométricos para cartografiar el pensamiento humano.
-                    </p>
+                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Despliega tus ideas. Gestiona recursos lógicos, conecta conceptos y mueve tus premisas sobre tableros isométricos para cartografiar el pensamiento humano.</p>
                 </div>
 
                 <div class="bg-white p-8 xul-border flex flex-col relative group cursor-pointer" onclick="window.location.href='seccion_mazos.html'" style="box-shadow: 6px 6px 0px #EBB134;">
                     <div class="w-16 h-16 bg-xul_yellow border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A] group-hover:scale-110 transition-transform">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink">
-                            <rect x="10" y="20" width="30" height="20" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <polyline points="10,20 25,30 40,20" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <path d="M 15 10 L 35 10 L 30 20 L 20 20 Z" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </svg>
+                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><rect x="10" y="20" width="30" height="20" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="10,20 25,30 40,20" fill="none" stroke="currentColor" stroke-width="2"/><path d="M 15 10 L 35 10 L 30 20 L 20 20 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
                     </div>
                     <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink group-hover:text-xul_terra transition-colors">Cartas para jugar y pensar</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Colección de cartas con infinidad de posibilidades. Arma escenarios únicos, resuelve dilemas y desbloquea nuevas variantes de juego.
-                    </p>
-                    <div class="mt-4 text-xul_yellow font-bold uppercase text-sm flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        Ver Colección →
-                    </div>
+                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Colección de cartas con infinidad de posibilidades. Arma escenarios únicos, resuelve dilemas y desbloquea nuevas variantes de juego.</p>
+                    <div class="mt-4 text-xul_yellow font-bold uppercase text-sm flex items-center opacity-0 group-hover:opacity-100 transition-opacity">Ver Colección →</div>
                 </div>
 
                 <div class="bg-white p-8 xul-border flex flex-col relative group cursor-pointer" onclick="window.location.href='index_hack.html'" style="box-shadow: 6px 6px 0px #D1623A;">
                     <div class="w-16 h-16 bg-xul_terra border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A] group-hover:scale-110 transition-transform">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink">
-                            <path d="M 25 10 C 30 10 32 15 25 25 C 18 15 20 10 25 10 Z" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <line x1="15" y1="40" x2="35" y2="40" stroke="currentColor" stroke-width="2"/>
-                            <path d="M 20 40 L 25 25 L 30 40 Z" fill="none" stroke="currentColor" stroke-width="2"/>
-                        </svg>
+                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><path d="M 25 10 C 30 10 32 15 25 25 C 18 15 20 10 25 10 Z" fill="none" stroke="currentColor" stroke-width="2"/><line x1="15" y1="40" x2="35" y2="40" stroke="currentColor" stroke-width="2"/><path d="M 20 40 L 25 25 L 30 40 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
                     </div>
                     <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink group-hover:text-xul_terra transition-colors">Clásicos hackeados</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Variantes filosóficas de juegos clásicos y no tanto. Ajedrez Hegelhiano, Go Taoísta, Póker Dialéctico y mucho más.
-                    </p>
-                    <div class="mt-4 text-xul_terra font-bold uppercase text-sm flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
-                        Ver Catálogo →
-                    </div>
+                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Variantes filosóficas de juegos clásicos y no tanto. Ajedrez Hegelhiano, Go Taoísta, Póker Dialéctico y mucho más.</p>
+                    <div class="mt-4 text-xul_terra font-bold uppercase text-sm flex items-center opacity-0 group-hover:opacity-100 transition-opacity">Ver Catálogo →</div>
                 </div>
 
                 <div class="bg-white p-8 xul-border flex flex-col" style="box-shadow: 6px 6px 0px #2A2A2A;">
                     <div class="w-16 h-16 bg-xul_paper border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#D1623A]">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink">
-                            <circle cx="25" cy="25" r="15" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <circle cx="25" cy="25" r="5" fill="currentColor"/>
-                            <line x1="25" y1="5" x2="25" y2="10" stroke="currentColor" stroke-width="2"/>
-                            <line x1="25" y1="40" x2="25" y2="45" stroke="currentColor" stroke-width="2"/>
-                            <line x1="5" y1="25" x2="10" y2="25" stroke="currentColor" stroke-width="2"/>
-                            <line x1="40" y1="25" x2="45" y2="25" stroke="currentColor" stroke-width="2"/>
-                        </svg>
+                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><circle cx="25" cy="25" r="15" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="25" cy="25" r="5" fill="currentColor"/><line x1="25" y1="5" x2="25" y2="10" stroke="currentColor" stroke-width="2"/><line x1="25" y1="40" x2="25" y2="45" stroke="currentColor" stroke-width="2"/><line x1="5" y1="25" x2="10" y2="25" stroke="currentColor" stroke-width="2"/><line x1="40" y1="25" x2="45" y2="25" stroke="currentColor" stroke-width="2"/></svg>
                     </div>
                     <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Todos los juegos, el juego</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Recursos teóricos y ficcionales para conocer más sobre las relaciones entre filosofía y juego.
-                    </p>
+                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Recursos teóricos y ficcionales para conocer más sobre las relaciones entre filosofía y juego.</p>
                 </div>
                 
                 <div class="bg-white p-8 xul-border flex flex-col" style="box-shadow: 6px 6px 0px #75B07E;">
                     <div class="w-16 h-16 bg-xul_green border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink">
-                            <rect x="10" y="10" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"/>
-                            <text x="13" y="22" font-family="'Cormorant Garamond', serif" font-weight="bold" font-size="12" fill="currentColor">A</text>
-                            <rect x="25" y="25" width="15" height="15" fill="#EBB134" stroke="currentColor" stroke-width="2"/>
-                            <text x="28" y="37" font-family="'Cormorant Garamond', serif" font-weight="bold" font-size="12" fill="currentColor">Ω</text>
-                        </svg>
+                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><rect x="10" y="10" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"/><text x="13" y="22" font-family="'Cormorant Garamond', serif" font-weight="bold" font-size="12" fill="currentColor">A</text><rect x="25" y="25" width="15" height="15" fill="#EBB134" stroke="currentColor" stroke-width="2"/><text x="28" y="37" font-family="'Cormorant Garamond', serif" font-weight="bold" font-size="12" fill="currentColor">Ω</text></svg>
                     </div>
                     <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Alquimia de letras</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">
-                        Juegos, actividades y propuestas para todo el mundo. Mezcla conceptos e inventa neologismos en duelos de asociación libre.
-                    </p>
+                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Juegos, actividades y propuestas para todo el mundo. Mezcla conceptos e inventa neologismos en duelos de asociación libre.</p>
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- CALL TO ACTION: MEMBRESÍAS -->
+    <!-- CALL TO ACTION: MEMBRESÍAS (AQUÍ PONGA SUS LINKS DE MERCADOPAGO) -->
     <section id="unirse" class="py-24 px-6 border-y-[3px] border-xul_ink bg-[#EBB134] relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -374,7 +321,6 @@
                             <span>Newsletter semanal.</span>
                         </li>
                     </ul>
-                    <!-- Para el público, el registro es en la propia web -->
                     <button onclick="document.getElementById('login-modal').classList.remove('hidden')" class="w-full bg-white border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-xul_blue hover:text-white transition-colors mt-auto">
                         Sumarse
                     </button>
@@ -407,10 +353,10 @@
                             <span>Participación en atelier de juegos.</span>
                         </li>
                     </ul>
-                    <!-- Aquí irá su link de MercadoPago -->
-                    <button class="w-full bg-xul_orange border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
+                    <!-- Ponga aquí su URL de cobro de Mercado Pago en el href="" -->
+                    <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
                         Ser Socio
-                    </button>
+                    </a>
                 </div>
 
                 <!-- MEMBRESÍA 3: SOCIO FUNDADOR -->
@@ -451,10 +397,10 @@
                             <span>Consultoría mensual incluida.</span>
                         </li>
                     </ul>
-                    <!-- Aquí irá su link de MercadoPago -->
-                    <button class="w-full bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
-                        Ser Fundador
-                    </button>
+                    <!-- Ponga aquí su URL de cobro de Mercado Pago en el href="" -->
+                    <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
+                        Ser Socio Fundador
+                    </a>
                 </div>
             </div>
         </div>
@@ -594,75 +540,7 @@
     </div>
 
 
-    <!-- ============================================== -->
-    <!-- VENTANA MODAL DE CURSOS (PROGRAMA Y ALUMNI)    -->
-    <!-- ============================================== -->
-    <div id="cursos-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <!-- Fondo oscuro semitransparente -->
-        <div id="cursos-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer"></div>
-        
-        <!-- Caja del Modal -->
-        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-6 md:p-10 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-[12px_12px_0px_#6BA4C4] transform transition-all">
-            <button id="close-cursos-modal" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none">
-                <i data-lucide="x" class="w-8 h-8"></i>
-            </button>
-
-            <!-- Título del Modal -->
-            <div class="text-center mb-10">
-                <h3 class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase">Programa de Cursos</h3>
-                <p class="font-sans text-sm text-gray-600 mt-2 font-bold tracking-widest uppercase">Scholē de Ludosofía</p>
-            </div>
-
-            <!-- SECCIÓN 1: Cursos Actuales -->
-            <div class="mb-10">
-                <div class="flex items-center gap-3 mb-4 border-b-2 border-xul_ink pb-2">
-                    <i data-lucide="sparkles" class="w-5 h-5 text-xul_terra"></i>
-                    <h4 class="font-sans font-black text-xl text-xul_ink uppercase tracking-widest">Cursos Actuales</h4>
-                </div>
-                
-                <!-- Tarjeta de Curso Actual -->
-                <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
-                    <div>
-                        <span class="inline-block bg-xul_yellow text-xul_ink text-[10px] font-black uppercase px-2 py-1 tracking-widest mb-2 border border-xul_ink">Inscripciones Abiertas</span>
-                        <h5 class="xul-title font-bold text-2xl text-xul_ink leading-none mb-1">Ontología del Azar</h5>
-                        <p class="font-serif text-sm text-gray-600">La metáfora de la tirada de dados en la filosofía.</p>
-                    </div>
-                    <a href="seminario_azar.html" class="w-full sm:w-auto bg-xul_ink text-white font-bold text-xs text-center uppercase tracking-widest px-5 py-3 hover:bg-xul_blue transition-colors flex-shrink-0">
-                        Ver Programa
-                    </a>
-                </div>
-            </div>
-
-            <!-- SECCIÓN 2: Histórico de Cursos -->
-            <div>
-                <div class="flex items-center gap-3 mb-4 border-b-2 border-gray-300 pb-2">
-                    <i data-lucide="history" class="w-5 h-5 text-gray-500"></i>
-                    <h4 class="font-sans font-black text-lg text-gray-600 uppercase tracking-widest">Histórico (Últimos 3)</h4>
-                </div>
-                
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center bg-gray-50 border-2 border-gray-200 p-4 hover:border-xul_blue transition-colors cursor-pointer group">
-                        <div>
-                            <h5 class="font-sans font-bold text-xul_ink group-hover:text-xul_blue transition-colors">Ética para el Fin del Mundo</h5>
-                            <p class="font-serif text-xs text-gray-500 mt-1">Dictado en Marzo 2026</p>
-                        </div>
-                        <div class="flex flex-col items-end">
-                            <span class="text-[10px] font-bold text-xul_green uppercase tracking-widest mb-1 hidden sm:block">Completado</span>
-                            <i data-lucide="lock" class="w-4 h-4 text-gray-400"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <p class="text-center font-sans text-xs text-gray-500 mt-6 italic">
-                    El material de los cursos históricos es exclusivo para miembros activos del Club.
-                </p>
-            </div>
-        </div>
-    </div>
-
-
     <script type="module">
-        // 1. IMPORTACIONES
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
         import { 
@@ -671,7 +549,6 @@
         } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // 2. CONFIGURACIÓN
         const firebaseConfig = {
             apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
             authDomain: "ludosofia-1cdc7.firebaseapp.com",
@@ -694,7 +571,6 @@
 
         lucide.createIcons();
 
-        // 3. FUNCIONES DE MODALES Y ALERTA PERSONALIZADA
         const btnMenu = document.getElementById('mobile-menu-btn');
         const menuMobile = document.getElementById('mobile-menu');
         btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
@@ -730,15 +606,25 @@
 
         // --- SISTEMA DE ÍCONOS DE MEMBRESÍA ---
         function getIconByRole(role) {
-            if (role === 'SOCIO FUNDADOR') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink flex-shrink-0"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
-            if (role === 'SOCIO') return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink flex-shrink-0"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
-            return '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-xul_ink flex-shrink-0"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+            if (role === 'SOCIO FUNDADOR') {
+                return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            }
+            if (role === 'SOCIO') {
+                return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            }
+            return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
         }
 
         function updateUIWithRole(rol) {
             const iconHtml = getIconByRole(rol);
-            document.getElementById('badge-icon-desktop').innerHTML = iconHtml;
-            document.getElementById('badge-icon-mobile').innerHTML = iconHtml;
+            const deskBadge = document.getElementById('badge-container-desktop');
+            const mobBadge = document.getElementById('badge-container-mobile');
+            
+            deskBadge.innerHTML = iconHtml;
+            mobBadge.innerHTML = iconHtml;
+            
+            deskBadge.style.display = 'flex';
+            mobBadge.style.display = 'flex';
         }
 
         // 4. LÓGICA DE USUARIO Y BASE DE DATOS
@@ -785,8 +671,8 @@
                 document.getElementById('login-text-desktop').innerText = 'INGRESAR';
                 document.getElementById('login-text-mobile').innerText = 'INGRESAR';
                 
-                document.getElementById('badge-icon-desktop').innerHTML = '';
-                document.getElementById('badge-icon-mobile').innerHTML = '';
+                document.getElementById('badge-container-desktop').style.display = 'none';
+                document.getElementById('badge-container-mobile').style.display = 'none';
                 
                 loginBtnDesktop.onclick = toggleLoginModal;
                 loginBtnMobile.onclick = toggleLoginModal;
