@@ -352,7 +352,6 @@
                             <span>Participación en atelier de juegos.</span>
                         </li>
                     </ul>
-                    <!-- Ponga aquí su URL de cobro de Mercado Pago en el href="" -->
                     <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
                         Ser Socio
                     </a>
@@ -396,7 +395,6 @@
                             <span>Consultoría mensual incluida.</span>
                         </li>
                     </ul>
-                    <!-- Ponga aquí su URL de cobro de Mercado Pago en el href="" -->
                     <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
                         Ser Socio Fundador
                     </a>
@@ -537,6 +535,58 @@
         </div>
     </div>
 
+    <!-- ============================================== -->
+    <!-- VENTANA MODAL DE CURSOS (PROGRAMA Y ALUMNI)    -->
+    <!-- ============================================== -->
+    <div id="cursos-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div id="cursos-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-6 md:p-10 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-[12px_12px_0px_#6BA4C4] transform transition-all">
+            <button id="close-cursos-modal" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <div class="text-center mb-10">
+                <h3 class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase">Programa de Cursos</h3>
+                <p class="font-sans text-sm text-gray-600 mt-2 font-bold tracking-widest uppercase">Scholē de Ludosofía</p>
+            </div>
+            <div class="mb-10">
+                <div class="flex items-center gap-3 mb-4 border-b-2 border-xul_ink pb-2">
+                    <i data-lucide="sparkles" class="w-5 h-5 text-xul_terra"></i>
+                    <h4 class="font-sans font-black text-xl text-xul_ink uppercase tracking-widest">Cursos Actuales</h4>
+                </div>
+                <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
+                    <div>
+                        <span class="inline-block bg-xul_yellow text-xul_ink text-[10px] font-black uppercase px-2 py-1 tracking-widest mb-2 border border-xul_ink">Inscripciones Abiertas</span>
+                        <h5 class="xul-title font-bold text-2xl text-xul_ink leading-none mb-1">Ontología del Azar</h5>
+                        <p class="font-serif text-sm text-gray-600">La metáfora de la tirada de dados en la filosofía.</p>
+                    </div>
+                    <a href="seminario_azar.html" class="w-full sm:w-auto bg-xul_ink text-white font-bold text-xs text-center uppercase tracking-widest px-5 py-3 hover:bg-xul_blue transition-colors flex-shrink-0">
+                        Ver Programa
+                    </a>
+                </div>
+            </div>
+            <div>
+                <div class="flex items-center gap-3 mb-4 border-b-2 border-gray-300 pb-2">
+                    <i data-lucide="history" class="w-5 h-5 text-gray-500"></i>
+                    <h4 class="font-sans font-black text-lg text-gray-600 uppercase tracking-widest">Histórico (Últimos 3)</h4>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center bg-gray-50 border-2 border-gray-200 p-4 hover:border-xul_blue transition-colors cursor-pointer group">
+                        <div>
+                            <h5 class="font-sans font-bold text-xul_ink group-hover:text-xul_blue transition-colors">Ética para el Fin del Mundo</h5>
+                            <p class="font-serif text-xs text-gray-500 mt-1">Dictado en Marzo 2026</p>
+                        </div>
+                        <div class="flex flex-col items-end">
+                            <span class="text-[10px] font-bold text-xul_green uppercase tracking-widest mb-1 hidden sm:block">Completado</span>
+                            <i data-lucide="lock" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center font-sans text-xs text-gray-500 mt-6 italic">
+                    El material de los cursos históricos es exclusivo para miembros activos del Club.
+                </p>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -569,6 +619,7 @@
 
         lucide.createIcons();
 
+        // --- NAVEGACIÓN Y MODALES ---
         const btnMenu = document.getElementById('mobile-menu-btn');
         const menuMobile = document.getElementById('mobile-menu');
         btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
@@ -585,7 +636,7 @@
         const loginBtnDesktop = document.getElementById('login-btn-desktop');
         const loginBtnMobile = document.getElementById('login-btn-mobile');
 
-        // Acción por defecto al abrir la página
+        // IMPORTANTE: Devolvemos la acción original al botón para que no se quede bloqueado
         loginBtnDesktop.onclick = toggleLoginModal;
         loginBtnMobile.onclick = toggleLoginModal;
 
@@ -606,7 +657,7 @@
         window.toggleCursosModal = () => cursosModal.classList.toggle('hidden');
         document.getElementById('close-cursos-modal').addEventListener('click', toggleCursosModal);
 
-        // --- SISTEMA DE ÍCONOS ---
+        // --- SISTEMA DE ÍCONOS DE MEMBRESÍA INTELIGENTE ---
         function getIconByRole(role) {
             const r = (role || '').toUpperCase().trim();
             if (r.includes('FUNDADOR')) {
@@ -630,38 +681,50 @@
             mobBadge.style.display = 'flex';
         }
 
-        // --- 4. ESCÁNER AUTOMÁTICO DE SESIÓN ---
+        // --- ESCÁNER Y BASE DE DATOS FIRESTORE ---
+        let usuarioActual = null;
+
+        // Esto se activa automáticamente si usted ingresa, se registra, o recarga la página
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                usuarioActual = user;
+                const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+                
+                document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
+                document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
+                
+                loginBtnDesktop.onclick = toggleProfileModal;
+                loginBtnMobile.onclick = toggleProfileModal;
+
+                document.getElementById('profile-email').innerText = user.email;
+
                 try {
                     const userRef = doc(db, "usuarios", user.uid);
                     const docSnap = await getDoc(userRef);
 
+                    // Si existe en Firestore, leemos su rol
                     if (docSnap.exists()) {
-                        // El usuario ES válido y ESTÁ en la base de datos
-                        const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-                        
-                        document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
-                        document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
-                        
-                        loginBtnDesktop.onclick = toggleProfileModal;
-                        loginBtnMobile.onclick = toggleProfileModal;
-                        document.getElementById('profile-email').innerText = user.email;
-
                         const datos = docSnap.data();
                         localStorage.setItem('rol_usuario', datos.rol);
                         document.getElementById('profile-role').innerText = datos.rol;
                         updateUIWithRole(datos.rol);
                     } else {
-                        // ¡ALERTA! El usuario se logueó en Auth pero NO existe en Firestore.
-                        // Lo cerramos por seguridad para que pase por el botón "Crear Cuenta".
-                        await signOut(auth);
+                        // ¡MAGIA DE FIREBASE! Si NO existe (porque es nuevo), lo anotamos como PUBLICO
+                        await setDoc(userRef, {
+                            email: user.email,
+                            rol: 'PUBLICO',
+                            fechaRegistro: new Date()
+                        });
+                        localStorage.setItem('rol_usuario', 'PUBLICO');
+                        document.getElementById('profile-role').innerText = 'PÚBLICO';
+                        updateUIWithRole('PUBLICO');
                     }
                 } catch (error) {
-                    console.error("Error leyendo base de datos:", error);
+                    console.error("Error al obtener rol:", error);
+                    updateUIWithRole('PUBLICO'); 
                 }
             } else {
-                // Nadie conectado
+                usuarioActual = null;
                 document.getElementById('login-text-desktop').innerText = 'INGRESAR';
                 document.getElementById('login-text-mobile').innerText = 'INGRESAR';
                 
@@ -674,7 +737,7 @@
             }
         });
 
-        // --- 5. LÓGICA DE BOTONES Y REGISTRO ESTRICTO ---
+        // --- SISTEMA DE INGRESO Y REGISTRO ---
         let isLoginMode = true;
 
         document.getElementById('btn-toggle-mode').addEventListener('click', (e) => {
@@ -686,72 +749,48 @@
             e.target.innerText = isLoginMode ? 'REGÍSTRATE AQUÍ' : 'INGRESA AQUÍ';
         });
 
-        async function manejarAuth(promesaAuth) {
-            try {
-                const result = await promesaAuth;
-                const user = result.user;
-                const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-                
-                const userRef = doc(db, "usuarios", user.uid);
-                const docSnap = await getDoc(userRef);
-
-                if (isLoginMode) {
-                    // MODO INGRESO: Solo entran si ya existen
-                    if (docSnap.exists()) {
-                        mostrarAlerta('Acceso Concedido', `¡Todo listo para jugar, ${nombreMostrar}!`, '#75B07E');
-                        loginModal.classList.add('hidden');
-                    } else {
-                        await signOut(auth); // Lo echamos
-                        mostrarAlerta('Acceso Denegado', 'Tu cuenta no está registrada. Haz clic abajo en "REGÍSTRATE AQUÍ".', '#D1623A');
-                    }
-                } else {
-                    // MODO REGISTRO: Los creamos si no existen
-                    if (docSnap.exists()) {
-                        mostrarAlerta('Atención', 'Ya tienes una cuenta registrada. Hemos iniciado tu sesión.', '#6BA4C4');
-                        loginModal.classList.add('hidden');
-                    } else {
-                        await setDoc(userRef, {
-                            email: user.email,
-                            rol: 'PUBLICO',
-                            fechaRegistro: new Date()
-                        });
-                        mostrarAlerta('Registro Exitoso', `¡Bienvenido al Club, ${nombreMostrar}!`, '#75B07E');
-                        loginModal.classList.add('hidden');
-                    }
-                }
-            } catch (error) {
+        // Función unificada que nunca bloquea
+        function procesarAuth(promesaAuth) {
+            promesaAuth.then((result) => {
+                const nombreMostrar = result.user.displayName ? result.user.displayName.split(' ')[0] : result.user.email.split('@')[0];
+                const titulo = isLoginMode ? 'Acceso Concedido' : 'Registro Exitoso';
+                mostrarAlerta(titulo, `¡Todo listo para jugar, ${nombreMostrar}!`, '#75B07E');
+                loginModal.classList.add('hidden');
+                // El onAuthStateChanged de arriba se encargará de crear la ficha en la base de datos automáticamente
+            }).catch((error) => {
+                console.error(error); // Por si hay un fallo interno
                 if (error.code === 'auth/invalid-credential') {
-                    mostrarAlerta('Error de Ingreso', 'Las credenciales no son válidas. Verifique su correo o clave.');
+                    mostrarAlerta('Error', 'Las credenciales no son válidas o tu cuenta no existe.');
                 } else if (error.code === 'auth/email-already-in-use') {
-                    mostrarAlerta('Atención', 'Ese correo ya está registrado. Por favor, intenta ingresar en lugar de registrarte.');
+                    mostrarAlerta('Atención', 'Este correo ya está registrado. Por favor, ingresa con tu clave.');
                 } else if (error.code === 'auth/weak-password') {
                     mostrarAlerta('Clave Débil', 'La contraseña debe tener al menos 6 caracteres.');
                 } else {
-                    mostrarAlerta('Error', 'Hubo un problema de conexión.');
+                    mostrarAlerta('Error', 'Hubo un problema de conexión: ' + error.message);
                 }
-            }
+            });
         }
 
-        // Ejecución de formularios
+        // Formulario (Botón amarillo)
         document.getElementById('login-form').addEventListener('submit', (event) => {
             event.preventDefault();
             const email = event.target.querySelectorAll('input')[0].value;
             const password = event.target.querySelectorAll('input')[1].value;
             
             if (isLoginMode) {
-                manejarAuth(signInWithEmailAndPassword(auth, email, password));
+                procesarAuth(signInWithEmailAndPassword(auth, email, password));
             } else {
-                manejarAuth(createUserWithEmailAndPassword(auth, email, password));
+                procesarAuth(createUserWithEmailAndPassword(auth, email, password));
             }
         });
 
-        // Ejecución de botones sociales
-        document.getElementById('btn-google').addEventListener('click', () => manejarAuth(signInWithPopup(auth, providerGoogle)));
-        document.getElementById('btn-facebook').addEventListener('click', () => manejarAuth(signInWithPopup(auth, providerFacebook)));
-        document.getElementById('btn-apple').addEventListener('click', () => manejarAuth(signInWithPopup(auth, providerApple)));
-        document.getElementById('btn-microsoft').addEventListener('click', () => manejarAuth(signInWithPopup(auth, providerMicrosoft)));
+        // Botones Sociales (Google, etc.)
+        document.getElementById('btn-google').addEventListener('click', () => procesarAuth(signInWithPopup(auth, providerGoogle)));
+        document.getElementById('btn-facebook').addEventListener('click', () => procesarAuth(signInWithPopup(auth, providerFacebook)));
+        document.getElementById('btn-apple').addEventListener('click', () => procesarAuth(signInWithPopup(auth, providerApple)));
+        document.getElementById('btn-microsoft').addEventListener('click', () => procesarAuth(signInWithPopup(auth, providerMicrosoft)));
 
-        // --- 6. CERRAR SESIÓN ---
+        // --- CERRAR SESIÓN ---
         document.getElementById('btn-logout').addEventListener('click', () => {
             signOut(auth).then(() => {
                 profileModal.classList.add('hidden');
