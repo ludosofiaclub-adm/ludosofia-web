@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LUDOSOFÍA | Club de Filosofía</title>
+    <title>Manual: Dixit Socrático | LUDOSOFÍA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -19,6 +19,7 @@
                         xul_yellow: '#EBB134',
                         xul_green: '#75B07E',
                         xul_pink: '#C96B8C',
+                        xul_silver: '#C4CAD0',
                         xul_orange: '#E87524'
                     },
                     fontFamily: {
@@ -32,26 +33,126 @@
     <style>
         body { 
             font-family: 'Outfit', sans-serif; 
-            background-color: #FDF8ED; 
+            background-color: #e5dfd3;
             color: #2A2A2A;
-            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.04"/%3E%3C/svg%3E');
         }
         .xul-border {
             border: 3px solid #2A2A2A;
             box-shadow: 6px 6px 0px #2A2A2A;
             transition: all 0.2s ease;
         }
-        .xul-border:hover {
-            transform: translate(-3px, -3px);
-            box-shadow: 9px 9px 0px #2A2A2A;
-        }
         .xul-title {
             font-family: 'Cormorant Garamond', serif;
         }
-        .text-shadow-xul {
-            text-shadow: 4px 4px 0px #D1623A;
+        
+        /* Animaciones Personalizadas */
+        @keyframes owlPulse {
+            0% { background-color: #2A2A2A; transform: translateY(0); }
+            33% { background-color: #6BA4C4; transform: translateY(-4px); }
+            66% { background-color: #D1623A; transform: translateY(2px); }
+            100% { background-color: #2A2A2A; transform: translateY(0); }
+        }
+        .owl-magic {
+            animation: owlPulse 4s infinite ease-in-out;
+        }
+
+        @keyframes badgeHover {
+            0% { transform: translateY(0px) rotate(2deg); }
+            50% { transform: translateY(-4px) rotate(4deg); }
+            100% { transform: translateY(0px) rotate(2deg); }
+        }
+        @keyframes badgeHoverSidebar {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-3px); }
+            100% { transform: translateY(0px); }
+        }
+        .badge-float {
+            animation: badgeHover 3.5s infinite ease-in-out;
+            transform-origin: center;
+        }
+        .badge-float-sidebar {
+            animation: badgeHoverSidebar 3.5s infinite ease-in-out;
+        }
+
+        /* Estilos específicos para la lectura del documento */
+        .doc-content h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2A2A2A;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-bottom: 3px solid #2A2A2A;
+            padding-bottom: 0.5rem;
+        }
+        .doc-content h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 2rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .doc-content p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: #374151;
+            margin-bottom: 1.25rem;
+            text-align: justify;
+        }
+        .doc-content ul.bullet-list {
+            list-style-type: none;
+            margin-bottom: 1.5rem;
+        }
+        .doc-content ul.bullet-list li {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: flex-start;
+        }
+        .doc-content ul.bullet-list li::before {
+            content: '■';
+            color: #6BA4C4;
+            font-size: 0.8rem;
+            margin-right: 10px;
+            margin-top: 4px;
         }
         
+        /* Tabla del Glosario */
+        .xul-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 3px solid #2A2A2A;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        .xul-table th, .xul-table td {
+            border: 2px solid #2A2A2A;
+            padding: 1rem;
+            text-align: left;
+        }
+        .xul-table th {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            text-transform: uppercase;
+            background-color: #6BA4C4;
+            color: #FDF8ED;
+        }
+        .xul-table tr:nth-child(even) {
+            background-color: #FDF8ED;
+        }
+        .xul-table tr:nth-child(odd) {
+            background-color: #ffffff;
+        }
+
+        /* Animación Modal */
         @keyframes modalFadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -61,748 +162,391 @@
         }
     </style>
 </head>
-<body class="antialiased selection:bg-xul_yellow selection:text-xul_ink relative">
+<body class="antialiased selection:bg-xul_blue selection:text-white">
 
-    <!-- Navbar -->
-    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
-        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
-            <div class="flex items-center space-x-3 cursor-pointer">
-                <!-- Mini Logo -->
-                <svg viewBox="0 0 100 100" class="w-10 h-10">
-                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
-                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
-                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
-                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
-                </svg>
-                <div class="flex flex-col">
-                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
-                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
-                </div>
-            </div>
+    <!-- Navbar Minimalista (Estilo Lector) -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300 shadow-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center py-2 px-6">
+            <a href="index_hack.html" class="flex items-center space-x-3 cursor-pointer group hover:text-xul_terra transition-colors">
+                <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                <span class="font-sans font-bold uppercase tracking-widest text-sm">Volver al Catálogo</span>
+            </a>
             
-            <!-- Menú Escritorio -->
-            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
-                <a href="#schole" class="hover:text-xul_terra transition">Scholē</a>
-                <a href="#ludoteca" class="hover:text-xul_terra transition">Ludoteca</a>
-                <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Cartas</a>
-                <a href="#faqs" class="hover:text-xul_terra transition">FAQs</a>
-                
-                <!-- MEDALLA DE MEMBRESÍA -->
-                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía">
-                </div>
-
-                <!-- Botón de Ingreso Principal -->
-                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
-                    <span id="login-text-desktop">Ingresar</span>
-                </button>
+            <div class="flex items-center space-x-3">
+                <span class="xul-title font-bold text-xl md:text-2xl">LUDOSOFÍA</span>
+                <span class="bg-xul_ink text-white px-2 py-1 text-[10px] font-black uppercase tracking-widest hidden sm:inline-block">Juegos Hackeados</span>
             </div>
-            
-            <!-- Botón Menú Móvil -->
-            <div class="md:hidden">
-                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
-                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
-                </button>
-            </div>
-        </div>
-        
-        <!-- Panel Menú Móvil Desplegable -->
-        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
-            <a href="#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
-            <a href="#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
-            <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
-            <a href="#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
-            
-            <!-- MEDALLA DE MEMBRESÍA MÓVIL -->
-            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
-
-            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
-                <span id="login-text-mobile">Ingresar</span>
-            </button>
         </div>
     </nav>
 
-    <!-- HERO SECTION -->
-    <header class="relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-12 overflow-hidden border-b-[3px] border-xul_ink">
-        <div class="absolute inset-0 opacity-10 pointer-events-none">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                <defs><pattern id="grid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M 60 0 L 0 0 0 60" fill="none" stroke="#2A2A2A" stroke-width="1.5"/></pattern></defs>
-                <rect width="100%" height="100%" fill="url(#grid)" />
-            </svg>
-        </div>
-
-        <div class="relative z-10 flex flex-col items-center max-w-4xl mx-auto text-center mt-8">
-            <div class="flex flex-col items-center mb-8 relative">
-                <svg viewBox="0 0 100 100" class="w-48 h-48 md:w-64 md:h-64 mb-4 hover:scale-105 transition-transform duration-500">
-                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="1.5" stroke-linejoin="round"/>
-                    <line x1="32.5" y1="27.5" x2="67.5" y2="42.5" stroke="#2A2A2A" stroke-width="1.5"/>
-                    <line x1="67.5" y1="27.5" x2="32.5" y2="42.5" stroke="#2A2A2A" stroke-width="1.5"/>
-                    <path d="M 65 40 C 75 40 75 50 65 50 C 55 50 55 40 65 40 Z" fill="#EBB134" stroke="#2A2A2A" stroke-width="1.5"/>
-                    <path d="M 55 45 L 55 60 C 55 70 75 70 75 60 L 75 45" fill="#EBB134" stroke="#2A2A2A" stroke-width="1.5"/>
-                    <text x="61" y="58" font-family="'Cormorant Garamond', serif" font-size="14" font-weight="bold" fill="#2A2A2A">Φ</text>
-                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="1.5"/>
-                    <circle cx="32.5" cy="65" r="8" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="1.5"/>
-                    <circle cx="32.5" cy="65" r="2.5" fill="#2A2A2A"/>
-                    <line x1="32.5" y1="52" x2="32.5" y2="55" stroke="#2A2A2A" stroke-width="1.5"/>
-                    <line x1="32.5" y1="75" x2="32.5" y2="78" stroke="#2A2A2A" stroke-width="1.5"/>
-                </svg>
-
-                <h1 class="xul-title text-5xl sm:text-6xl md:text-8xl font-black text-xul_ink tracking-tighter mb-4 text-shadow-xul">
-                    LUDOSOFÍA
-                </h1>
-                
-                <div class="border-y-[3px] border-xul_ink py-2 px-8 inline-block bg-xul_paper">
-                    <p class="font-sans font-black tracking-[0.3em] uppercase text-sm md:text-lg text-xul_ink">
-                        Club de Filosofía
-                    </p>
-                </div>
-            </div>
-
-            <p class="xul-title text-2xl md:text-3xl italic text-gray-700 mb-10 max-w-2xl px-4 leading-relaxed">
-                "Una propuesta diferente todas las semanas."
-                <span class="block mt-4 font-sans text-lg font-light text-gray-600 not-italic">
-                    Un espacio donde las ideas se transforman en dinámicas, tableros y dilemas interactivos. Un espacio para jugar.
-                </span>
-            </p>
-            
-            <div class="flex flex-col sm:flex-row gap-6 w-full sm:w-auto px-6 justify-center">
-                <a href="#unirse" class="w-full sm:w-auto bg-xul_green border-[3px] border-xul_ink text-xul_ink font-bold text-xl py-4 px-10 shadow-[6px_6px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#2A2A2A] transition-all text-center">
-                    TIRAR LOS DADOS
-                </a>
-            </div>
-        </div>
-    </header>
-
-    <!-- SECCIÓN 1: FORMACIÓN Y SCHOLĒ -->
-    <section id="schole" class="py-24 px-6 bg-white relative">
-        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#2A2A2A 1px, transparent 1px), linear-gradient(90deg, #2A2A2A 1px, transparent 1px); background-size: 30px 30px;"></div>
+    <!-- CONTENEDOR PRINCIPAL DEL LECTOR -->
+    <div class="pt-24 pb-12 px-4 md:px-6 max-w-7xl mx-auto flex flex-col md:flex-row gap-8 items-start">
         
-        <div class="max-w-6xl mx-auto relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="font-sans font-black text-xul_blue uppercase tracking-widest text-sm mb-2 border-b-2 border-xul_blue inline-block pb-1">Más allá del juego</h2>
-                <h3 class="xul-title text-4xl md:text-5xl font-bold text-xul_ink mt-4">Scholē de Ludosofía</h3>
-                <p class="font-serif text-xl text-gray-600 mt-4 max-w-2xl mx-auto">Espacios de entrenamiento profundo para quienes buscan dominar las reglas, crear sus propios tableros o llevar la filosofía lúdica a las aulas y empresas.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_yellow transition-colors group flex flex-col items-start">
-                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink"><path d="M 10 35 L 40 35 L 40 15 L 10 15 Z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M 25 15 V 35" stroke="currentColor" stroke-width="2"/><polyline points="15,25 20,25 20,20 25,20" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Cursos interactivos</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6 flex-grow">
-                        Recorridos teóricos sobre la historia de las ideas, estructurados con mecánicas de juego. Aprender con nosotros es una aventura por niveles.
-                    </p>
-                    <button onclick="toggleCursosModal()" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline focus:outline-none">
-                        Ver Programa →
-                    </button>
-                </div>
-
-                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_terra transition-colors group">
-                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink"><polygon points="15,35 25,15 35,35" fill="none" stroke="currentColor" stroke-width="2"/><rect x="20" y="25" width="10" height="10" fill="currentColor"/></svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Atelier de juegos</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
-                        Sesiones prácticas donde desarmamos juegos de mesa filosóficos para entender sus mecánicas. Ven a diseñar tus propios prototipos.
-                    </p>
-                    <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Próximo Taller →</a>
-                </div>
-
-                <div class="bg-xul_paper p-8 xul-border hover:bg-xul_blue transition-colors group">
-                    <div class="w-14 h-14 bg-white border-2 border-xul_ink flex items-center justify-center mb-6 rounded-full shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-8 h-8 text-xul_ink"><circle cx="25" cy="20" r="10" fill="none" stroke="currentColor" stroke-width="2"/><line x1="25" y1="30" x2="25" y2="40" stroke="currentColor" stroke-width="2"/><line x1="15" y1="10" x2="20" y2="15" stroke="currentColor" stroke-width="2"/><line x1="35" y1="10" x2="30" y2="15" stroke="currentColor" stroke-width="2"/><line x1="10" y1="20" x2="15" y2="20" stroke="currentColor" stroke-width="2"/></svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Capacitaciones y consultoría</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed mb-6">
-                        Capacitaciones exclusivas para educadores, líderes y facilitadores que buscan herramientas lúdicas para fomentar el pensamiento crítico.
-                    </p>
-                    <a href="#" class="inline-flex items-center text-sm font-bold uppercase tracking-widest text-xul_ink group-hover:underline">Solicitar Info →</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- SECCIÓN 2: LUDOTECA -->
-    <section id="ludoteca" class="py-24 px-6 border-t-[3px] border-xul_ink relative">
-        <div class="max-w-6xl mx-auto">
+        <!-- SIDEBAR IZQUIERDO (Índice) -->
+        <aside class="w-full md:w-1/4 md:sticky md:top-24 space-y-6">
             
-            <div class="text-center mb-16">
-                <h2 class="font-sans font-black text-xul_terra uppercase tracking-widest text-sm mb-2 border-b-2 border-xul_terra inline-block pb-1">El Menú del Club</h2>
-                <h3 class="xul-title text-4xl md:text-5xl font-bold text-xul_ink mt-4">Nuestra Ludoteca</h3>
+            <!-- Índice de Navegación -->
+            <div class="bg-xul_paper border-[3px] border-xul_ink p-5 hidden md:block">
+                <h4 class="font-sans font-black text-sm uppercase tracking-widest text-xul_ink mb-4 pb-2 border-b-2 border-xul_ink">
+                    Índice del Documento
+                </h4>
+                <nav class="flex flex-col space-y-3 font-sans font-medium text-sm text-gray-600">
+                    <a href="#intro" class="hover:text-xul_blue hover:font-bold transition-colors">1. Introducción</a>
+                    <a href="#componentes" class="hover:text-xul_blue hover:font-bold transition-colors">2. Componentes</a>
+                    <a href="#reglas" class="hover:text-xul_blue hover:font-bold transition-colors">3. Las Nuevas Reglas</a>
+                    <a href="#premisa" class="ml-4 hover:text-xul_terra hover:font-bold transition-colors">A. La Premisa del Narrador</a>
+                    <a href="#juicio" class="ml-4 hover:text-xul_terra hover:font-bold transition-colors">B. El Juicio Socrático</a>
+                    <a href="#glosario" class="hover:text-xul_blue hover:font-bold transition-colors">4. Glosario del Oráculo</a>
+                </nav>
             </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <div class="bg-white p-8 xul-border flex flex-col" style="box-shadow: 6px 6px 0px #C96B8C;">
-                    <div class="w-16 h-16 bg-xul_pink border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><path d="M10 15 Q25 5 40 15 L45 35 Q25 45 5 35 Z" fill="none" stroke="currentColor" stroke-width="2"/><line x1="20" y1="20" x2="30" y2="20" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="25" r="2" fill="currentColor"/><circle cx="32" cy="25" r="2" fill="currentColor"/></svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Juegos de rol</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Ponte la máscara de los grandes maestros. Encarna a un pensador y defiende su visión del mundo en debates inmersivos, asumiendo su filosofía como propia.</p>
+            
+            <!-- Banner Decorativo -->
+            <div class="bg-xul_ink border-[3px] border-xul_ink p-4 text-center text-white relative overflow-hidden hidden lg:block">
+                <div class="absolute -right-4 -bottom-4 opacity-20">
+                    <i data-lucide="eye" class="w-24 h-24 text-xul_blue"></i>
                 </div>
-
-                <div class="bg-white p-8 xul-border flex flex-col" style="box-shadow: 6px 6px 0px #6BA4C4;">
-                    <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><polygon points="25,10 45,20 25,30 5,20" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="25,30 45,20 45,40 25,50" fill="none" stroke="currentColor" stroke-width="2"/><polygon points="5,20 25,30 25,50 5,40" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Juegos de tablero</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Despliega tus ideas. Gestiona recursos lógicos, conecta conceptos y mueve tus premisas sobre tableros isométricos para cartografiar el pensamiento humano.</p>
+                <div class="relative z-10 mb-3 flex justify-center flex-wrap gap-2">
+                    <!-- INSIGNIAS SIDEBAR (Controladas por JS) -->
+                    <span class="insignia-publico hidden bg-xul_blue text-white border-2 border-white p-1.5 badge-float-sidebar cursor-help" title="Acceso Público">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </span>
+                    <span class="insignia-socio hidden bg-xul_orange text-white border-2 border-white p-1.5 badge-float-sidebar cursor-help" title="Solo Socios">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                    </span>
+                    <span class="insignia-fundador hidden bg-xul_yellow text-xul_ink border-2 border-xul_ink p-1.5 badge-float-sidebar cursor-help" title="Socios Fundadores">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+                    </span>
                 </div>
-
-                <div class="bg-white p-8 xul-border flex flex-col relative group cursor-pointer" onclick="window.location.href='seccion_mazos.html'" style="box-shadow: 6px 6px 0px #EBB134;">
-                    <div class="w-16 h-16 bg-xul_yellow border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A] group-hover:scale-110 transition-transform">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><rect x="10" y="20" width="30" height="20" fill="none" stroke="currentColor" stroke-width="2"/><polyline points="10,20 25,30 40,20" fill="none" stroke="currentColor" stroke-width="2"/><path d="M 15 10 L 35 10 L 30 20 L 20 20 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink group-hover:text-xul_terra transition-colors">Cartas para jugar y pensar</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Colección de cartas con infinidad de posibilidades. Arma escenarios únicos, resuelve dilemas y desbloquea nuevas variantes de juego.</p>
-                    <div class="mt-4 text-xul_yellow font-bold uppercase text-sm flex items-center opacity-0 group-hover:opacity-100 transition-opacity">Ver Colección →</div>
-                </div>
-
-                <div class="bg-white p-8 xul-border flex flex-col relative group cursor-pointer" onclick="window.location.href='index_hack.html'" style="box-shadow: 6px 6px 0px #D1623A;">
-                    <div class="w-16 h-16 bg-xul_terra border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A] group-hover:scale-110 transition-transform">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><path d="M 25 10 C 30 10 32 15 25 25 C 18 15 20 10 25 10 Z" fill="none" stroke="currentColor" stroke-width="2"/><line x1="15" y1="40" x2="35" y2="40" stroke="currentColor" stroke-width="2"/><path d="M 20 40 L 25 25 L 30 40 Z" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink group-hover:text-xul_terra transition-colors">Clásicos hackeados</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Variantes filosóficas de juegos clásicos y no tanto. Ajedrez Hegelhiano, Go Taoísta, Póker Dialéctico y mucho más.</p>
-                    <div class="mt-4 text-xul_terra font-bold uppercase text-sm flex items-center opacity-0 group-hover:opacity-100 transition-opacity">Ver Catálogo →</div>
-                </div>
-
-                <div class="bg-white p-8 xul-border flex flex-col" style="box-shadow: 6px 6px 0px #2A2A2A;">
-                    <div class="w-16 h-16 bg-xul_paper border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#D1623A]">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><circle cx="25" cy="25" r="15" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="25" cy="25" r="5" fill="currentColor"/><line x1="25" y1="5" x2="25" y2="10" stroke="currentColor" stroke-width="2"/><line x1="25" y1="40" x2="25" y2="45" stroke="currentColor" stroke-width="2"/><line x1="5" y1="25" x2="10" y2="25" stroke="currentColor" stroke-width="2"/><line x1="40" y1="25" x2="45" y2="25" stroke="currentColor" stroke-width="2"/></svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Todos los juegos, el juego</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Recursos teóricos y ficcionales para conocer más sobre las relaciones entre filosofía y juego.</p>
-                </div>
-                
-                <div class="bg-white p-8 xul-border flex flex-col" style="box-shadow: 6px 6px 0px #75B07E;">
-                    <div class="w-16 h-16 bg-xul_green border-2 border-xul_ink flex items-center justify-center mb-6 shadow-[3px_3px_0px_#2A2A2A]">
-                        <svg viewBox="0 0 50 50" class="w-10 h-10 text-xul_ink"><rect x="10" y="10" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"/><text x="13" y="22" font-family="'Cormorant Garamond', serif" font-weight="bold" font-size="12" fill="currentColor">A</text><rect x="25" y="25" width="15" height="15" fill="#EBB134" stroke="currentColor" stroke-width="2"/><text x="28" y="37" font-family="'Cormorant Garamond', serif" font-weight="bold" font-size="12" fill="currentColor">Ω</text></svg>
-                    </div>
-                    <h4 class="font-sans font-black text-2xl mb-3 text-xul_ink">Alquimia de letras</h4>
-                    <p class="font-serif text-gray-700 text-lg leading-relaxed flex-grow">Juegos, actividades y propuestas para todo el mundo. Mezcla conceptos e inventa neologismos en duelos de asociación libre.</p>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- CALL TO ACTION: MEMBRESÍAS -->
-    <section id="unirse" class="py-24 px-6 border-y-[3px] border-xul_ink bg-[#EBB134] relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10">
-            <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                <defs><pattern id="circles" width="80" height="80" patternUnits="userSpaceOnUse"><circle cx="40" cy="40" r="20" fill="none" stroke="#2A2A2A" stroke-width="2"/><circle cx="40" cy="40" r="5" fill="#2A2A2A"/></pattern></defs>
-                <rect width="100%" height="100%" fill="url(#circles)" />
-            </svg>
-        </div>
-
-        <div class="max-w-6xl mx-auto relative z-10">
-            <div class="text-center mb-16">
-                <h2 class="xul-title text-4xl md:text-6xl font-bold text-xul_ink mb-4">Ayudanos a expandir el tablero.</h2>
-                <p class="font-sans text-xl text-xul_ink font-medium max-w-2xl mx-auto">
-                    Tu aporte es fundamental para hacer crecer este proyecto. Elegí cómo sumarte, accedé a beneficios exclusivos y acompañanos a llevar la filosofía lúdica mucho más lejos.
+                <h5 class="font-sans font-bold text-sm uppercase tracking-widest mb-1 relative z-10">Hack de Tablero</h5>
+                <p class="font-serif text-xs text-gray-300 relative z-10 italic">
+                    "Habla para que yo te conozca." - Sócrates
                 </p>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                <!-- MEMBRESÍA 1: PÚBLICO -->
-                <div class="bg-white border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
-                    <div class="mb-6 border-b-2 border-xul_ink pb-6 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Público</h3>
-                            <p class="font-serif text-gray-700">Para los curiosos que recién llegan.</p>
-                        </div>
-                        <i data-lucide="user" class="w-10 h-10 text-xul_blue"></i>
-                    </div>
-                    <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow text-sm">
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-5 h-5 text-xul_blue mt-0.5 flex-shrink-0"></i>
-                            <span>Newsletter semanal.</span>
-                        </li>
-                    </ul>
-                    <button onclick="document.getElementById('login-modal').classList.remove('hidden')" class="w-full bg-white border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-xul_blue hover:text-white transition-colors mt-auto">
-                        Sumarse
-                    </button>
-                </div>
+        </aside>
 
-                <!-- MEMBRESÍA 2: SOCIO -->
-                <div class="bg-[#FDE4D0] border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
-                    <div class="mb-6 border-b-2 border-xul_ink pb-6 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Socio</h3>
-                            <p class="font-serif text-gray-700">Para sumarse a la mesa de juego.</p>
-                        </div>
-                        <i data-lucide="award" class="w-10 h-10 text-xul_orange"></i>
-                    </div>
-                    <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow text-sm">
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-5 h-5 text-xul_orange mt-0.5 flex-shrink-0"></i>
-                            <span>Newsletter con todas novedades.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-5 h-5 text-xul_orange mt-0.5 flex-shrink-0"></i>
-                            <span>Acceso a catálogo de juegos.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-5 h-5 text-xul_orange mt-0.5 flex-shrink-0"></i>
-                            <span>Descuentos 40% en cursos.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-5 h-5 text-xul_orange mt-0.5 flex-shrink-0"></i>
-                            <span>Participación en atelier de juegos.</span>
-                        </li>
-                    </ul>
-                    <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
-                        Ser Socio
-                    </a>
-                </div>
+        <!-- ÁREA DEL DOCUMENTO (Página de Papel) -->
+        <main class="w-full md:w-3/4 bg-white border-[3px] border-xul_ink p-8 md:p-16 shadow-[12px_12px_0px_#2A2A2A] relative doc-content">
+            
+            <!-- Decoración de la hoja -->
+            <div class="absolute top-0 right-0 w-16 h-16 bg-xul_blue border-b-[3px] border-l-[3px] border-xul_ink"></div>
+            <div class="absolute top-2 right-2 w-12 h-12 border-2 border-dashed border-white"></div>
 
-                <!-- MEMBRESÍA 3: SOCIO FUNDADOR -->
-                <div class="bg-xul_ink border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#D1623A] hover:-translate-y-2 transition-transform relative">
-                    <div class="absolute -top-4 -right-4 bg-xul_terra border-[3px] border-xul_ink px-4 py-1 font-black text-white uppercase text-xs tracking-widest shadow-[4px_4px_0px_#2A2A2A] rotate-3">
-                        Cupos Limitados
+            <!-- Título del Documento -->
+            <div class="text-center mb-12 border-b-4 border-double border-gray-300 pb-8">
+                <div class="flex justify-center gap-4 mb-4 items-center">
+                    <div class="inline-block bg-xul_yellow border-2 border-xul_ink px-3 py-1 shadow-[3px_3px_0px_#2A2A2A] rotate-[-2deg]">
+                        <span class="font-sans font-black text-xs uppercase tracking-widest text-xul_ink">Documento Oficial</span>
                     </div>
-                    <div class="mb-6 border-b-2 border-gray-600 pb-6 flex items-center justify-between">
-                        <div>
-                            <h3 class="font-sans font-black text-3xl text-[#FDF8ED] tracking-tight uppercase mb-2">Fundador</h3>
-                            <p class="font-serif text-gray-400">Para impulsar el pensamiento.</p>
-                        </div>
-                        <i data-lucide="crown" class="w-10 h-10 text-xul_yellow"></i>
+                    
+                    <!-- INSIGNIAS MAIN (Controladas por JS) -->
+                    <div class="insignia-publico hidden bg-xul_blue border-2 border-xul_ink p-2 shadow-[3px_3px_0px_#2A2A2A] rotate-[2deg] badge-float cursor-help" title="Acceso Público">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-white"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                     </div>
-                    <ul class="font-sans text-[#FDF8ED] space-y-4 mb-8 flex-grow text-sm">
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span>Newsletter con todas novedades.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span>Acceso a catálogo de juegos.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span>Plataforma de juego.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span>Cursos gratuitos.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span>Focus group para creación de juegos.</span>
-                        </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
-                            <span>Consultoría mensual incluida.</span>
-                        </li>
-                    </ul>
-                    <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
-                        Ser Socio Fundador
-                    </a>
+                    <div class="insignia-socio hidden bg-xul_orange border-2 border-xul_ink p-2 shadow-[3px_3px_0px_#2A2A2A] rotate-[2deg] badge-float cursor-help" title="Solo Socios Activos">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-white"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                    </div>
+                    <div class="insignia-fundador hidden bg-xul_yellow border-2 border-xul_ink p-2 shadow-[3px_3px_0px_#2A2A2A] rotate-[2deg] badge-float cursor-help" title="Socios Fundadores">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-xul_ink"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+                    </div>
                 </div>
+                <h1 class="xul-title text-5xl md:text-7xl font-black text-xul_ink leading-none mb-2">DIXIT</h1>
+                <h2 class="font-sans text-2xl md:text-3xl font-black text-xul_terra uppercase tracking-widest !border-0 !mt-0 !mb-0">El Oráculo Socrático</h2>
             </div>
-        </div>
-    </section>
 
-    <!-- FOOTER -->
-    <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-700 pb-8">
-            <div class="flex items-center space-x-3">
-                <svg viewBox="0 0 100 100" class="w-8 h-8">
-                    <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="currentColor" stroke-width="3"/>
-                    <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="currentColor" stroke-width="3"/>
+            <section id="intro">
+                <p class="text-xl font-medium">
+                    <span class="text-4xl font-bold float-left mr-2 leading-none text-xul_blue">E</span>ste documento contiene las reglas oficiales para la variante "El Oráculo Socrático", un hack filosófico del aclamado juego de mesa Dixit. El objetivo de esta variante es transformar la mecánica de asociación libre de imágenes en un divertido ejercicio de mayéutica y argumentación.
+                </p>
+            </section>
+
+            <section id="componentes">
+                <h2>Componentes Necesarios</h2>
+                <p class="font-serif text-xl text-gray-700 leading-relaxed mb-6">
+                    Para jugar necesitarás 1 copia del juego base <strong>Dixit</strong> (incluyendo tablero, cartas, fichas de voto y conejos de madera), de 3 a 6 jugadores dispuestos a debatir sus ideas, y el <strong>Glosario del Oráculo</strong> (disponible al final de este documento).
+                </p>
+            </section>
+
+            <section id="reglas">
+                <h2>Las Nuevas Reglas</h2>
+                <p>
+                    El juego transcurre de forma normal según el reglamento estándar: en cada ronda, el narrador elige una carta de su mano en secreto, da una pista en voz alta, los demás jugadores seleccionan una carta de sus manos que coincida con la pista, se mezclan todas y se procede a la votación.
+                </p>
+                <p>
+                    Sin embargo, para introducir la tensión filosófica, se aplicarán <strong>dos modificaciones cruciales</strong> que alteran por completo la dinámica de las deducciones y el puntaje:
+                </p>
+
+                <div id="premisa" class="bg-xul_paper border-[3px] border-xul_ink p-6 my-8 relative">
+                    <div class="absolute -left-4 top-6 w-8 h-8 bg-xul_blue border-[3px] border-xul_ink flex items-center justify-center rotate-45">
+                        <span class="font-bold text-white -rotate-45">1</span>
+                    </div>
+                    <h3><span class="text-xul_blue">A.</span> La Premisa del Narrador</h3>
+                    <p>
+                        En lugar de dar pistas libres (como ruidos, canciones, refranes o palabras sueltas descriptivas), el narrador de turno <strong>debe usar exclusivamente un concepto filosófico, un dilema moral o una premisa abstracta</strong> para describir su carta secreta.
+                    </p>
+                    <ul class="bullet-list">
+                        <li><strong class="text-xul_terra">Ejemplos válidos:</strong> "El justo medio", "La banalidad del mal", "El mito de la caverna", "Determinismo", "La angustia existencial".</li>
+                        <li><strong class="text-red-600">No está permitido:</strong> Describir literalmente lo que se ve en la imagen (ej. "Un barco volando" o "Color rojo").</li>
+                    </ul>
+                </div>
+
+                <div id="juicio" class="bg-xul_paper border-[3px] border-xul_ink p-6 my-8 relative">
+                    <div class="absolute -left-4 top-6 w-8 h-8 bg-xul_terra border-[3px] border-xul_ink flex items-center justify-center rotate-45">
+                        <span class="font-bold text-white -rotate-45">2</span>
+                    </div>
+                    <div class="flex justify-between items-start gap-4">
+                        <h3><span class="text-xul_terra">B.</span> El Juicio Socrático</h3>
+                        <button onclick="toggleSocratesModal()" class="flex-shrink-0 text-white p-2 border-2 border-xul_ink shadow-[2px_2px_0px_#2A2A2A] group owl-magic cursor-pointer" title="El Juicio de Sócrates">
+                            <!-- SVG del Búho de la Sabiduría -->
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 group-hover:scale-110 transition-transform">
+                                <path d="M5 9c0 -4 3 -5 3 -7 1 1 3 2 4 2s3 -1 4 -2c0 2 3 3 3 7a8 8 0 1 1 -14 0z"></path>
+                                <circle cx="9" cy="11" r="2"></circle>
+                                <circle cx="15" cy="11" r="2"></circle>
+                                <path d="M12 14l-1 2h2l-1-2z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <p>
+                        Aquí radica la magia de esta variante. Una vez reveladas todas las cartas jugadas en la mesa y habiendo finalizado la fase de votación con fichas, <strong>los jugadores que no acertaron</strong> cuál era la carta original del narrador tienen derecho a apelar al tribunal mediante el "Juicio".
+                    </p>
+                    <p>
+                        El procedimiento del Juicio es el siguiente:
+                    </p>
+                    <ul class="space-y-4 mt-4">
+                        <li>
+                            <div class="flex-1">
+                                <strong class="text-xul_terra uppercase tracking-wider text-sm font-sans block mb-1">1. El Argumento</strong>
+                                El jugador apelante debe <strong>argumentar brevemente</strong> (con un tiempo máximo de 1 minuto) por qué la carta que <em>él mismo jugó</em> representaba de mejor manera el concepto filosófico dado que la carta original del narrador.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="flex-1">
+                                <strong class="text-xul_terra uppercase tracking-wider text-sm font-sans block mb-1">2. El Jurado</strong>
+                                El resto de la mesa (excluyendo al apelante y al narrador, quienes son las partes en disputa) oficia de jurado.
+                            </div>
+                        </li>
+                        <li>
+                            <div class="flex-1">
+                                <strong class="text-xul_terra uppercase tracking-wider text-sm font-sans block mb-1">3. La Votación</strong>
+                                Tras escuchar el argumento, el jurado vota simultáneamente con el pulgar hacia arriba (aprobado) o hacia abajo (rechazado).
+                            </div>
+                        </li>
+                        <li>
+                            <div class="flex-1">
+                                <strong class="text-xul_terra uppercase tracking-wider text-sm font-sans block mb-1">4. La Sentencia</strong>
+                                Si la mayoría aprueba el argumento por considerarlo lógicamente superior o más poético, se ejecuta la sentencia: <strong>el apelante suma inmediatamente 2 puntos</strong> en esa ronda, y el narrador se queda en cero.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="glosario">
+                <h2>Glosario del Oráculo</h2>
+                <p>
+                    Utiliza esta tabla de referencia rápida como inspiración cuando sea tu turno de ser el Narrador. No estás obligado a ceñirte estrictamente a estos términos, pero contienen las llaves para abrir grandes debates socráticos al momento de bajar tu carta al tablero.
+                </p>
+
+                <!-- VERSIÓN ESCRITORIO: Tabla Clásica -->
+                <div class="hidden md:block overflow-x-auto">
+                    <table class="xul-table">
+                        <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Rama / Autor</th>
+                                <th>Breve Definición (Para inspirar imágenes)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>El Justo Medio</strong></td>
+                                <td>Aristóteles</td>
+                                <td>La virtud como equilibrio perfecto entre dos vicios extremos (ej. la valentía se encuentra entre la cobardía y la temeridad).</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Solipsismo</strong></td>
+                                <td>Epistemología</td>
+                                <td>La creencia radical de que solo la propia mente existe con seguridad; todo el resto del universo puede ser una ilusión.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Amor Fati</strong></td>
+                                <td>F. Nietzsche</td>
+                                <td>"Amor al destino". La actitud vital de abrazar y aceptar todo lo que ocurre en la vida, sea bueno o malo, sin querer cambiarlo.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Velo de la Ignorancia</strong></td>
+                                <td>John Rawls</td>
+                                <td>El experimento de diseñar las reglas de la sociedad sin saber qué posición ocuparemos en ella, forzando así la equidad absoluta.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Imperativo Categórico</strong></td>
+                                <td>Immanuel Kant</td>
+                                <td>El deber moral de actuar solo según aquellas máximas que desearías firmemente que se convirtieran en leyes universales para todos.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Mito de la Caverna</strong></td>
+                                <td>Platón</td>
+                                <td>La ignorancia humana: confundir las sombras proyectadas en la pared con la realidad verdadera del mundo exterior.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Síntesis Dialéctica</strong></td>
+                                <td>G.W.F. Hegel</td>
+                                <td>La resolución y superación (Aufhebung) del conflicto entre dos fuerzas, ideas o épocas históricas opuestas (tesis y antítesis).</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- VERSIÓN CELULAR: Bloques de Texto -->
+                <div class="block md:hidden space-y-6 mt-8">
+                    
+                    <div class="border-l-[4px] border-xul_blue pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">El Justo Medio</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_terra mb-2 shadow-[2px_2px_0px_#2A2A2A]">Aristóteles</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">La virtud como equilibrio perfecto entre dos vicios extremos (ej. la valentía se encuentra entre la cobardía y la temeridad).</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_terra pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Solipsismo</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_blue mb-2 shadow-[2px_2px_0px_#2A2A2A]">Epistemología</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">La creencia radical de que solo la propia mente existe con seguridad; todo el resto del universo puede ser una ilusión.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_yellow pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Amor Fati</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_pink mb-2 shadow-[2px_2px_0px_#2A2A2A]">F. Nietzsche</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">"Amor al destino". La actitud vital de abrazar y aceptar todo lo que ocurre en la vida, sea bueno o malo, sin querer cambiarlo.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_green pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Velo de la Ignorancia</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_terra mb-2 shadow-[2px_2px_0px_#2A2A2A]">John Rawls</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">El experimento de diseñar las reglas de la sociedad sin saber qué posición ocuparemos en ella, forzando así la equidad absoluta.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_pink pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Imperativo Categórico</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_blue mb-2 shadow-[2px_2px_0px_#2A2A2A]">Immanuel Kant</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">El deber moral de actuar solo según aquellas máximas que desearías firmemente que se convirtieran en leyes universales para todos.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_ink pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Mito de la Caverna</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_terra mb-2 shadow-[2px_2px_0px_#2A2A2A]">Platón</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">La ignorancia humana: confundir las sombras proyectadas en la pared con la realidad verdadera del mundo exterior.</p>
+                    </div>
+
+                    <div class="border-l-[4px] border-xul_blue pl-4">
+                        <h4 class="font-sans font-black text-xl text-xul_ink leading-none mb-1">Síntesis Dialéctica</h4>
+                        <span class="inline-block bg-xul_paper border border-xul_ink px-2 py-0.5 text-[10px] font-bold uppercase tracking-widest text-xul_yellow mb-2 shadow-[2px_2px_0px_#2A2A2A]">G.W.F. Hegel</span>
+                        <p class="font-serif text-lg text-gray-700 leading-snug">La resolución y superación (Aufhebung) del conflicto entre dos fuerzas, ideas o épocas históricas opuestas (tesis y antítesis).</p>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Firma del documento -->
+            <div class="mt-16 flex flex-col items-center justify-center opacity-50">
+                <svg viewBox="0 0 100 100" class="w-12 h-12 mb-2">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="#2A2A2A" stroke-width="4"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="#2A2A2A" stroke-width="4"/>
                 </svg>
-                <div class="flex flex-col">
-                    <span class="font-sans font-black tracking-widest text-lg leading-none">LUDOSOFÍA</span>
-                </div>
+                <span class="font-sans font-bold tracking-widest text-xs uppercase">Documento Lúdico de Ludosofía</span>
             </div>
-            
-            <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
-                <a href="#" class="hover:text-xul_yellow transition">Reglas del Juego</a>
-                <a href="#schole" class="hover:text-xul_yellow transition">Scholē</a>
-                <a href="#faqs" class="hover:text-xul_yellow transition">FAQs</a>
-                <a href="#" class="hover:text-xul_yellow transition">Manifiesto</a>
-            </div>
-        </div>
-        <div class="max-w-6xl mx-auto mt-6 text-center text-sm font-sans text-gray-400">
-            &copy; 2026 Ludosofía - Club de Filosofía. El juego infinito del pensamiento.
-        </div>
-    </footer>
 
-    <!-- ============================================== -->
-    <!-- VENTANA MODAL DE ALERTAS PERSONALIZADA         -->
-    <!-- ============================================== -->
-    <div id="alert-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('alert-modal').classList.add('hidden')"></div>
-        <div id="alert-box" class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] transform transition-all text-center">
-            <h3 id="alert-title" class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-2">Aviso</h3>
-            <p id="alert-message" class="font-sans text-gray-700 mb-6">Mensaje de alerta.</p>
-            <button onclick="document.getElementById('alert-modal').classList.add('hidden')" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:shadow-[6px_6px_0px_#2A2A2A]">
-                Entendido
-            </button>
-        </div>
+        </main>
     </div>
 
-    <!-- ============================================== -->
-    <!-- VENTANA MODAL DE PERFIL (CERRAR SESIÓN)        -->
-    <!-- ============================================== -->
-    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
-        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] transform transition-all text-center">
-            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
-            
-            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
-                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
-            </div>
-            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-1">Mi Perfil</h3>
-            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
-            
-            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
-                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía Actual</p>
-                <p id="profile-role" class="font-black text-xl text-xul_ink uppercase tracking-wider text-xul_terra"></p>
-            </div>
-
-            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">
-                Cerrar Sesión
-            </button>
-        </div>
-    </div>
-
-    <!-- ============================================== -->
-    <!-- VENTANA MODAL DE LOGIN (INTERFAZ "EL ÁGORA")   -->
-    <!-- ============================================== -->
-    <div id="login-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div id="login-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer"></div>
-        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-md w-full shadow-[12px_12px_0px_#EBB134] transform transition-all">
-            <button id="close-modal" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
-            <div class="text-center mb-8">
-                <svg viewBox="0 0 50 50" class="w-12 h-12 mx-auto mb-4 text-xul_ink">
-                    <circle cx="25" cy="15" r="10" fill="none" stroke="currentColor" stroke-width="3"/>
-                    <circle cx="25" cy="15" r="3" fill="currentColor"/>
-                    <line x1="25" y1="25" x2="25" y2="45" stroke="currentColor" stroke-width="3"/>
-                    <line x1="25" y1="35" x2="35" y2="35" stroke="currentColor" stroke-width="3"/>
-                    <line x1="25" y1="42" x2="32" y2="42" stroke="currentColor" stroke-width="3"/>
-                </svg>
-                <h3 id="modal-main-title" class="xul-title text-4xl font-black text-xul_ink tracking-tight uppercase">Entrar al CLUB</h3>
-                <p class="font-sans text-sm text-gray-600 mt-2">Identifícate para continuar tu partida.</p>
-            </div>
-
-            <form id="login-form" class="mb-6">
-                <div class="mb-5">
-                    <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Correo Electrónico</label>
-                    <input type="email" placeholder="Ej: socrates@mail.com" required class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all">
-                </div>
-                <div class="mb-6">
-                    <div class="flex justify-between items-end mb-2">
-                        <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink">Clave Secreta</label>
-                    </div>
-                    <input type="password" placeholder="••••••••" required minlength="6" class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all">
-                </div>
-                <button id="modal-submit-btn" type="submit" class="w-full bg-xul_yellow border-[3px] border-xul_ink py-3 font-black text-lg uppercase tracking-widest text-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
-                    Entrar con Clave
-                </button>
-            </form>
-
-            <div class="flex items-center my-4">
-                <div class="flex-grow border-t-2 border-xul_ink"></div>
-                <span class="px-3 font-bold text-xs uppercase tracking-widest text-gray-500">O ingresa con</span>
-                <div class="flex-grow border-t-2 border-xul_ink"></div>
-            </div>
-
-            <!-- Botones Sociales -->
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <button id="btn-google" type="button" class="flex items-center justify-center gap-2 bg-white border-2 border-xul_ink p-2 font-bold text-sm hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_#2A2A2A] hover:shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-0.5 transition-all">
-                    <svg viewBox="0 0 24 24" class="w-5 h-5"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
-                    Google
-                </button>
-                <button id="btn-microsoft" type="button" class="flex items-center justify-center gap-2 bg-white border-2 border-xul_ink p-2 font-bold text-sm hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_#2A2A2A] hover:shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-0.5 transition-all">
-                    <svg viewBox="0 0 21 21" class="w-5 h-5"><path fill="#f35325" d="M1 1h9v9H1z"/><path fill="#81bc06" d="M11 1h9v9h-9z"/><path fill="#05a6f0" d="M1 11h9v9H1z"/><path fill="#ffba08" d="M11 11h9v9h-9z"/></svg>
-                    Microsoft
-                </button>
-                <button id="btn-facebook" type="button" class="flex items-center justify-center gap-2 bg-[#1877F2] border-2 border-xul_ink p-2 font-bold text-sm text-white hover:bg-[#166fe5] transition-colors shadow-[2px_2px_0px_#2A2A2A] hover:shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-0.5 transition-all">
-                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-                    Facebook
-                </button>
-                <button id="btn-apple" type="button" class="flex items-center justify-center gap-2 bg-black border-2 border-xul_ink p-2 font-bold text-sm text-white hover:bg-gray-800 transition-colors shadow-[2px_2px_0px_#2A2A2A] hover:shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-0.5 transition-all">
-                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.641-.026 2.669-1.48 3.665-2.94.114-.165.234-.343.35-.531-1.636-.666-2.825-2.434-2.766-4.453.072-2.316 1.831-3.693 1.942-3.765-1.127-1.657-2.898-1.89-3.524-1.928-1.906-.15-3.682 1.163-4.632 1.163-.949 0-2.443-1.082-3.32-1.01zM15.984 4.545c.801-.97 1.341-2.321 1.194-3.666-1.159.047-2.585.772-3.42 1.769-.675.795-1.285 2.181-1.111 3.493 1.294.1 2.541-.628 3.337-1.596z"/></svg>
-                    Apple
-                </button>
-            </div>
-            
-            <div class="mt-2 text-center">
-                <span id="toggle-question" class="font-sans text-sm text-gray-600">¿Aún no eres miembro?</span>
-                <a href="#" id="btn-toggle-mode" class="font-bold text-xul_ink hover:text-xul_terra uppercase text-sm tracking-wide ml-1">Regístrate aquí</a>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- ============================================== -->
-    <!-- VENTANA MODAL DE CURSOS (PROGRAMA Y ALUMNI)    -->
-    <!-- ============================================== -->
-    <div id="cursos-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <!-- Fondo oscuro semitransparente -->
-        <div id="cursos-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer"></div>
+    <!-- MODAL DEL JUICIO DE SÓCRATES -->
+    <div id="socrates-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div id="socrates-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="toggleSocratesModal()"></div>
         
-        <!-- Caja del Modal -->
-        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-6 md:p-10 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-[12px_12px_0px_#6BA4C4] transform transition-all">
-            <button id="close-cursos-modal" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none">
+        <div class="modal-animate relative bg-white border-[3px] border-xul_ink p-8 max-w-xl w-full shadow-[12px_12px_0px_#6BA4C4] z-10 max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleSocratesModal()" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none">
                 <i data-lucide="x" class="w-8 h-8"></i>
             </button>
 
-            <!-- Título del Modal -->
-            <div class="text-center mb-10">
-                <h3 class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase">Programa de Cursos</h3>
-                <p class="font-sans text-sm text-gray-600 mt-2 font-bold tracking-widest uppercase">Scholē de Ludosofía</p>
+            <div class="flex items-center gap-4 mb-6 border-b-2 border-xul_ink pb-4">
+                <div class="w-12 h-12 bg-xul_yellow border-2 border-xul_ink flex items-center justify-center shadow-[3px_3px_0px_#2A2A2A]">
+                    <i data-lucide="scale" class="w-6 h-6 text-xul_ink"></i>
+                </div>
+                <h3 class="xul-title text-3xl font-black text-xul_ink leading-none">El Juicio de Sócrates</h3>
+            </div>
+            
+            <p class="font-sans font-bold text-xul_terra uppercase tracking-widest text-xs mb-4">¿Buscador de la verdad o traidor?</p>
+            
+            <p class="font-serif text-lg text-gray-700 mb-4">
+                En el año 399 a.C., Atenas sentó en el banquillo a su ciudadano más incómodo. Sócrates no fue juzgado por un crimen común, sino por su palabra.
+            </p>
+            
+            <ul class="space-y-3 mb-6 font-serif text-lg">
+                <li class="leading-snug"><strong class="font-sans text-xul_ink">Los Cargos:</strong> Corromper a la juventud y no creer en los dioses de la ciudad.</li>
+                <li class="leading-snug"><strong class="font-sans text-xul_ink">La Defensa:</strong> Lejos de pedir clemencia, Sócrates afirmó que su labor era un regalo divino: actuar como un "tábano" que aguijonea a una sociedad adormecida para que despierte a la virtud.</li>
+                <li class="leading-snug"><strong class="font-sans text-xul_ink">El Desenlace:</strong> Prefería morir antes que dejar de filosofar. Su condena a beber cicuta lo convirtió en el primer mártir de la libertad de pensamiento.</li>
+            </ul>
+
+            <div class="bg-xul_paper border-l-4 border-xul_blue p-4 mb-6">
+                <p class="font-serif text-xl italic text-gray-800">"Una vida sin examen no merece la pena ser vivida."</p>
             </div>
 
-            <!-- SECCIÓN 1: Cursos Actuales -->
-            <div class="mb-10">
-                <div class="flex items-center gap-3 mb-4 border-b-2 border-xul_ink pb-2">
-                    <i data-lucide="sparkles" class="w-5 h-5 text-xul_terra"></i>
-                    <h4 class="font-sans font-black text-xl text-xul_ink uppercase tracking-widest">Cursos Actuales</h4>
-                </div>
-                
-                <!-- Tarjeta de Curso Actual -->
-                <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
-                    <div>
-                        <span class="inline-block bg-xul_yellow text-xul_ink text-[10px] font-black uppercase px-2 py-1 tracking-widest mb-2 border border-xul_ink">Inscripciones Abiertas</span>
-                        <h5 class="xul-title font-bold text-2xl text-xul_ink leading-none mb-1">Ontología del Azar</h5>
-                        <p class="font-serif text-sm text-gray-600">La metáfora de la tirada de dados en la filosofía.</p>
-                    </div>
-                    <a href="seminario_azar.html" class="w-full sm:w-auto bg-xul_ink text-white font-bold text-xs text-center uppercase tracking-widest px-5 py-3 hover:bg-xul_blue transition-colors flex-shrink-0">
-                        Ver Programa
-                    </a>
-                </div>
-            </div>
-
-            <!-- SECCIÓN 2: Histórico de Cursos -->
-            <div>
-                <div class="flex items-center gap-3 mb-4 border-b-2 border-gray-300 pb-2">
-                    <i data-lucide="history" class="w-5 h-5 text-gray-500"></i>
-                    <h4 class="font-sans font-black text-lg text-gray-600 uppercase tracking-widest">Histórico (Últimos 3)</h4>
-                </div>
-                
-                <div class="space-y-3">
-                    <div class="flex justify-between items-center bg-gray-50 border-2 border-gray-200 p-4 hover:border-xul_blue transition-colors cursor-pointer group">
-                        <div>
-                            <h5 class="font-sans font-bold text-xul_ink group-hover:text-xul_blue transition-colors">Ética para el Fin del Mundo</h5>
-                            <p class="font-serif text-xs text-gray-500 mt-1">Dictado en Marzo 2026</p>
-                        </div>
-                        <div class="flex flex-col items-end">
-                            <span class="text-[10px] font-bold text-xul_green uppercase tracking-widest mb-1 hidden sm:block">Completado</span>
-                            <i data-lucide="lock" class="w-4 h-4 text-gray-400"></i>
-                        </div>
-                    </div>
-                </div>
-                
-                <p class="text-center font-sans text-xs text-gray-500 mt-6 italic">
-                    El material de los cursos históricos es exclusivo para miembros activos del Club.
-                </p>
-            </div>
+            <a href="apologia.html" class="block w-full text-center bg-xul_ink text-white font-bold uppercase tracking-widest py-3 border-2 border-xul_ink hover:bg-xul_terra transition-colors shadow-[4px_4px_0px_#2A2A2A]">
+                Más Información: La Apología
+            </a>
         </div>
     </div>
 
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
-        import { 
-            getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, 
-            GoogleAuthProvider, FacebookAuthProvider, OAuthProvider, onAuthStateChanged, signOut 
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
-            authDomain: "ludosofia-1cdc7.firebaseapp.com",
-            projectId: "ludosofia-1cdc7",
-            storageBucket: "ludosofia-1cdc7.firebasestorage.app",
-            messagingSenderId: "542040294003",
-            appId: "1:542040294003:web:466f0156db6665a2482006",
-            measurementId: "G-MY88C9F4B0"
+    <!-- ========================================== -->
+    <!-- CONFIGURACIÓN DE ACCESO PARA ESTA PÁGINA   -->
+    <!-- ========================================== -->
+    <script>
+        const CONFIG_ACCESO = {
+            PUBLICO: true,         // 'true' = acceso libre
+            SOCIO: true,            // 'true' = acceso para Socios
+            FUNDADOR: true          // 'true' = acceso para Fundadores
         };
+    </script>
 
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+    <!-- Ejecución del validador de seguridad -->
+    <script src="seguridad.js"></script>
 
-        const providerGoogle = new GoogleAuthProvider();
-        const providerFacebook = new FacebookAuthProvider();
-        const providerApple = new OAuthProvider('apple.com');
-        const providerMicrosoft = new OAuthProvider('microsoft.com');
+    <!-- Lógica de Interfaz de Usuario -->
+    <script>
+        // Función para aplicar las insignias correctas al cargar la página
+        function aplicarInsignias() {
+            const publicos = document.querySelectorAll('.insignia-publico');
+            const socios = document.querySelectorAll('.insignia-socio');
+            const fundadores = document.querySelectorAll('.insignia-fundador');
+
+            const setDisplay = (elements, isVisible) => {
+                elements.forEach(el => {
+                    if (isVisible) {
+                        el.classList.remove('hidden');
+                        if (el.classList.contains('badge-float-sidebar')) {
+                            el.classList.add('inline-flex'); // Para sidebar
+                        } else {
+                            el.classList.add('inline-block'); // Para el título main
+                        }
+                    } else {
+                        el.classList.add('hidden');
+                        el.classList.remove('inline-flex', 'inline-block');
+                    }
+                });
+            };
+
+            setDisplay(publicos, CONFIG_ACCESO.PUBLICO);
+            setDisplay(socios, CONFIG_ACCESO.SOCIO);
+            setDisplay(fundadores, CONFIG_ACCESO.FUNDADOR);
+        }
+
+        // Ejecutamos la lógica de insignias apenas carga el documento
+        document.addEventListener('DOMContentLoaded', aplicarInsignias);
 
         lucide.createIcons();
 
-        const btnMenu = document.getElementById('mobile-menu-btn');
-        const menuMobile = document.getElementById('mobile-menu');
-        btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
-
-        function mostrarAlerta(titulo, mensaje, colorSombra = '#D1623A') {
-            document.getElementById('alert-title').innerText = titulo;
-            document.getElementById('alert-message').innerText = mensaje;
-            document.getElementById('alert-box').style.boxShadow = `12px 12px 0px ${colorSombra}`;
-            document.getElementById('alert-modal').classList.remove('hidden');
+        function toggleSocratesModal() {
+            const modal = document.getElementById('socrates-modal');
+            modal.classList.toggle('hidden');
         }
-
-        const loginModal = document.getElementById('login-modal');
-        const profileModal = document.getElementById('profile-modal');
-        const loginBtnDesktop = document.getElementById('login-btn-desktop');
-        const loginBtnMobile = document.getElementById('login-btn-mobile');
-
-        // ASIGNAMOS LA ACCIÓN DE ABRIR MODAL POR DEFECTO PARA QUE EL BOTÓN FUNCIONE SIEMPRE
-        loginBtnDesktop.onclick = toggleLoginModal;
-        loginBtnMobile.onclick = toggleLoginModal;
-
-        function toggleLoginModal() {
-            loginModal.classList.toggle('hidden');
-            if(!menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
-        }
-
-        function toggleProfileModal() {
-            profileModal.classList.toggle('hidden');
-            if(!menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
-        }
-
-        document.getElementById('close-modal').addEventListener('click', toggleLoginModal);
-        document.getElementById('login-overlay').addEventListener('click', toggleLoginModal);
-
-        const cursosModal = document.getElementById('cursos-modal');
-        window.toggleCursosModal = () => cursosModal.classList.toggle('hidden');
-        document.getElementById('close-cursos-modal').addEventListener('click', toggleCursosModal);
-
-        // --- SISTEMA DE ÍCONOS DE MEMBRESÍA (SEPARADOS DEL BOTÓN) ---
-        function getIconByRole(role) {
-            if (role === 'SOCIO FUNDADOR') {
-                return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
-            }
-            if (role === 'SOCIO') {
-                return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
-            }
-            return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
-        }
-
-        function updateUIWithRole(rol) {
-            const iconHtml = getIconByRole(rol);
-            const deskBadge = document.getElementById('badge-container-desktop');
-            const mobBadge = document.getElementById('badge-container-mobile');
-            
-            deskBadge.innerHTML = iconHtml;
-            mobBadge.innerHTML = iconHtml;
-            
-            // Forzamos visibilidad
-            deskBadge.style.display = 'flex';
-            mobBadge.style.display = 'flex';
-        }
-
-        // 4. LÓGICA DE USUARIO Y BASE DE DATOS
-        let usuarioActual = null;
-
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                usuarioActual = user;
-                const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-                
-                document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
-                document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
-                
-                loginBtnDesktop.onclick = toggleProfileModal;
-                loginBtnMobile.onclick = toggleProfileModal;
-
-                document.getElementById('profile-email').innerText = user.email;
-
-                try {
-                    const userRef = doc(db, "usuarios", user.uid);
-                    const docSnap = await getDoc(userRef);
-
-                    if (docSnap.exists()) {
-                        const datos = docSnap.data();
-                        localStorage.setItem('rol_usuario', datos.rol);
-                        document.getElementById('profile-role').innerText = datos.rol;
-                        updateUIWithRole(datos.rol);
-                    } else {
-                        await setDoc(userRef, {
-                            email: user.email,
-                            rol: 'PUBLICO',
-                            fechaRegistro: new Date()
-                        });
-                        localStorage.setItem('rol_usuario', 'PUBLICO');
-                        document.getElementById('profile-role').innerText = 'PÚBLICO';
-                        updateUIWithRole('PUBLICO');
-                    }
-                } catch (error) {
-                    console.error("Error al obtener rol:", error);
-                    updateUIWithRole('PUBLICO'); 
-                }
-            } else {
-                usuarioActual = null;
-                document.getElementById('login-text-desktop').innerText = 'INGRESAR';
-                document.getElementById('login-text-mobile').innerText = 'INGRESAR';
-                
-                document.getElementById('badge-container-desktop').style.display = 'none';
-                document.getElementById('badge-container-mobile').style.display = 'none';
-                
-                loginBtnDesktop.onclick = toggleLoginModal;
-                loginBtnMobile.onclick = toggleLoginModal;
-                localStorage.removeItem('rol_usuario');
-            }
-        });
-
-        // 5. ACCIONES DE INGRESO Y REGISTRO
-        let isLoginMode = true;
-
-        document.getElementById('btn-toggle-mode').addEventListener('click', (e) => {
-            e.preventDefault();
-            isLoginMode = !isLoginMode;
-            document.getElementById('modal-main-title').innerText = isLoginMode ? 'ENTRAR AL CLUB' : 'CREAR CUENTA';
-            document.getElementById('modal-submit-btn').innerText = isLoginMode ? 'ENTRAR CON CLAVE' : 'REGISTRARSE';
-            document.getElementById('toggle-question').innerText = isLoginMode ? '¿Aún no eres miembro?' : '¿Ya tienes cuenta?';
-            e.target.innerText = isLoginMode ? 'REGÍSTRATE AQUÍ' : 'INGRESA AQUÍ';
-        });
-
-        function procesarIngreso(promesaIngreso) {
-            promesaIngreso.then((result) => {
-                const nombreMostrar = result.user.displayName ? result.user.displayName.split(' ')[0] : result.user.email.split('@')[0];
-                mostrarAlerta('Acceso Concedido', `¡Todo listo para jugar, ${nombreMostrar}!`, '#75B07E');
-                loginModal.classList.add('hidden');
-            }).catch((error) => {
-                if (error.code === 'auth/invalid-credential') {
-                    mostrarAlerta('Error de Ingreso', 'Las credenciales no son válidas. Verifique su correo o clave.');
-                } else if (error.code === 'auth/email-already-in-use') {
-                    mostrarAlerta('Atención', 'Ese correo ya está registrado. Por favor, intenta ingresar.');
-                } else if (error.code === 'auth/weak-password') {
-                    mostrarAlerta('Clave Débil', 'La contraseña debe tener al menos 6 caracteres.');
-                } else {
-                    mostrarAlerta('Error', 'Hubo un problema: ' + error.message);
-                }
-            });
-        }
-
-        document.getElementById('login-form').addEventListener('submit', (event) => {
-            event.preventDefault();
-            const email = event.target.querySelectorAll('input')[0].value;
-            const password = event.target.querySelectorAll('input')[1].value;
-            
-            if (isLoginMode) {
-                procesarIngreso(signInWithEmailAndPassword(auth, email, password));
-            } else {
-                procesarIngreso(createUserWithEmailAndPassword(auth, email, password));
-            }
-        });
-
-        document.getElementById('btn-google').addEventListener('click', () => procesarIngreso(signInWithPopup(auth, providerGoogle)));
-        document.getElementById('btn-facebook').addEventListener('click', () => procesarIngreso(signInWithPopup(auth, providerFacebook)));
-        document.getElementById('btn-apple').addEventListener('click', () => procesarIngreso(signInWithPopup(auth, providerApple)));
-        document.getElementById('btn-microsoft').addEventListener('click', () => procesarIngreso(signInWithPopup(auth, providerMicrosoft)));
-
-        // 6. ACCIÓN DE CERRAR SESIÓN
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                profileModal.classList.add('hidden');
-                mostrarAlerta('Hasta Pronto', 'Tu sesión ha sido cerrada correctamente.', '#6BA4C4');
-            });
-        });
-
     </script>
 </body>
 </html>
