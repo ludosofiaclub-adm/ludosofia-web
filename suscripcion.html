@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planes y Membresías | LUDOSOFÍA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_silver: '#C4CAD0',
+                        xul_orange: '#E87524'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #FDF8ED; 
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-border {
+            border: 3px solid #2A2A2A;
+            box-shadow: 6px 6px 0px #2A2A2A;
+            transition: all 0.2s ease;
+        }
+        .xul-border:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px #2A2A2A;
+        }
+        .xul-title {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        .text-shadow-xul {
+            text-shadow: 4px 4px 0px #2A2A2A;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_terra selection:text-white">
+
+    <!-- Navbar Minimalista -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index_hacks.html" class="flex items-center space-x-3 cursor-pointer group hover:text-xul_terra transition-colors">
+                <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Volver al Catálogo</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <span class="text-xul_terra border-b-2 border-xul_terra">Suscripción</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER / HERO -->
+    <header class="pt-32 pb-16 px-6 relative border-b-[3px] border-xul_ink bg-white overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#2A2A2A 2px, transparent 2px), linear-gradient(90deg, #2A2A2A 2px, transparent 2px); background-size: 50px 50px;"></div>
+        
+        <div class="max-w-4xl mx-auto relative z-10 text-center">
+            
+            <div class="inline-block bg-xul_terra border-[3px] border-xul_ink px-4 py-1 mb-6 shadow-[4px_4px_0px_#2A2A2A] rotate-[-2deg]">
+                <span class="font-sans font-black text-xs md:text-sm uppercase tracking-widest text-white">Acceso Restringido</span>
+            </div>
+            
+            <h1 class="xul-title text-5xl md:text-7xl lg:text-8xl font-black text-xul_ink tracking-tighter mb-6">
+                EL ÁGORA TE ESPERA
+            </h1>
+            
+            <p class="font-serif text-xl md:text-2xl text-gray-700 max-w-2xl mx-auto leading-relaxed mb-8">
+                Has tropezado con los muros de la caverna. Para acceder a los manuales avanzados, las herramientas del laboratorio y participar en los debates socráticos, debes cruzar el umbral.
+            </p>
+        </div>
+    </header>
+
+    <!-- PLANES DE PRECIOS -->
+    <main class="max-w-7xl mx-auto px-6 py-20 relative">
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+            
+            <!-- PLAN PÚBLICO (GRATIS) -->
+            <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#6BA4C4] relative hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute -right-6 -top-6 w-16 h-16 bg-xul_blue border-[3px] border-xul_ink rounded-full flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                
+                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-2">Público</h3>
+                <p class="font-serif text-gray-500 mb-6 italic">"Solo sé que no sé nada"</p>
+                
+                <div class="text-5xl font-black text-xul_ink mb-8 xul-title">
+                    Gratis
+                </div>
+                
+                <ul class="space-y-4 mb-8 font-sans text-sm font-medium text-gray-700">
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_blue"></i> Leer el Manifiesto</li>
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_blue"></i> Acceso a introducciones de juegos</li>
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_blue"></i> Newsletter quincenal</li>
+                    <li class="flex items-center gap-3 opacity-50"><i data-lucide="x" class="w-5 h-5"></i> Descarga de PDF's</li>
+                    <li class="flex items-center gap-3 opacity-50"><i data-lucide="x" class="w-5 h-5"></i> Acceso a foros</li>
+                </ul>
+                
+                <a href="#" class="block w-full text-center bg-transparent border-[3px] border-xul_blue text-xul_blue font-black uppercase tracking-widest py-3 hover:bg-xul_blue hover:text-white transition-colors">
+                    Crear Cuenta Base
+                </a>
+            </div>
+
+            <!-- PLAN SOCIO ACTIVO -->
+            <div class="bg-xul_ink border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#E87524] relative transform scale-105 z-10 hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute -top-5 left-1/2 transform -translate-x-1/2 bg-xul_orange border-2 border-xul_ink px-4 py-1 text-[10px] font-black uppercase tracking-widest text-white shadow-[2px_2px_0px_#2A2A2A]">
+                    Más Elegido
+                </div>
+                <div class="absolute -right-6 -top-6 w-16 h-16 bg-xul_orange border-[3px] border-xul_ink rounded-full flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
+                </div>
+                
+                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-white mb-2">Socio Activo</h3>
+                <p class="font-serif text-gray-400 mb-6 italic">"Atrévete a saber"</p>
+                
+                <div class="text-5xl font-black text-white mb-2 xul-title">
+                    $5<span class="text-2xl text-gray-400">/mes</span>
+                </div>
+                <p class="text-xs text-xul_orange uppercase font-bold tracking-widest mb-8">Cancela cuando quieras</p>
+                
+                <ul class="space-y-4 mb-8 font-sans text-sm font-medium text-gray-300">
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_orange"></i> Todo lo del plan Público</li>
+                    <li class="flex items-center gap-3 text-white"><i data-lucide="check" class="w-5 h-5 text-xul_orange"></i> Acceso total a manuales completos</li>
+                    <li class="flex items-center gap-3 text-white"><i data-lucide="check" class="w-5 h-5 text-xul_orange"></i> Descarga ilimitada de PDFs listos para imprimir</li>
+                    <li class="flex items-center gap-3 text-white"><i data-lucide="check" class="w-5 h-5 text-xul_orange"></i> Pase libre a los foros de debate</li>
+                    <li class="flex items-center gap-3 opacity-50"><i data-lucide="x" class="w-5 h-5"></i> Insignia Exclusiva</li>
+                </ul>
+                
+                <a href="#" class="block w-full text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black uppercase tracking-widest py-4 hover:bg-white hover:text-xul_ink transition-colors shadow-[4px_4px_0px_#FDF8ED]">
+                    Convertirse en Socio
+                </a>
+            </div>
+
+            <!-- PLAN FUNDADOR -->
+            <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#EBB134] relative hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute -right-6 -top-6 w-16 h-16 bg-xul_yellow border-[3px] border-xul_ink rounded-full flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-xul_ink"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
+                </div>
+                
+                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-2">Fundador</h3>
+                <p class="font-serif text-gray-500 mb-6 italic">"Amor al destino (Amor Fati)"</p>
+                
+                <div class="text-5xl font-black text-xul_ink mb-2 xul-title">
+                    $50<span class="text-2xl text-gray-500">/año</span>
+                </div>
+                <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-8">Pago Anual (-15%)</p>
+                
+                <ul class="space-y-4 mb-8 font-sans text-sm font-medium text-gray-700">
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_yellow"></i> Todo lo del plan Socio</li>
+                    <li class="flex items-center gap-3 font-bold"><i data-lucide="check" class="w-5 h-5 text-xul_yellow"></i> Insignia dorada permanente</li>
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_yellow"></i> Vota por los próximos juegos a hackear</li>
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_yellow"></i> Mención especial en el Manifiesto</li>
+                </ul>
+                
+                <a href="#" class="block w-full text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black uppercase tracking-widest py-3 hover:bg-xul_ink hover:text-white transition-colors">
+                    Ser Fundador
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-xul_paper py-12 px-6 border-t-[3px] border-xul_ink mt-12">
+        <div class="max-w-6xl mx-auto text-center">
+            <svg viewBox="0 0 100 100" class="w-10 h-10 mx-auto mb-4 opacity-50">
+                <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="#2A2A2A" stroke-width="3"/>
+                <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="#2A2A2A" stroke-width="3"/>
+            </svg>
+            <p class="font-sans text-sm font-bold tracking-widest uppercase text-gray-500">
+                Ludosofía - El juego es algo serio.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
