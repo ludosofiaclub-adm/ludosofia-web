@@ -35,12 +35,9 @@
     <!-- CONFIGURACIÓN DE ACCESO PARA ESTA PÁGINA   -->
     <!-- ========================================== -->
     <script>
-        const CONFIG_ACCESO = {
-            PUBLICO: false,         // 'true' = acceso libre
-            SOCIO: true,            // 'true' = acceso para Socios
-            FUNDADOR: true          // 'true' = acceso para Fundadores
-        };
-    </script>
+    const CONFIG_ACCESO = { PUBLICO: false, SOCIO: true, SOCIO_FUNDADOR: true };
+</script>
+<script type="module" src="seguridad.js"></script>
 
     <!-- Ejecución del validador de seguridad -->
     <script src="seguridad.js"></script>
