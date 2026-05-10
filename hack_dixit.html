@@ -67,6 +67,22 @@
         .text-shadow-xul {
             text-shadow: 3px 3px 0px #6BA4C4;
         }
+
+        /* Scrollbar personalizada para el sidebar fijo */
+        .sidebar-scroll {
+            scrollbar-width: thin;
+            scrollbar-color: #C4CAD0 transparent;
+        }
+        .sidebar-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .sidebar-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-scroll::-webkit-scrollbar-thumb {
+            background-color: #C4CAD0;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-xul_yellow selection:text-xul_ink relative">
@@ -109,7 +125,7 @@
                 </svg>
                 <!-- Etiqueta superior -->
                 <div class="absolute top-4 left-0 bg-xul_ink text-white text-[10px] uppercase font-black tracking-widest py-1 px-4 border-y-[3px] border-r-[3px] border-xul_ink">
-                    Documento Oficial
+                    VARIANTE FILOSÓFICA
                 </div>
             </div>
 
@@ -157,7 +173,7 @@
     </header>
 
     <!-- CONTENIDO PRINCIPAL -->
-    <main class="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-4 gap-12 relative items-start">
+    <main class="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-4 gap-12 relative">
         
         <!-- Columna Izquierda: Documento Completo -->
         <div class="lg:col-span-3 space-y-16">
@@ -335,62 +351,66 @@
 
         <!-- Columna Derecha: Índice Fijo (Sidebar) -->
         <div class="lg:col-span-1 hidden lg:block">
-            <div class="sticky top-28 bg-white border-[3px] border-xul_ink shadow-[8px_8px_0px_#6BA4C4] p-6">
-                <div class="flex items-center gap-2 border-b-2 border-xul_ink pb-3 mb-4">
-                    <i data-lucide="list" class="w-5 h-5 text-xul_ink"></i>
-                    <h4 class="font-sans font-black text-xl uppercase tracking-widest text-xul_ink">Índice</h4>
-                </div>
+            <div class="sticky top-28 flex flex-col gap-6">
                 
-                <nav>
-                    <ul class="space-y-3 font-sans font-bold text-gray-600 text-sm">
-                        <li>
-                            <a href="#introduccion" class="hover:text-xul_terra transition-colors flex items-center gap-2">
-                                <span class="text-xul_terra">1.</span> Introducción
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#componentes" class="hover:text-xul_terra transition-colors flex items-center gap-2">
-                                <span class="text-xul_terra">2.</span> Componentes
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#reglas" class="hover:text-xul_terra transition-colors flex items-center gap-2">
-                                <span class="text-xul_terra">3.</span> Las Nuevas Reglas
-                            </a>
-                            <ul class="pl-6 mt-2 space-y-2 font-normal text-xs uppercase tracking-wider">
-                                <li>
-                                    <a href="#regla-a" class="hover:text-xul_blue transition-colors flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-xul_blue rounded-full"></div> Premisa del Narrador
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#regla-b" class="hover:text-xul_blue transition-colors flex items-center gap-2">
-                                        <div class="w-1.5 h-1.5 bg-xul_blue rounded-full"></div> Juicio Socrático
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li>
-                            <a href="#glosario" class="hover:text-xul_terra transition-colors flex items-center gap-2">
-                                <span class="text-xul_terra">4.</span> Glosario del Oráculo
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <!-- Banner Promocional Ludosofía -->
-            <div class="sticky top-[28rem] mt-8 bg-xul_ink border-[3px] border-xul_ink p-6 text-center text-white relative overflow-hidden group hover:shadow-[6px_6px_0px_#EBB134] transition-all cursor-pointer">
-                <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                    <i data-lucide="message-circle" class="w-32 h-32"></i>
+                <!-- Índice -->
+                <div class="bg-white border-[3px] border-xul_ink shadow-[8px_8px_0px_#6BA4C4] p-6">
+                    <div class="flex items-center gap-2 border-b-2 border-xul_ink pb-3 mb-4">
+                        <i data-lucide="list" class="w-5 h-5 text-xul_ink"></i>
+                        <h4 class="font-sans font-black text-xl uppercase tracking-widest text-xul_ink">Índice</h4>
+                    </div>
+                    
+                    <nav>
+                        <ul class="space-y-3 font-sans font-bold text-gray-600 text-sm">
+                            <li>
+                                <a href="#introduccion" class="hover:text-xul_terra transition-colors flex items-center gap-2">
+                                    <span class="text-xul_terra">1.</span> Introducción
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#componentes" class="hover:text-xul_terra transition-colors flex items-center gap-2">
+                                    <span class="text-xul_terra">2.</span> Componentes
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#reglas" class="hover:text-xul_terra transition-colors flex items-center gap-2">
+                                    <span class="text-xul_terra">3.</span> Las Nuevas Reglas
+                                </a>
+                                <ul class="pl-6 mt-2 space-y-2 font-normal text-xs uppercase tracking-wider">
+                                    <li>
+                                        <a href="#regla-a" class="hover:text-xul_blue transition-colors flex items-center gap-2">
+                                            <div class="w-1.5 h-1.5 bg-xul_blue rounded-full"></div> Premisa del Narrador
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#regla-b" class="hover:text-xul_blue transition-colors flex items-center gap-2">
+                                            <div class="w-1.5 h-1.5 bg-xul_blue rounded-full"></div> Juicio Socrático
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <a href="#glosario" class="hover:text-xul_terra transition-colors flex items-center gap-2">
+                                    <span class="text-xul_terra">4.</span> Glosario del Oráculo
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-                <h5 class="xul-title font-bold text-2xl mb-2 relative z-10">¿Lo jugaste?</h5>
-                <p class="font-sans text-xs text-gray-300 mb-4 relative z-10">
-                    Entra al Ágora y comparte cuál fue el mejor argumento socrático que escuchaste en tu mesa.
-                </p>
-                <a href="#" class="inline-block bg-transparent border-2 border-white px-6 py-2 font-bold text-[10px] uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors relative z-10">
-                    Ir al Foro
-                </a>
+
+                <!-- Banner Promocional Ludosofía -->
+                <div class="bg-xul_ink border-[3px] border-xul_ink p-6 text-center text-white relative overflow-hidden group hover:shadow-[6px_6px_0px_#EBB134] transition-all cursor-pointer">
+                    <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="message-circle" class="w-32 h-32"></i>
+                    </div>
+                    <h5 class="xul-title font-bold text-2xl mb-2 relative z-10">¿Lo jugaste?</h5>
+                    <p class="font-sans text-xs text-gray-300 mb-4 relative z-10">
+                        Entra al Ágora y comparte cuál fue el mejor argumento socrático que escuchaste en tu mesa.
+                    </p>
+                    <a href="#" class="inline-block bg-transparent border-2 border-white px-6 py-2 font-bold text-[10px] uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors relative z-10">
+                        Ir al Foro
+                    </a>
+                </div>
             </div>
         </div>
 
