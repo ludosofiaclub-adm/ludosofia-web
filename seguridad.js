@@ -66,8 +66,8 @@ function bloquearAcceso() {
                 <div class="w-20 h-20 mx-auto bg-xul_yellow border-[3px] border-xul_ink rounded-full flex items-center justify-center mb-4 shadow-[4px_4px_0px_#2A2A2A]">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-xul_ink"><path d="M12 2a10 10 0 1 1 0 20a10 10 0 0 1 0-20z"/><path d="M9 10a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0zm5 0a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0z"/><path d="M12 16.5c-2.5 0-4-2-4-2s1.5-2 4-2s4 2 4 2s-1.5 2-4 2z"/></svg>
                 </div>
-                <h3 id="guard-modal-title" class="font-serif text-4xl font-black text-xul_ink tracking-tight uppercase">Acceso Restringido</h3>
-                <p id="guard-modal-desc" class="font-sans text-sm text-xul_terra font-bold mt-2 tracking-widest uppercase">Identifícate para entrar a esta zona.</p>
+                <h3 id="guard-modal-title" class="font-serif text-4xl font-black text-xul_ink tracking-tight uppercase">¿Listo para tu turno?</h3>
+                <p id="guard-modal-desc" class="font-sans text-sm text-xul_terra font-bold mt-2 tracking-widest uppercase">Inicia tu sesión para continuar tu partida en el tablero.</p>
             </div>
 
             <form id="guard-login-form" class="mb-6">
