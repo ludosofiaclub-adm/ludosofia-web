@@ -23,11 +23,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-const providerGoogle = new GoogleAuthProvider();
-const providerFacebook = new FacebookAuthProvider();
-const providerApple = new OAuthProvider('apple.com');
-const providerMicrosoft = new OAuthProvider('microsoft.com');
-
 // 2. LÓGICA DE VERIFICACIÓN
 function obtenerRolUsuario() {
     // Si no hay nadie, por defecto es PUBLICO
@@ -63,7 +58,7 @@ function bloquearAcceso() {
         
         <div class="relative z-10 bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-md w-full shadow-[12px_12px_0px_#EBB134] animate-[modalFadeIn_0.3s_ease-out_forwards]">
             
-            <button onclick="window.location.href='index_hack.html'" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none" title="Volver al inicio">
+            <button onclick="window.location.href='index_hack.html'" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none" title="Volver al catálogo">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
             </button>
             
@@ -118,10 +113,8 @@ function bloquearAcceso() {
 
 // 4. EJECUCIÓN AL CARGAR LA PÁGINA
 document.addEventListener('DOMContentLoaded', () => {
-    // Verificamos si el usuario tiene acceso
     const tienePermiso = verificarAcceso();
     
-    // Si NO tiene permiso, bloqueamos la página
     if (!tienePermiso) {
         bloquearAcceso();
     }
