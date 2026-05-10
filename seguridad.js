@@ -28,13 +28,14 @@ const providerFacebook = new FacebookAuthProvider();
 const providerApple = new OAuthProvider('apple.com');
 const providerMicrosoft = new OAuthProvider('microsoft.com');
 
-// 2. LÓGICA DE VERIFICACIÓN INSTANTÁNEA
+// 2. LÓGICA DE VERIFICACIÓN
 function obtenerRolUsuario() {
+    // Si no hay nadie, por defecto es PUBLICO
     return localStorage.getItem('rol_usuario') || 'PUBLICO'; 
 }
 
 function verificarAcceso() {
-    if (typeof CONFIG_ACCESO === 'undefined') return true; // Libre
+    if (typeof CONFIG_ACCESO === 'undefined') return true; // Libre por defecto
 
     const rol = (obtenerRolUsuario() || '').toUpperCase().trim();
 
@@ -42,38 +43,35 @@ function verificarAcceso() {
     if (CONFIG_ACCESO.SOCIO_FUNDADOR === true && rol.includes('FUNDADOR')) return true;
     if (CONFIG_ACCESO.SOCIO === true && (rol.includes('SOCIO') || rol.includes('FUNDADOR'))) return true;
 
-    return false;
+    return false; // Si llega aquí, NO tiene acceso
 }
 
-// 3. INYECCIÓN DEL POP-UP HERMOSO DE LOGIN
-function inyectarInterfazSeguridad() {
-    const modalHtml = `
-    <div id="guard-alert-modal" class="hidden fixed inset-0 z-[9999] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('guard-alert-modal').classList.add('hidden')"></div>
-        <div id="guard-alert-box" class="relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] transform transition-all text-center animate-[modalFadeIn_0.3s_ease-out_forwards]">
-            <h3 id="guard-alert-title" class="font-[Cormorant_Garamond] text-3xl font-black text-xul_ink tracking-tight uppercase mb-2">Aviso</h3>
-            <p id="guard-alert-message" class="font-sans text-gray-700 mb-6">Mensaje</p>
-            <button onclick="document.getElementById('guard-alert-modal').classList.add('hidden')" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">Entendido</button>
-        </div>
-    </div>
+// 3. INYECCIÓN DE INTERFAZ DE BLOQUEO (Solo se llama si no hay acceso)
+function bloquearAcceso() {
+    
+    // Ocultar el contenido de la página actual
+    Array.from(document.body.children).forEach(child => {
+        if (child.tagName !== 'SCRIPT') {
+            child.style.display = 'none';
+        }
+    });
 
-    <div id="guard-login-modal" class="fixed inset-0 z-[9990] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-xul_ink/90 backdrop-blur-md"></div>
+    // Inyectar el HTML del modal de bloqueo
+    const modalHtml = `
+    <div id="guard-login-modal" class="fixed inset-0 z-[9990] flex items-center justify-center p-4 overflow-y-auto bg-xul_ink">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#D1623A 2px, transparent 2px), linear-gradient(90deg, #D1623A 2px, transparent 2px); background-size: 50px 50px;"></div>
         
-        <div class="relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-md w-full shadow-[12px_12px_0px_#EBB134] animate-[modalFadeIn_0.3s_ease-out_forwards]">
-            <button onclick="window.location.href='index.html'" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none" title="Volver al inicio">
+        <div class="relative z-10 bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-md w-full shadow-[12px_12px_0px_#EBB134] animate-[modalFadeIn_0.3s_ease-out_forwards]">
+            
+            <button onclick="window.location.href='index_hack.html'" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none" title="Volver al inicio">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
             </button>
             
             <div class="text-center mb-8">
-                <svg viewBox="0 0 50 50" class="w-12 h-12 mx-auto mb-4 text-xul_ink">
-                    <circle cx="25" cy="15" r="10" fill="none" stroke="currentColor" stroke-width="3"/>
-                    <circle cx="25" cy="15" r="3" fill="currentColor"/>
-                    <line x1="25" y1="25" x2="25" y2="45" stroke="currentColor" stroke-width="3"/>
-                    <line x1="25" y1="35" x2="35" y2="35" stroke="currentColor" stroke-width="3"/>
-                    <line x1="25" y1="42" x2="32" y2="42" stroke="currentColor" stroke-width="3"/>
-                </svg>
-                <h3 id="guard-modal-title" class="font-[Cormorant_Garamond] text-4xl font-black text-xul_ink tracking-tight uppercase">Acceso Restringido</h3>
+                <div class="w-20 h-20 mx-auto bg-xul_yellow border-[3px] border-xul_ink rounded-full flex items-center justify-center mb-4 shadow-[4px_4px_0px_#2A2A2A]">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-10 h-10 text-xul_ink"><path d="M12 2a10 10 0 1 1 0 20a10 10 0 0 1 0-20z"/><path d="M9 10a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0zm5 0a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0z"/><path d="M12 16.5c-2.5 0-4-2-4-2s1.5-2 4-2s4 2 4 2s-1.5 2-4 2z"/></svg>
+                </div>
+                <h3 id="guard-modal-title" class="font-serif text-4xl font-black text-xul_ink tracking-tight uppercase">Acceso Restringido</h3>
                 <p id="guard-modal-desc" class="font-sans text-sm text-xul_terra font-bold mt-2 tracking-widest uppercase">Identifícate para entrar a esta zona.</p>
             </div>
 
@@ -98,5 +96,33 @@ function inyectarInterfazSeguridad() {
             </div>
 
             <div class="grid grid-cols-2 gap-3 mb-6">
-                <button id="guard-btn-google" type="button" class="flex items-center justify-center gap-2 bg-white border-2 border-xul_ink p-2 font-bold text-sm hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5"><svg viewBox="0 0 24 24" class="w-5 h-5"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>Google</button>
-                <button id="guard-btn-microsoft" type="button" class="flex items-center justify-center gap-2 bg-white border-2 border-
+                <button id="guard-btn-google" type="button" class="flex items-center justify-center gap-2 bg-white border-2 border-xul_ink p-2 font-bold text-sm hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                    Google
+                </button>
+                <button id="guard-btn-microsoft" type="button" class="flex items-center justify-center gap-2 bg-white border-2 border-xul_ink p-2 font-bold text-sm hover:bg-gray-100 transition-colors shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5">
+                    <svg viewBox="0 0 21 21" class="w-5 h-5"><path fill="#f35325" d="M1 1h9v9H1z"/><path fill="#81bc06" d="M11 1h9v9h-9z"/><path fill="#05a6f0" d="M1 11h9v9H1z"/><path fill="#ffba08" d="M11 11h9v9h-9z"/></svg>
+                    Microsoft
+                </button>
+            </div>
+            
+            <div class="mt-4 pt-4 border-t-2 border-dashed border-gray-300 text-center">
+                 <p class="font-sans text-sm text-gray-700">¿No tienes cuenta? <a href="suscripcion.html" class="font-bold underline text-xul_ink hover:text-xul_terra">Únete al club</a></p>
+            </div>
+        </div>
+    </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+// 4. EJECUCIÓN AL CARGAR LA PÁGINA
+document.addEventListener('DOMContentLoaded', () => {
+    // Verificamos si el usuario tiene acceso
+    const tienePermiso = verificarAcceso();
+    
+    // Si NO tiene permiso, bloqueamos la página
+    if (!tienePermiso) {
+        bloquearAcceso();
+    }
+});
