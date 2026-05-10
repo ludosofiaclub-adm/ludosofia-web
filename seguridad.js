@@ -1,96 +1,89 @@
-// ==========================================
-// SCRIPT DE SEGURIDAD Y CONTROL DE ACCESO
-// ==========================================
+/**
+ * LUDOSOFÍA - Módulo de Seguridad y Control de Acceso
+ * Archivo: seguridad.js
+ */
 
-// 1. Lógica para verificar quién es el usuario
-function obtenerRolUsuario() {
-    return localStorage.getItem('rol_usuario') || 'PUBLICO'; 
-}
-
-function verificarAcceso() {
-    // Si la página no tiene restricciones, pasa directo
-    if (typeof CONFIG_ACCESO === 'undefined') {
-        return true;
-    }
-
-    const rol = obtenerRolUsuario();
-
-    // Nivel 1: Entran todos
-    if (CONFIG_ACCESO.PUBLICO === true) {
-        return true;
-    }
-
-    // Nivel 3: SOLO entran los Socios Fundadores
-    if (CONFIG_ACCESO.SOCIO_FUNDADOR === true) {
-        return rol === 'SOCIO FUNDADOR';
-    }
-
-    // Nivel 2: Entran los Socios y también los Fundadores
-    if (CONFIG_ACCESO.SOCIO === true) {
-        return rol === 'SOCIO' || rol === 'SOCIO FUNDADOR';
-    }
-
-    return false;
-}
-
-// 2. Función para dibujar el Pop-Up hermoso (Inyección dinámica)
-function mostrarPopUpSeguridad() {
-    // Usamos los colores exactos de Ludosofía
-    const modalHtml = `
-    <div id="security-modal" style="position: fixed; inset: 0; z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 1rem;">
-        <!-- Fondo oscuro -->
-        <div style="position: absolute; inset: 0; background-color: rgba(42, 42, 42, 0.9); backdrop-filter: blur(4px);"></div>
-        
-        <!-- Caja del Pop-Up -->
-        <div style="position: relative; background-color: #FDF8ED; border: 3px solid #2A2A2A; padding: 2.5rem; max-width: 28rem; width: 100%; box-shadow: 12px 12px 0px #D1623A; text-align: center; animation: modalFadeIn 0.3s ease-out forwards;">
-            
-            <svg viewBox="0 0 50 50" style="width: 4rem; height: 4rem; margin: 0 auto 1rem auto; color: #2A2A2A;">
-                <circle cx="25" cy="25" r="20" fill="none" stroke="currentColor" stroke-width="3"/>
-                <line x1="15" y1="15" x2="35" y2="35" stroke="currentColor" stroke-width="3"/>
-                <line x1="35" y1="15" x2="15" y2="35" stroke="currentColor" stroke-width="3"/>
-            </svg>
-            
-            <h3 style="font-family: 'Cormorant Garamond', serif; font-size: 2.25rem; font-weight: 900; color: #2A2A2A; text-transform: uppercase; letter-spacing: -0.025em; margin-bottom: 0.5rem; line-height: 1;">
-                Acceso Restringido
-            </h3>
-            
-            <p style="font-family: 'Outfit', sans-serif; font-size: 1rem; color: #4B5563; margin-bottom: 2rem;">
-                Las puertas de este espacio están cerradas. Necesitas iniciar sesión o adquirir una membresía superior para entrar.
-            </p>
-            
-            <button onclick="window.location.href='index.html'" style="width: 100%; background-color: #EBB134; border: 3px solid #2A2A2A; padding: 0.75rem; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1.125rem; text-transform: uppercase; letter-spacing: 0.1em; color: #2A2A2A; box-shadow: 4px 4px 0px #2A2A2A; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='6px 6px 0px #2A2A2A';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='4px 4px 0px #2A2A2A';">
-                Volver al Inicio a Ingresar
-            </button>
-        </div>
-    </div>
-    <style>
-        @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
-    `;
-
-    // Insertamos el modal al final de la página
-    document.body.insertAdjacentHTML('beforeend', modalHtml);
-}
-
-// 3. Ejecución principal
 document.addEventListener('DOMContentLoaded', () => {
-    const tienePermiso = verificarAcceso();
+    
+    // 1. Simulación de la Sesión del Usuario
+    // Cambia este valor a: 'publico', 'socio' o 'fundador' para probar.
+    const nivelUsuarioActual = 'publico'; 
 
-    if (!tienePermiso) {
-        // Bloqueamos que se pueda hacer scroll
-        document.body.style.overflow = 'hidden'; 
+    // 2. Verificar el objeto de configuración (definido en el HTML de cada página)
+    if (typeof CONFIG_ACCESO === 'undefined') {
+        console.warn("Advertencia: No se encontró CONFIG_ACCESO en esta página. Permitiendo acceso por defecto.");
+        return;
+    }
+
+    // 3. Lógica de validación de permisos
+    let accesoPermitido = false;
+
+    if (nivelUsuarioActual === 'publico' && CONFIG_ACCESO.PUBLICO) {
+        accesoPermitido = true;
+    } else if (nivelUsuarioActual === 'socio' && (CONFIG_ACCESO.SOCIO || CONFIG_ACCESO.PUBLICO)) {
+        accesoPermitido = true;
+    } else if (nivelUsuarioActual === 'fundador' && (CONFIG_ACCESO.FUNDADOR || CONFIG_ACCESO.SOCIO || CONFIG_ACCESO.PUBLICO)) {
+        accesoPermitido = true;
+    }
+
+    // 4. Pop-up Gamificado si no hay permiso
+    if (!accesoPermitido) {
         
-        // Magia extra: Ocultamos todo el contenido secreto que estaba en la página
+        // Ocultar todo el contenido actual de la página para que no se pueda leer
         Array.from(document.body.children).forEach(child => {
-            if (child.tagName !== 'SCRIPT' && child.tagName !== 'STYLE') {
+            if (child.tagName !== 'SCRIPT') {
                 child.style.display = 'none';
             }
         });
+
+        // Crear el Pop-up
+        const modalBloqueo = document.createElement('div');
+        modalBloqueo.innerHTML = `
+            <div class="fixed inset-0 z-[9999] flex items-center justify-center bg-xul_ink p-4 font-sans overflow-hidden">
+                <!-- Trama de fondo interactiva -->
+                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#D1623A 2px, transparent 2px), linear-gradient(90deg, #D1623A 2px, transparent 2px); background-size: 50px 50px;"></div>
+
+                <div class="relative z-10 bg-xul_paper border-[3px] border-xul_ink p-8 md:p-12 max-w-lg w-full text-center shadow-[12px_12px_0px_#6BA4C4]">
+                    
+                    <!-- Icono de Búho (Símbolo de Sabiduría) animado -->
+                    <div class="w-24 h-24 mx-auto bg-xul_yellow border-[3px] border-xul_ink rounded-full flex items-center justify-center mb-6 shadow-[6px_6px_0px_#2A2A2A] transform hover:rotate-180 transition-transform duration-500 cursor-pointer">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-12 h-12 text-xul_ink"><path d="M12 2a10 10 0 1 1 0 20a10 10 0 0 1 0-20z"/><path d="M9 10a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0zm5 0a1.5 1.5 0 1 1 3 0a1.5 1.5 0 0 1-3 0z"/><path d="M12 16.5c-2.5 0-4-2-4-2s1.5-2 4-2s4 2 4 2s-1.5 2-4 2z"/></svg>
+                    </div>
+                    
+                    <!-- Se ha eliminado el encabezado "El Oráculo exige un tributo" -->
+                    
+                    <p class="font-sans text-lg text-gray-700 mb-8 leading-relaxed">
+                        Unite a nuestro Club de Filosofía, desbloquea el acceso total al tablero y descubre este contenido.
+                    </p>
+                    
+                    <!-- Botón Llamativo de Acción -->
+                    <button onclick="window.location.href='suscripcion.html'" class="w-full bg-xul_green text-white border-[3px] border-xul_ink font-black text-lg md:text-xl uppercase tracking-widest py-4 shadow-[6px_6px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[8px_8px_0px_#2A2A2A] transition-all flex justify-center items-center gap-3 group">
+                        <!-- Mantenemos el dado en el botón para coherencia con la metáfora del juego en el texto -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-6 h-6 group-hover:rotate-12 transition-transform"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><circle cx="15.5" cy="15.5" r="1.5"></circle><circle cx="15.5" cy="8.5" r="1.5"></circle><circle cx="8.5" cy="15.5" r="1.5"></circle><circle cx="12" cy="12" r="1.5"></circle></svg>
+                        Lanzar los dados y Unirse
+                    </button>
+                    
+                    <!-- Opción de Login para usuarios existentes -->
+                    <div class="mt-5">
+                        <p class="font-sans text-sm md:text-base text-gray-700">
+                            ¿Ya tienes acceso al tablero? 
+                            <a href="login.html" class="font-bold underline text-xul_ink hover:text-xul_terra transition-colors">
+                                Inicia sesión
+                            </a>
+                        </p>
+                    </div>
+
+                    <!-- Regresar al catálogo -->
+                    <div class="mt-8 pt-6 border-t-2 border-dashed border-gray-300">
+                        <a href="index_hack.html" class="text-sm font-bold uppercase tracking-widest text-xul_terra hover:text-xul_ink transition-colors">
+                            ← Regresar al catálogo
+                        </a>
+                    </div>
+                </div>
+            </div>
+        `;
         
-        // Mostramos nuestro nuevo y hermoso pop-up
-        mostrarPopUpSeguridad();
+        // Agregar el modal al documento
+        document.body.appendChild(modalBloqueo);
     }
 });
