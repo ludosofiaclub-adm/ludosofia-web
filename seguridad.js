@@ -30,7 +30,7 @@ const providerMicrosoft = new OAuthProvider('microsoft.com');
 
 // 2. LÓGICA DE VERIFICACIÓN INSTANTÁNEA
 function obtenerRolUsuario() {
-    return localStorage.getItem('rol_usuario') || 'FUNDADOR'; 
+    return localStorage.getItem('rol_usuario') || 'PUBLICO'; 
 }
 
 function verificarAcceso() {
