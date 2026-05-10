@@ -64,8 +64,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         Lanzar los dados y Unirse
                     </button>
                     
+                    <!-- NUEVO: Opción de Login para usuarios existentes -->
+                    <div class="mt-5">
+                        <p class="font-sans text-sm md:text-base text-gray-700">
+                            ¿Ya tienes acceso al tablero? 
+                            <a href="login.html" class="font-bold underline text-xul_ink hover:text-xul_terra transition-colors">
+                                Inicia sesión
+                            </a>
+                        </p>
+                    </div>
+
                     <!-- Regresar al catálogo -->
-                    <div class="mt-8">
+                    <div class="mt-8 pt-6 border-t-2 border-dashed border-gray-300">
                         <a href="index_hack.html" class="text-sm font-bold uppercase tracking-widest text-xul_terra hover:text-xul_ink transition-colors">
                             ← Regresar al catálogo
                         </a>
