@@ -1,42 +1,39 @@
-// ==========================================
-// SCRIPT DE SEGURIDAD Y CONTROL DE ACCESO
-// ==========================================
-
-function obtenerRolUsuario() {
-    return localStorage.getItem('rol_usuario') || 'PUBLICO'; 
-}
-
-function verificarAcceso() {
-    // Si la constante CONFIG_ACCESO no está definida, es de navegación libre
-    if (typeof CONFIG_ACCESO === 'undefined') {
-        return true;
-    }
-
-    const rol = obtenerRolUsuario();
-
-    // Nivel 1: Entran todos
-    if (CONFIG_ACCESO.PUBLICO === true) {
-        return true;
-    }
-
-    // Nivel 3: SOLO entran los Socios Fundadores
-    if (CONFIG_ACCESO.SOCIO_FUNDADOR === true) {
-        return rol === 'SOCIO FUNDADOR';
-    }
-
-    // Nivel 2: Entran los Socios y también los Socios Fundadores
-    if (CONFIG_ACCESO.SOCIO === true) {
-        return rol === 'SOCIO' || rol === 'SOCIO FUNDADOR';
-    }
-
-    return false;
-}
+/**
+ * LUDOSOFÍA - Módulo de Seguridad y Control de Acceso
+ * Archivo: seguridad.js
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
-    const tienePermiso = verificarAcceso();
+    
+    // 1. Simulación de la Sesión del Usuario
+    // Cambia este valor a: 'publico', 'socio' o 'fundador' para probar.
+    // Al dejarlo en 'publico', activará el bloqueo en páginas exclusivas (ej. CONFIG_ACCESO.PUBLICO = false).
+    const nivelUsuarioActual = 'publico'; 
 
-    if (!tienePermiso) {
-        alert('El Ágora está restringida. Necesitas un nivel de membresía superior para ver este contenido.');
-        window.location.href = 'index.html'; 
+    // 2. Verificar el objeto de configuración (definido en el HTML de cada página)
+    if (typeof CONFIG_ACCESO === 'undefined') {
+        console.warn("Advertencia: No se encontró CONFIG_ACCESO en esta página. Permitiendo acceso por defecto.");
+        return;
+    }
+
+    // 3. Lógica de validación de permisos
+    let accesoPermitido = false;
+
+    if (nivelUsuarioActual === 'publico' && CONFIG_ACCESO.PUBLICO) {
+        accesoPermitido = true;
+    } else if (nivelUsuarioActual === 'socio' && (CONFIG_ACCESO.SOCIO || CONFIG_ACCESO.PUBLICO)) {
+        accesoPermitido = true;
+    } else if (nivelUsuarioActual === 'fundador' && (CONFIG_ACCESO.FUNDADOR || CONFIG_ACCESO.SOCIO || CONFIG_ACCESO.PUBLICO)) {
+        accesoPermitido = true;
+    }
+
+    // 4. Ejecutar Bloqueo si no hay permiso y redirigir a Suscripción
+    if (!accesoPermitido) {
+        // Ocultar el contenido inmediatamente para que no lo puedan leer de fondo
+        document.body.style.display = 'none';
+        
+        // Redirigir a la página de planes para convertirlos en socios
+        alert("El Oráculo exige un tributo. Este contenido es exclusivo para Socios del club.");
+        window.location.href = "suscripcion.html"; 
     }
 });
