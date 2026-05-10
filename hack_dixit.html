@@ -34,10 +34,16 @@
     <!-- ========================================== -->
     <!-- CONFIGURACIÓN DE ACCESO PARA ESTA PÁGINA   -->
     <!-- ========================================== -->
-    <script>
-    const CONFIG_ACCESO = { PUBLICO: false, SOCIO: true, SOCIO_FUNDADOR: true };
+    <!-- CONFIGURACIÓN DE ACCESO -->
+<script>
+    const CONFIG_ACCESO = {
+        PUBLICO: false,  // Bloqueado para curiosos
+        SOCIO: true,     // Permitido para Socios
+        FUNDADOR: true   // Permitido para Fundadores
+    };
 </script>
-<script type="module" src="seguridad.js"></script>
+<!-- LUEGO CARGAS EL SCRIPT DE SEGURIDAD -->
+<script src="seguridad.js" defer></script>
 
     <!-- Ejecución del validador de seguridad -->
     <script src="seguridad.js"></script>
