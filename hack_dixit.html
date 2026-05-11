@@ -33,17 +33,48 @@
         }
     </script>
 
-    <!-- CONFIGURACIÓN DE ACCESO -->
     <script>
-        window.CONFIG_ACCESO = {
+        const CONFIG_ACCESO = {
             PUBLICO: false,           // Bloqueado para visitantes sin cuenta
             SOCIO: true,              // Acceso permitido
             SOCIO_FUNDADOR: true      // Acceso permitido
         };
-        
-        // 🔒 OCULTAMOS LA PÁGINA DE INMEDIATO HASTA VERIFICAR LA SESIÓN
-        document.documentElement.style.display = 'none';
     </script>
+    
+    <!-- ========================================== -->
+    <!-- GUARDIÁN DE ACCESO CON MEMORIA LOCAL -->
+    <!-- ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        // NOTA: Usa tu propia configuración aquí
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Extraemos solo el nombre del archivo actual (ej: "mis-juegos.html")
+        const rutaActual = window.location.pathname.split('/').pop() || 'index.html';
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // 1. Guardamos la página en la memoria secreta del navegador
+                localStorage.setItem('destino_post_login', rutaActual);
+                
+                // 2. Lo mandamos al login normal
+                window.location.replace('login.html'); 
+            } else {
+                // El usuario sí está logueado. Puede ver el contenido.
+                console.log("Acceso concedido");
+            }
+        });
+    </script>
+    <!-- ========================================== -->
 
     <style>
         body { 
@@ -71,54 +102,20 @@
 </head>
 <body class="antialiased selection:bg-xul_yellow selection:text-xul_ink relative">
 
-    <!-- NAVBAR UNIFICADO -->
     <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
         <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
-            <div class="flex items-center space-x-3 cursor-pointer" onclick="window.location.href='index.html'">
-                <svg viewBox="0 0 100 100" class="w-10 h-10">
-                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
-                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
-                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
-                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
-                </svg>
+            <a href="index_hack.html" class="flex items-center space-x-3 cursor-pointer group hover:text-xul_terra transition-colors">
+                <i data-lucide="arrow-left" class="w-6 h-6"></i>
                 <div class="flex flex-col">
                     <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
-                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Volver al catálogo</span>
                 </div>
-            </div>
+            </a>
             
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
-                <a href="index.html#schole" class="hover:text-xul_terra transition">Scholē</a>
-                <a href="index.html#ludoteca" class="hover:text-xul_terra transition">Ludoteca</a>
-                <a href="seccion_mazos.html" class="hover:text-xul_terra transition">Cartas</a>
-                <a href="index.html#faqs" class="hover:text-xul_terra transition">FAQs</a>
-                
-                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía">
-                </div>
-
-                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
-                    <span id="login-text-desktop">Ingresar</span>
-                </button>
+                <span class="text-xul_ink/50">Colección:</span>
+                <span class="text-xul_terra border-b-2 border-xul_terra">Juegos Hackeados</span>
             </div>
-            
-            <div class="md:hidden">
-                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
-                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
-                </button>
-            </div>
-        </div>
-        
-        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
-            <a href="index.html#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
-            <a href="index.html#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
-            <a href="seccion_mazos.html" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
-            <a href="index.html#faqs" class="mobile-link hover:text-xul_terra transition block">FAQs</a>
-            
-            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
-
-            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
-                <span id="login-text-mobile">Ingresar</span>
-            </button>
         </div>
     </nav>
 
@@ -159,11 +156,11 @@
                 </div>
 
                 <script>
-                    // Mostrar insignias según configuración atada a window
-                    if (typeof window.CONFIG_ACCESO !== 'undefined') {
-                        if (window.CONFIG_ACCESO.PUBLICO) document.getElementById('insignia-publico').classList.remove('hidden');
-                        if (window.CONFIG_ACCESO.SOCIO) document.getElementById('insignia-socio').classList.remove('hidden');
-                        if (window.CONFIG_ACCESO.SOCIO_FUNDADOR) document.getElementById('insignia-fundador').classList.remove('hidden');
+                    // Mostrar insignias según configuración
+                    if (typeof CONFIG_ACCESO !== 'undefined') {
+                        if (CONFIG_ACCESO.PUBLICO) document.getElementById('insignia-publico').classList.remove('hidden');
+                        if (CONFIG_ACCESO.SOCIO) document.getElementById('insignia-socio').classList.remove('hidden');
+                        if (CONFIG_ACCESO.SOCIO_FUNDADOR) document.getElementById('insignia-fundador').classList.remove('hidden');
                     }
                 </script>
 
@@ -269,229 +266,8 @@
         </div>
     </footer>
 
-    <!-- MODALES Y SCRIPT DE SESIÓN (FIREBASE) -->
-    <div id="alert-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('alert-modal').classList.add('hidden')"></div>
-        <div id="alert-box" class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] transform transition-all text-center">
-            <h3 id="alert-title" class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-2">Aviso</h3>
-            <p id="alert-message" class="font-sans text-gray-700 mb-6">Mensaje de alerta.</p>
-            <button onclick="document.getElementById('alert-modal').classList.add('hidden')" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">Entendido</button>
-        </div>
-    </div>
-
-    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
-        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] transform transition-all text-center">
-            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
-            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
-                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
-            </div>
-            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-1">Mi Perfil</h3>
-            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
-            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
-                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía Actual</p>
-                <p id="profile-role" class="font-black text-xl text-xul_ink uppercase tracking-wider text-xul_terra"></p>
-            </div>
-            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">Cerrar Sesión</button>
-        </div>
-    </div>
-
-    <div id="login-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
-        <div id="login-overlay" class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer"></div>
-        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-md w-full shadow-[12px_12px_0px_#EBB134] transform transition-all">
-            <button id="close-modal" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
-            <div class="text-center mb-8">
-                <svg viewBox="0 0 50 50" class="w-12 h-12 mx-auto mb-4 text-xul_ink"><circle cx="25" cy="15" r="10" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="25" cy="15" r="3" fill="currentColor"/><line x1="25" y1="25" x2="25" y2="45" stroke="currentColor" stroke-width="3"/><line x1="25" y1="35" x2="35" y2="35" stroke="currentColor" stroke-width="3"/><line x1="25" y1="42" x2="32" y2="42" stroke="currentColor" stroke-width="3"/></svg>
-                <h3 id="modal-main-title" class="xul-title text-4xl font-black text-xul_ink tracking-tight uppercase">Entrar al CLUB</h3>
-                <p class="font-sans text-sm text-gray-600 mt-2">Identifícate para continuar tu partida.</p>
-            </div>
-            <form id="login-form" class="mb-6">
-                <div class="mb-5">
-                    <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Correo Electrónico</label>
-                    <input type="email" placeholder="Ej: socrates@mail.com" required class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue transition-all">
-                </div>
-                <div class="mb-6">
-                    <div class="flex justify-between items-end mb-2">
-                        <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink">Clave Secreta</label>
-                    </div>
-                    <input type="password" placeholder="••••••••" required minlength="6" class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue transition-all">
-                </div>
-                <button id="modal-submit-btn" type="submit" class="w-full bg-xul_yellow border-[3px] border-xul_ink py-3 font-black text-lg uppercase tracking-widest text-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">Entrar con Clave</button>
-            </form>
-            <div class="flex items-center my-4">
-                <div class="flex-grow border-t-2 border-xul_ink"></div>
-                <span class="px-3 font-bold text-xs uppercase tracking-widest text-gray-500">O usa tus redes</span>
-                <div class="flex-grow border-t-2 border-xul_ink"></div>
-            </div>
-            <div class="grid grid-cols-2 gap-3 mb-6">
-                <button id="btn-google" type="button" class="flex items-center justify-center gap-2 bg-white border-2 border-xul_ink p-2 font-bold text-sm hover:bg-gray-100 shadow-[2px_2px_0px_#2A2A2A]"><svg viewBox="0 0 24 24" class="w-5 h-5"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>Google</button>
-                <button id="btn-microsoft" type="button" class="flex items-center justify-center gap-2 bg-white border-2 border-xul_ink p-2 font-bold text-sm hover:bg-gray-100 shadow-[2px_2px_0px_#2A2A2A]"><svg viewBox="0 0 21 21" class="w-5 h-5"><path fill="#f35325" d="M1 1h9v9H1z"/><path fill="#81bc06" d="M11 1h9v9h-9z"/><path fill="#05a6f0" d="M1 11h9v9H1z"/><path fill="#ffba08" d="M11 11h9v9h-9z"/></svg>Microsoft</button>
-            </div>
-            <div class="mt-2 text-center">
-                <span id="toggle-question" class="font-sans text-sm text-gray-600">¿Aún no eres miembro?</span>
-                <a href="#" id="btn-toggle-mode" class="font-bold text-xul_ink hover:text-xul_terra uppercase text-sm tracking-wide ml-1">Regístrate aquí</a>
-            </div>
-        </div>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
-            authDomain: "ludosofia-1cdc7.firebaseapp.com",
-            projectId: "ludosofia-1cdc7"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
+    <script>
         lucide.createIcons();
-
-        // UI BÁSICA
-        const btnMenu = document.getElementById('mobile-menu-btn');
-        const menuMobile = document.getElementById('mobile-menu');
-        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
-
-        function mostrarAlerta(titulo, mensaje, color = '#D1623A') {
-            document.getElementById('alert-title').innerText = titulo;
-            document.getElementById('alert-message').innerText = mensaje;
-            document.getElementById('alert-box').style.boxShadow = `12px 12px 0px ${color}`;
-            document.getElementById('alert-modal').classList.remove('hidden');
-        }
-
-        const loginModal = document.getElementById('login-modal');
-        const profileModal = document.getElementById('profile-modal');
-        const loginBtnDesktop = document.getElementById('login-btn-desktop');
-        const loginBtnMobile = document.getElementById('login-btn-mobile');
-
-        function toggleLoginModal() {
-            loginModal.classList.toggle('hidden');
-            if(menuMobile && !menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
-        }
-        function toggleProfileModal() {
-            profileModal.classList.toggle('hidden');
-            if(menuMobile && !menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
-        }
-
-        loginBtnDesktop.onclick = toggleLoginModal;
-        if(loginBtnMobile) loginBtnMobile.onclick = toggleLoginModal;
-        document.getElementById('close-modal').addEventListener('click', toggleLoginModal);
-        document.getElementById('login-overlay').addEventListener('click', toggleLoginModal);
-
-        function updateUIWithRole(rol) {
-            let r = (rol || '').toUpperCase().trim();
-            let iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
-            if (r.includes('FUNDADOR')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
-            else if (r.includes('SOCIO')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
-            
-            const deskBadge = document.getElementById('badge-container-desktop');
-            const mobBadge = document.getElementById('badge-container-mobile');
-            if(deskBadge) { deskBadge.innerHTML = iconHtml; deskBadge.style.display = 'flex'; }
-            if(mobBadge) { mobBadge.innerHTML = iconHtml; mobBadge.style.display = 'flex'; }
-        }
-
-        // ==========================================
-        // SISTEMA DE SEGURIDAD INTEGRADO
-        // ==========================================
-        onAuthStateChanged(auth, async (user) => {
-            const config = window.CONFIG_ACCESO;
-
-            if (user) {
-                try {
-                    const docSnap = await getDoc(doc(db, "usuarios", user.uid));
-                    if (docSnap.exists()) {
-                        const datos = docSnap.data();
-                        const rolUsuario = (datos.rol || '').toUpperCase();
-                        
-                        // Validar contra CONFIG_ACCESO
-                        let tieneAcceso = false;
-                        if (config.PUBLICO) tieneAcceso = true;
-                        else if (config.SOCIO && rolUsuario.includes('SOCIO')) tieneAcceso = true;
-                        else if (config.SOCIO_FUNDADOR && (rolUsuario.includes('FUNDADOR') || rolUsuario.includes('SOCIO_FUNDADOR'))) tieneAcceso = true;
-
-                        if (tieneAcceso) {
-                            // ✨ TIENE PERMISO: MOSTRAR LA PÁGINA
-                            document.documentElement.style.display = '';
-                            
-                            // Cargar interfaz del usuario
-                            const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-                            document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
-                            if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
-                            
-                            loginBtnDesktop.onclick = toggleProfileModal;
-                            if(loginBtnMobile) loginBtnMobile.onclick = toggleProfileModal;
-
-                            document.getElementById('profile-email').innerText = user.email;
-                            localStorage.setItem('rol_usuario', datos.rol);
-                            document.getElementById('profile-role').innerText = datos.rol;
-                            updateUIWithRole(datos.rol);
-                        } else {
-                            // Logueado, pero NO tiene el rol requerido
-                            window.location.replace("suscripcion.html");
-                        }
-                    } else {
-                        // Logueado, pero NO tiene perfil en Firestore
-                        window.location.replace("suscripcion.html");
-                    }
-                } catch (error) { 
-                    console.error("Error validando usuario:", error); 
-                    window.location.replace("login.html");
-                }
-            } else {
-                // NO ESTÁ LOGUEADO
-                if (!config.PUBLICO) {
-                    window.location.replace("login.html");
-                } else {
-                    // La página es pública: La mostramos con interfaz de visitante
-                    document.documentElement.style.display = '';
-                    
-                    document.getElementById('login-text-desktop').innerText = 'INGRESAR';
-                    if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = 'INGRESAR';
-                    if(document.getElementById('badge-container-desktop')) document.getElementById('badge-container-desktop').style.display = 'none';
-                    if(document.getElementById('badge-container-mobile')) document.getElementById('badge-container-mobile').style.display = 'none';
-                    
-                    loginBtnDesktop.onclick = toggleLoginModal;
-                    if(loginBtnMobile) loginBtnMobile.onclick = toggleLoginModal;
-                    localStorage.removeItem('rol_usuario');
-                }
-            }
-        });
-
-        // Toggle Registro/Login
-        let isLoginMode = true;
-        document.getElementById('btn-toggle-mode').addEventListener('click', (e) => {
-            e.preventDefault();
-            isLoginMode = !isLoginMode;
-            document.getElementById('modal-main-title').innerText = isLoginMode ? 'ENTRAR AL CLUB' : 'CREAR CUENTA';
-            document.getElementById('modal-submit-btn').innerText = isLoginMode ? 'ENTRAR CON CLAVE' : 'REGISTRARSE';
-            document.getElementById('toggle-question').innerText = isLoginMode ? '¿Aún no eres miembro?' : '¿Ya tienes cuenta?';
-            e.target.innerText = isLoginMode ? 'REGÍSTRATE AQUÍ' : 'INGRESA AQUÍ';
-        });
-
-        document.getElementById('login-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = e.target.querySelectorAll('input')[0].value;
-            const password = e.target.querySelectorAll('input')[1].value;
-            const promesaAuth = isLoginMode ? signInWithEmailAndPassword(auth, email, password) : createUserWithEmailAndPassword(auth, email, password);
-            
-            promesaAuth.then((result) => {
-                loginModal.classList.add('hidden');
-                // Al loguearse exitosamente, recargamos la página. 
-                // Esto hará que el validador de arriba se ejecute de nuevo y le muestre la página al instante.
-                window.location.reload(); 
-            }).catch(err => mostrarAlerta('Error', err.message));
-        });
-
-        document.getElementById('btn-logout').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                profileModal.classList.add('hidden');
-                window.location.reload(); 
-            });
-        });
     </script>
 </body>
 </html>
