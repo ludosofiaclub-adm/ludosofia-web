@@ -253,7 +253,7 @@
         const providerApple = new OAuthProvider('apple.com');
 
         // LÓGICA DE REDIRECCIÓN AUTOMÁTICA Y EXTRACCIÓN DE RUTA
-        onAuthStateChanged(auth, async (user) => {
+        localStorage(auth, async (user) => {
             if (user) {
                 try {
                     let docRef;
