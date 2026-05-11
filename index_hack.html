@@ -90,7 +90,8 @@
         onAuthStateChanged(auth, (user) => {
             if (!user) {
                 // Si el usuario NO existe (no está logueado), lo mandamos al login
-                window.location.replace('login.html'); 
+                // window.location.replace('login.html'); 
+                console.log("Visitante público viendo la página.");
             } else {
                 // El usuario está logueado, se le permite ver la página.
                 console.log("Acceso concedido al socio:", user.email);
