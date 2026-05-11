@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso al Club | LUDOSOFÍA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #2A2A2A; /* Fondo oscuro para destacar la tarjeta */
+            color: #2A2A2A;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .xul-border {
+            border: 3px solid #2A2A2A;
+            box-shadow: 12px 12px 0px #EBB134;
+            transition: all 0.3s ease;
+        }
+        .xul-title {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        
+        /* Trama de fondo exclusiva para el Login */
+        .login-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.15;
+            pointer-events: none;
+            background-image: linear-gradient(#EBB134 2px, transparent 2px), linear-gradient(90deg, #EBB134 2px, transparent 2px);
+            background-size: 50px 50px;
+            z-index: 0;
+        }
+
+        /* Modal Alert Animación */
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate {
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_terra selection:text-white relative overflow-x-hidden">
+
+    <!-- Patrón de Fondo Geométrico -->
+    <div class="login-grid"></div>
+
+    <!-- Botón Volver (Esquina Superior Izquierda) -->
+    <div class="relative z-20 p-6 absolute top-0 left-0 w-full">
+        <a href="index.html" class="inline-flex items-center gap-2 text-[#FDF8ED] hover:text-xul_yellow font-bold uppercase tracking-widest text-sm transition-colors group">
+            <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Volver al Club
+        </a>
+    </div>
+
+    <!-- Contenedor Principal Centrado -->
+    <main class="relative z-10 flex-grow flex items-center justify-center p-4">
+        
+        <!-- Tarjeta de Login -->
+        <div class="bg-xul_paper xul-border p-8 md:p-12 max-w-md w-full relative">
+            
+            <!-- Decoración esquina superior -->
+            <div class="absolute -top-4 -right-4 w-12 h-12 bg-xul_blue border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] z-20 transform rotate-12"></div>
+            
+            <div class="text-center mb-8 relative z-10">
+                <!-- Ícono central -->
+                <svg viewBox="0 0 50 50" class="w-16 h-16 mx-auto mb-6 text-xul_ink">
+                    <circle cx="25" cy="15" r="10" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <circle cx="25" cy="15" r="3" fill="currentColor"/>
+                    <line x1="25" y1="25" x2="25" y2="45" stroke="currentColor" stroke-width="3"/>
+                    <line x1="25" y1="35" x2="35" y2="35" stroke="currentColor" stroke-width="3"/>
+                    <line x1="25" y1="42" x2="32" y2="42" stroke="currentColor" stroke-width="3"/>
+                </svg>
+                
+                <h1 id="main-title" class="xul-title text-4xl md:text-5xl font-black text-xul_ink tracking-tight uppercase">Entrar al CLUB</h1>
+                <p id="main-subtitle" class="font-sans text-sm text-gray-600 mt-2 font-medium">Identifícate para continuar tu partida.</p>
+            </div>
+
+            <!-- Formulario de Acceso -->
+            <form id="login-form" class="mb-6 relative z-10">
+                
+                <!-- Campo de Nombre (Solo Registro) -->
+                <div id="name-group" class="mb-5 hidden">
+                    <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Nombre o Alias</label>
+                    <input type="text" id="name-input" placeholder="Ej: Platón" class="w-full border-[3px] border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_terra focus:shadow-[4px_4px_0px_#D1623A] transition-all">
+                </div>
+
+                <div class="mb-5">
+                    <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Correo Electrónico</label>
+                    <input type="email" id="email-input" placeholder="Ej: socrates@mail.com" required class="w-full border-[3px] border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_terra focus:shadow-[4px_4px_0px_#D1623A] transition-all">
+                </div>
+                
+                <div class="mb-8">
+                    <div class="flex justify-between items-end mb-2">
+                        <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink">Clave Secreta</label>
+                        <button type="button" id="btn-forgot-password" class="text-xs font-bold text-xul_terra hover:text-xul_blue uppercase tracking-widest transition-colors focus:outline-none">¿Olvidaste tu clave?</button>
+                    </div>
+                    <div class="relative">
+                        <input type="password" id="password-input" placeholder="••••••••" required minlength="6" class="w-full border-[3px] border-xul_ink bg-white p-3 pr-12 font-sans text-lg focus:outline-none focus:border-xul_terra focus:shadow-[4px_4px_0px_#D1623A] transition-all">
+                        <button type="button" id="btn-toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none">
+                            <i data-lucide="eye" id="icon-eye" class="w-5 h-5"></i>
+                            <i data-lucide="eye-off" id="icon-eye-off" class="w-5 h-5 hidden"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <button id="submit-btn" type="submit" class="w-full bg-xul_yellow border-[3px] border-xul_ink py-4 font-black text-xl uppercase tracking-widest text-xul_ink shadow-[6px_6px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#2A2A2A] transition-all flex items-center justify-center gap-3">
+                    Entrar con Clave
+                </button>
+            </form>
+
+            <div class="flex items-center my-6 relative z-10">
+                <div class="flex-grow border-t-[3px] border-gray-300"></div>
+                <span class="px-4 font-black text-xs uppercase tracking-widest text-gray-500">O usa tus redes</span>
+                <div class="flex-grow border-t-[3px] border-gray-300"></div>
+            </div>
+
+            <!-- Botones Sociales -->
+            <div class="grid grid-cols-2 gap-4 mb-8 relative z-10">
+                <button id="btn-google" type="button" class="flex items-center justify-center gap-2 bg-white border-[3px] border-xul_ink p-3 font-black text-sm uppercase tracking-wider hover:bg-gray-50 shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                    Google
+                </button>
+                <button id="btn-microsoft" type="button" class="flex items-center justify-center gap-2 bg-white border-[3px] border-xul_ink p-3 font-black text-sm uppercase tracking-wider hover:bg-gray-50 shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all">
+                    <svg viewBox="0 0 21 21" class="w-5 h-5"><path fill="#f35325" d="M1 1h9v9H1z"/><path fill="#81bc06" d="M11 1h9v9h-9z"/><path fill="#05a6f0" d="M1 11h9v9H1z"/><path fill="#ffba08" d="M11 11h9v9h-9z"/></svg>
+                    Microsoft
+                </button>
+                <button id="btn-facebook" type="button" class="flex items-center justify-center gap-2 bg-white border-[3px] border-xul_ink p-3 font-black text-sm uppercase tracking-wider hover:bg-gray-50 shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all">
+                    <svg viewBox="0 0 24 24" class="w-5 h-5" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                    Facebook
+                </button>
+                <button id="btn-apple" type="button" class="flex items-center justify-center gap-2 bg-white border-[3px] border-xul_ink p-3 font-black text-sm uppercase tracking-wider hover:bg-gray-50 shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all">
+                    <svg viewBox="0 0 384 512" class="w-5 h-5" fill="#000000"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 22 184.9 22 261.8c0 86.8 56.6 174.2 122.5 174.2 29.3 0 45-18.2 78.4-18.2 33.2 0 49 18.2 78.4 18.2 59.9 0 109.2-92.4 109.2-132.8-31.5-16-46.3-43-46.3-77.9-10.8-3.6-26.9-6.3-45.5-6.6zM240.6 83.2c19.1-23.7 33.5-56.1 29.9-88.6-27.4 1.1-62 18.1-81.5 41.5-16.7 20-33.5 54-28.7 85.8 30.6 2.3 62-15 80.3-38.7z"/></svg>
+                    Apple
+                </button>
+            </div>
+
+            <!-- Cambio de Modo (Registro / Login) -->
+            <div class="mt-4 pt-6 border-t-[3px] border-xul_ink border-dashed text-center relative z-10">
+                <span id="toggle-question" class="font-sans text-sm font-bold text-gray-600">¿Aún no eres miembro del Club?</span>
+                <button id="btn-toggle-mode" class="block mx-auto mt-2 font-black text-xul_terra hover:text-xul_blue uppercase text-base tracking-widest transition-colors focus:outline-none">
+                    Regístrate Aquí
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modal de Alertas (Para errores y éxitos) -->
+    <div id="alert-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('alert-modal').classList.add('hidden')"></div>
+        <div id="alert-box" class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] text-center">
+            <h3 id="alert-title" class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-2">Aviso</h3>
+            <p id="alert-message" class="font-sans text-gray-700 mb-6 font-medium">Mensaje de alerta.</p>
+            <button onclick="document.getElementById('alert-modal').classList.add('hidden')" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">Entendido</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        lucide.createIcons();
+
+        // Lógica Visual del Cambio de Modo (Login <-> Registro)
+        let isLoginMode = true;
+        
+        document.getElementById('btn-toggle-mode').addEventListener('click', (e) => {
+            e.preventDefault();
+            isLoginMode = !isLoginMode;
+            
+            // Textos
+            document.getElementById('main-title').innerText = isLoginMode ? 'ENTRAR AL CLUB' : 'CREAR CUENTA';
+            document.getElementById('main-subtitle').innerText = isLoginMode ? 'Identifícate para continuar tu partida.' : 'Obtén tu pase para ingresar a la Scholē.';
+            document.getElementById('submit-btn').innerText = isLoginMode ? 'ENTRAR CON CLAVE' : 'REGISTRARSE';
+            document.getElementById('toggle-question').innerText = isLoginMode ? '¿Aún no eres miembro del Club?' : '¿Ya tienes acceso al tablero?';
+            e.target.innerText = isLoginMode ? 'REGÍSTRATE AQUÍ' : 'INGRESA AQUÍ';
+
+            // Visibilidad de campos extras
+            const nameGroup = document.getElementById('name-group');
+            const nameInput = document.getElementById('name-input');
+            const btnForgot = document.getElementById('btn-forgot-password');
+
+            if (isLoginMode) {
+                nameGroup.classList.add('hidden');
+                nameInput.removeAttribute('required');
+                btnForgot.classList.remove('hidden');
+            } else {
+                nameGroup.classList.remove('hidden');
+                nameInput.setAttribute('required', 'true');
+                btnForgot.classList.add('hidden');
+            }
+        });
+
+        // Toggle Mostrar/Ocultar Contraseña
+        const passwordInput = document.getElementById('password-input');
+        const btnTogglePassword = document.getElementById('btn-toggle-password');
+        const iconEye = document.getElementById('icon-eye');
+        const iconEyeOff = document.getElementById('icon-eye-off');
+
+        btnTogglePassword.addEventListener('click', () => {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                iconEye.classList.add('hidden');
+                iconEyeOff.classList.remove('hidden');
+            } else {
+                passwordInput.type = 'password';
+                iconEye.classList.remove('hidden');
+                iconEyeOff.classList.add('hidden');
+            }
+        });
+
+        // Función para mostrar alertas en pantalla
+        function mostrarAlerta(titulo, mensaje, color = '#D1623A') {
+            document.getElementById('alert-title').innerText = titulo;
+            document.getElementById('alert-message').innerText = mensaje;
+            document.getElementById('alert-box').style.boxShadow = `12px 12px 0px ${color}`;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        }
+    </script>
+
+    <!-- EL CEREBRO DE FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider, FacebookAuthProvider, onAuthStateChanged, updateProfile, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Adaptación para permitir que el código funcione tanto en el entorno de previsualización (Canvas) como en tu proyecto real.
+        let firebaseConfig;
+        if (typeof __firebase_config !== 'undefined') {
+            firebaseConfig = JSON.parse(__firebase_config);
+        } else {
+            // Configuración original del usuario
+            firebaseConfig = {
+                apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+                authDomain: "ludosofia-1cdc7.firebaseapp.com",
+                projectId: "ludosofia-1cdc7"
+            };
+        }
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const providerGoogle = new GoogleAuthProvider();
+        const providerMicrosoft = new OAuthProvider('microsoft.com');
+        const providerFacebook = new FacebookAuthProvider();
+        const providerApple = new OAuthProvider('apple.com');
+
+        // Lógica de Redirección Automática
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Obtenemos su rol en la base de datos y lo guardamos
+                try {
+                    // Adaptamos la ruta de la DB para que no falle en el preview, pero usamos la tuya si estás en tu servidor.
+                    let docRef;
+                    if (typeof __app_id !== 'undefined') {
+                        docRef = doc(db, 'artifacts', __app_id, 'users', user.uid, 'usuarios', 'perfil'); 
+                    } else {
+                        docRef = doc(db, "usuarios", user.uid);
+                    }
+
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        localStorage.setItem('rol_usuario', docSnap.data().rol || 'socio');
+                    } else {
+                        // Si es un usuario nuevo (ej. entró por Google), le damos rol básico
+                        localStorage.setItem('rol_usuario', 'socio');
+                        // Opcional: Crear el documento por defecto
+                        // await setDoc(docRef, { rol: 'socio' });
+                    }
+                } catch (error) { 
+                    console.error("Error al obtener rol:", error); 
+                }
+                
+                // Redirección simulada para el entorno de previsualización. 
+                // Cambia esto de vuelta a window.location.href = 'index.html'; para producción.
+                mostrarAlerta('¡Bienvenido al Club!', 'Te has autenticado correctamente. (Redirección pausada en modo preview)', '#75B07E');
+                // window.location.href = 'index.html';
+            }
+        });
+
+        // Función para procesar intentos de Login Social o por Email
+        const procesarAuth = (promesa) => {
+            promesa.catch(err => {
+                let mensajeError = err.message;
+                if (err.code === 'auth/invalid-credential') mensajeError = "Credenciales incorrectas.";
+                if (err.code === 'auth/email-already-in-use') mensajeError = "Este correo ya está registrado.";
+                if (err.code === 'auth/weak-password') mensajeError = "La contraseña debe tener al menos 6 caracteres.";
+                
+                mostrarAlerta('Error de Acceso', mensajeError);
+            });
+        };
+
+        // Escuchadores de eventos para los botones
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
+            
+            if (isLoginMode) {
+                procesarAuth(signInWithEmailAndPassword(auth, email, password));
+            } else {
+                const nombre = document.getElementById('name-input').value;
+                // Proceso de registro completo con Nombre y Base de Datos
+                const registroPromesa = createUserWithEmailAndPassword(auth, email, password)
+                    .then(async (userCredential) => {
+                        const user = userCredential.user;
+                        // 1. Actualizar perfil de Auth
+                        await updateProfile(user, { displayName: nombre });
+                        
+                        // 2. Crear documento en Firestore
+                        let docRef = typeof __app_id !== 'undefined' 
+                            ? doc(db, 'artifacts', __app_id, 'users', user.uid, 'usuarios', 'perfil') 
+                            : doc(db, "usuarios", user.uid);
+                            
+                        await setDoc(docRef, { 
+                            nombre: nombre, 
+                            email: email,
+                            rol: 'socio',
+                            fechaRegistro: new Date().toISOString()
+                        }, { merge: true });
+
+                        return userCredential;
+                    });
+                
+                procesarAuth(registroPromesa);
+            }
+        });
+
+        // Recuperación de Contraseña
+        document.getElementById('btn-forgot-password').addEventListener('click', () => {
+            const email = document.getElementById('email-input').value;
+            if (!email) {
+                mostrarAlerta('Falta el correo', 'Por favor, escribe tu correo electrónico en el campo superior para enviarte el enlace de recuperación.', '#EBB134');
+                return;
+            }
+            
+            sendPasswordResetEmail(auth, email)
+                .then(() => {
+                    mostrarAlerta('Correo Enviado', 'Revisa tu bandeja de entrada (y la carpeta de spam) para restablecer tu clave secreta.', '#75B07E');
+                })
+                .catch((err) => {
+                    let msg = err.message;
+                    if (err.code === 'auth/user-not-found') msg = "No hay ningún usuario registrado con este correo.";
+                    mostrarAlerta('Error', msg);
+                });
+        });
+
+        document.getElementById('btn-google').addEventListener('click', () => procesarAuth(signInWithPopup(auth, providerGoogle)));
+        document.getElementById('btn-microsoft').addEventListener('click', () => procesarAuth(signInWithPopup(auth, providerMicrosoft)));
+        document.getElementById('btn-facebook').addEventListener('click', () => procesarAuth(signInWithPopup(auth, providerFacebook)));
+        document.getElementById('btn-apple').addEventListener('click', () => procesarAuth(signInWithPopup(auth, providerApple)));
+
+    </script>
+</body>
+</html>
