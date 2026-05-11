@@ -33,17 +33,17 @@
         }
     </script>
 
-    <!-- CONFIGURACIÓN DE ACCESO DE ESTA PÁGINA (Atado a window para que lo lea seguridad.js) -->
+    <!-- CONFIGURACIÓN DE ACCESO -->
     <script>
         window.CONFIG_ACCESO = {
             PUBLICO: false,           // Bloqueado para visitantes sin cuenta
             SOCIO: true,              // Acceso permitido
             SOCIO_FUNDADOR: true      // Acceso permitido
         };
+        
+        // 🔒 OCULTAMOS LA PÁGINA DE INMEDIATO HASTA VERIFICAR LA SESIÓN
+        document.documentElement.style.display = 'none';
     </script>
-    
-    <!-- Validador de seguridad -->
-    <script type="module" src="seguridad.js"></script>
 
     <style>
         body { 
@@ -394,36 +394,70 @@
             if(mobBadge) { mobBadge.innerHTML = iconHtml; mobBadge.style.display = 'flex'; }
         }
 
-        // EL RECONOCIMIENTO DE SESIÓN QUE APLICA A TODAS LAS PÁGINAS
+        // ==========================================
+        // SISTEMA DE SEGURIDAD INTEGRADO
+        // ==========================================
         onAuthStateChanged(auth, async (user) => {
+            const config = window.CONFIG_ACCESO;
+
             if (user) {
-                const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-                document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
-                if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
-                
-                loginBtnDesktop.onclick = toggleProfileModal;
-                if(loginBtnMobile) loginBtnMobile.onclick = toggleProfileModal;
-
-                document.getElementById('profile-email').innerText = user.email;
-
                 try {
                     const docSnap = await getDoc(doc(db, "usuarios", user.uid));
                     if (docSnap.exists()) {
                         const datos = docSnap.data();
-                        localStorage.setItem('rol_usuario', datos.rol);
-                        document.getElementById('profile-role').innerText = datos.rol;
-                        updateUIWithRole(datos.rol);
+                        const rolUsuario = (datos.rol || '').toUpperCase();
+                        
+                        // Validar contra CONFIG_ACCESO
+                        let tieneAcceso = false;
+                        if (config.PUBLICO) tieneAcceso = true;
+                        else if (config.SOCIO && rolUsuario.includes('SOCIO')) tieneAcceso = true;
+                        else if (config.SOCIO_FUNDADOR && (rolUsuario.includes('FUNDADOR') || rolUsuario.includes('SOCIO_FUNDADOR'))) tieneAcceso = true;
+
+                        if (tieneAcceso) {
+                            // ✨ TIENE PERMISO: MOSTRAR LA PÁGINA
+                            document.documentElement.style.display = '';
+                            
+                            // Cargar interfaz del usuario
+                            const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+                            document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
+                            if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
+                            
+                            loginBtnDesktop.onclick = toggleProfileModal;
+                            if(loginBtnMobile) loginBtnMobile.onclick = toggleProfileModal;
+
+                            document.getElementById('profile-email').innerText = user.email;
+                            localStorage.setItem('rol_usuario', datos.rol);
+                            document.getElementById('profile-role').innerText = datos.rol;
+                            updateUIWithRole(datos.rol);
+                        } else {
+                            // Logueado, pero NO tiene el rol requerido
+                            window.location.replace("suscripcion.html");
+                        }
+                    } else {
+                        // Logueado, pero NO tiene perfil en Firestore
+                        window.location.replace("suscripcion.html");
                     }
-                } catch (error) { console.error(error); }
+                } catch (error) { 
+                    console.error("Error validando usuario:", error); 
+                    window.location.replace("login.html");
+                }
             } else {
-                document.getElementById('login-text-desktop').innerText = 'INGRESAR';
-                if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = 'INGRESAR';
-                if(document.getElementById('badge-container-desktop')) document.getElementById('badge-container-desktop').style.display = 'none';
-                if(document.getElementById('badge-container-mobile')) document.getElementById('badge-container-mobile').style.display = 'none';
-                
-                loginBtnDesktop.onclick = toggleLoginModal;
-                if(loginBtnMobile) loginBtnMobile.onclick = toggleLoginModal;
-                localStorage.removeItem('rol_usuario');
+                // NO ESTÁ LOGUEADO
+                if (!config.PUBLICO) {
+                    window.location.replace("login.html");
+                } else {
+                    // La página es pública: La mostramos con interfaz de visitante
+                    document.documentElement.style.display = '';
+                    
+                    document.getElementById('login-text-desktop').innerText = 'INGRESAR';
+                    if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = 'INGRESAR';
+                    if(document.getElementById('badge-container-desktop')) document.getElementById('badge-container-desktop').style.display = 'none';
+                    if(document.getElementById('badge-container-mobile')) document.getElementById('badge-container-mobile').style.display = 'none';
+                    
+                    loginBtnDesktop.onclick = toggleLoginModal;
+                    if(loginBtnMobile) loginBtnMobile.onclick = toggleLoginModal;
+                    localStorage.removeItem('rol_usuario');
+                }
             }
         });
 
@@ -446,19 +480,16 @@
             
             promesaAuth.then((result) => {
                 loginModal.classList.add('hidden');
-                // IMPORTANTE: Al iniciar sesión desde un juego, recarga la página para liberar el bloqueo
-                if (document.querySelector('script[src*="seguridad.js"]')) {
-                    window.location.reload();
-                } else {
-                    mostrarAlerta('Conectado', '¡Bienvenido al Ágora!', '#75B07E');
-                }
+                // Al loguearse exitosamente, recargamos la página. 
+                // Esto hará que el validador de arriba se ejecute de nuevo y le muestre la página al instante.
+                window.location.reload(); 
             }).catch(err => mostrarAlerta('Error', err.message));
         });
 
         document.getElementById('btn-logout').addEventListener('click', () => {
             signOut(auth).then(() => {
                 profileModal.classList.add('hidden');
-                window.location.reload(); // Recarga para volver a bloquear si estaba en un juego
+                window.location.reload(); 
             });
         });
     </script>
