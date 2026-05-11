@@ -252,8 +252,8 @@
         const providerFacebook = new FacebookAuthProvider();
         const providerApple = new OAuthProvider('apple.com');
 
-        // LÓGICA DE REDIRECCIÓN AUTOMÁTICA Y EXTRACCIÓN DE RUTA
-        localStorage(auth, async (user) => {
+        // LÓGICA DE REDIRECCIÓN CORREGIDA
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
                     let docRef;
@@ -273,13 +273,22 @@
                     console.error("Error al obtener rol:", error); 
                 }
                 
-                // Redirección inteligente leyendo el parámetro "redirect"
+                // Redirección inteligente buscando en LocalStorage o en la URL
+                const rutaPreviaLocal = localStorage.getItem('destino_post_login');
                 const parametros = new URLSearchParams(window.location.search);
-                const rutaPrevia = parametros.get('redirect');
+                const rutaPreviaURL = parametros.get('redirect');
 
-                const destinoFinal = rutaPrevia ? decodeURIComponent(rutaPrevia) : 'index.html';
+                // Calculamos destino
+                let destinoFinal = 'index.html';
                 
-                // Ejecutamos la redirección (si estás en Canvas/Preview, esto intentará navegar dentro del Iframe)
+                if (rutaPreviaLocal) {
+                    destinoFinal = rutaPreviaLocal;
+                    localStorage.removeItem('destino_post_login'); // Lo borramos tras usarlo
+                } else if (rutaPreviaURL) {
+                    destinoFinal = decodeURIComponent(rutaPreviaURL);
+                }
+                
+                // Ejecutamos la redirección
                 window.location.replace(destinoFinal);
             }
         });
