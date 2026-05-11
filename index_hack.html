@@ -71,6 +71,32 @@
             animation: modalFadeIn 0.3s ease-out forwards;
         }
     </style>
+
+    <!-- CEREBRO DE FIREBASE - GUARDIÁN DE LA PÁGINA -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Escuchador de estado de sesión
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // Si el usuario NO existe (no está logueado), lo mandamos al login
+                window.location.replace('login.html'); 
+            } else {
+                // El usuario está logueado, se le permite ver la página.
+                console.log("Acceso concedido al socio:", user.email);
+            }
+        });
+    </script>
 </head>
 <body class="antialiased selection:bg-xul_terra selection:text-white">
 
