@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -28,6 +29,7 @@
             }
         }
     </script>
+    
     <style>
         body { 
             font-family: 'Outfit', sans-serif; 
@@ -101,12 +103,11 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-xul_yellow selection:text-xul_ink">
 
-    <!-- UI DE PANTALLA (NO IMPRIMIBLE) -->
     <div class="no-print w-full flex flex-col items-center">
         
         <!-- Botón Volver -->
         <div class="w-full max-w-6xl px-6 pt-6 flex justify-start">
-            <a href="seccion_mazos.html" class="inline-flex items-center gap-2 text-xul_ink hover:text-xul_terra font-bold uppercase tracking-widest text-sm transition-colors group">
+            <a href="#" class="inline-flex items-center gap-2 text-xul_ink hover:text-xul_terra font-bold uppercase tracking-widest text-sm transition-colors group">
                 <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Volver a Mazos
             </a>
         </div>
@@ -155,7 +156,7 @@
     <!-- UI DE IMPRESIÓN (OCULTO EN PANTALLA) -->
     <div class="print-only">
         <div id="print-container" class="print-grid">
-            <!-- Se llena con todas las cartas vía JS -->
+            <!-- Ahora este contenedor se llenará solo con las cartas de la tirada actual -->
         </div>
     </div>
 
@@ -355,7 +356,10 @@
         // Dibuja la mesa con las flechas y las cartas seleccionadas
         function renderBoard() {
             const container = document.getElementById('random-draw-container');
+            const printContainer = document.getElementById('print-container'); // Obtenemos el contenedor de impresión
+            
             container.innerHTML = ''; 
+            printContainer.innerHTML = ''; // Limpiamos el contenedor de impresión antes de llenarlo
             
             const categories = ['context', 'subject', 'conflict', 'variable', 'solution'];
             
@@ -363,7 +367,7 @@
                 const cardData = db[cat][currentSelection[cat]];
                 const cardHtml = renderCardHTML(cardData);
                 
-                // Envolvemos la carta con sus flechas de control (ocultas en impresión)
+                // Envolvemos la carta con sus flechas de control para la pantalla (ocultas en impresión)
                 const slotHtml = `
                     <div class="flex flex-col items-center gap-4 group/slot">
                         <button onclick="cycleCard('${cat}', -1)" title="Carta Anterior" class="no-print w-14 h-8 bg-white border-[3px] border-xul_ink flex items-center justify-center text-xul_ink hover:bg-xul_ink hover:text-white transition-colors shadow-[3px_3px_0px_#2A2A2A] active:translate-y-1 active:shadow-none focus:outline-none">
@@ -378,27 +382,18 @@
                     </div>
                 `;
                 container.innerHTML += slotHtml;
+
+                // Añadimos solo el HTML de la carta (sin botones) al contenedor de impresión
+                printContainer.innerHTML += cardHtml; 
             });
             lucide.createIcons();
         }
 
-        // Renderiza el formato rejilla solo para la hoja de impresión (todas las cartas)
-        function generatePrintGrid() {
-            const container = document.getElementById('print-container');
-            container.innerHTML = ''; 
-            
-            const categories = ['context', 'subject', 'conflict', 'variable', 'solution'];
-            
-            categories.forEach(category => {
-                db[category].forEach(card => {
-                    container.innerHTML += renderCardHTML(card);
-                });
-            });
-        }
+        // Ya no necesitamos esta función porque la impresión se sincroniza con la tirada actual
+        // function generatePrintGrid() { ... }
 
         window.onload = () => {
-            generateRandomPizza(); // Inicializar con random
-            generatePrintGrid(); // Preparar el modo impresión por detrás
+            generateRandomPizza(); // Inicializar con random. Esto llamará a renderBoard() que ahora maneja la pantalla y la impresión.
         };
     </script>
 </body>
