@@ -103,18 +103,6 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased selection:bg-xul_yellow selection:text-xul_ink">
 
-    <!-- PANTALLA DE CARGA -->
-    <div id="loading-screen" class="flex-grow flex flex-col items-center justify-center w-full min-h-screen">
-        <svg class="w-12 h-12 text-xul_terra animate-spin mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        <p class="font-sans font-bold text-xul_ink uppercase tracking-widest animate-pulse">Verificando credenciales...</p>
-    </div>
-
-    <!-- CONTENIDO DE LA APP (OCULTO HASTA VERIFICAR) -->
-    <div id="app-content" class="hidden flex-col w-full min-h-screen">
-
     <div class="no-print w-full flex flex-col items-center">
         
         <!-- Botón Volver -->
@@ -171,37 +159,6 @@
             <!-- Ahora este contenedor se llenará solo con las cartas de la tirada actual -->
         </div>
     </div>
-    
-    </div> <!-- Cierre de app-content -->
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        if (typeof __initial_auth_token !== 'undefined') {
-            signInWithCustomToken(auth, __initial_auth_token).catch(err => console.error("Error auth token:", err));
-        }
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                // Si el usuario existe, ocultamos la carga y mostramos el juego
-                document.getElementById('loading-screen').classList.add('hidden');
-                document.getElementById('app-content').classList.remove('hidden');
-                document.getElementById('app-content').classList.add('flex');
-                
-                if (typeof window.initApp === 'function') {
-                    window.initApp();
-                }
-            } else {
-                // Si no hay usuario, lo expulsamos al login
-                window.location.href = 'login.html';
-            }
-        });
-    </script>
 
     <script>
         // LA BASE DE DATOS DEL JUEGO
@@ -432,10 +389,7 @@
             lucide.createIcons();
         }
 
-        // Ya no necesitamos esta función porque la impresión se sincroniza con la tirada actual
-        // function generatePrintGrid() { ... }
-
-        window.initApp = () => {
+        window.onload = () => {
             generateRandomPizza(); // Inicializar con random. Esto llamará a renderBoard() que ahora maneja la pantalla y la impresión.
         };
     </script>
