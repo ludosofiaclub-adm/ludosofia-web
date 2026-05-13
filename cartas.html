@@ -15,11 +15,11 @@
                     colors: {
                         xul_paper: '#FDF8ED',
                         xul_ink: '#2A2A2A',
-                        xul_blue: '#6BA4C4',
-                        xul_terra: '#D1623A',
-                        xul_yellow: '#EBB134',
-                        xul_green: '#75B07E',
-                        xul_pink: '#C96B8C'
+                        xul_blue: '#1a365d',
+                        xul_terra: '#7f1d1d',
+                        xul_yellow: '#854d0e',
+                        xul_green: '#14532d',
+                        xul_pink: '#831843'
                     },
                     fontFamily: {
                         serif: ['"Cormorant Garamond"', 'serif'],
@@ -38,7 +38,7 @@
             background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
         }
         .xul-title { font-family: 'Cormorant Garamond', serif; }
-        .text-shadow-xul { text-shadow: 3px 3px 0px #EBB134; }
+        .text-shadow-xul { text-shadow: 3px 3px 0px #854d0e; }
 
         /* Clases para el Efecto 3D de la Carta (Flip) */
         .perspective { perspective: 1500px; }
@@ -95,8 +95,8 @@
             
             /* Ajuste de fuentes para que entren en 63x88mm */
             .card-back { border-width: 3px !important; padding: 4px !important; }
-            .card-back h3 { font-size: 0.7rem !important; margin-bottom: 4px !important; padding-bottom: 4px !important; }
-            .card-back p { font-size: 0.5rem !important; line-height: 1.2 !important; }
+            .card-back h3 { font-size: 14pt !important; margin-bottom: 4px !important; padding-bottom: 4px !important; }
+            .card-back p { font-size: 12pt !important; line-height: 1.2 !important; }
             .shadow-bg { display: none !important; }
         }
     </style>
@@ -203,9 +203,9 @@
         const typeInfo = {
             context: { label: "Contexto", icon: "globe", bg: "bg-xul_blue", border: "border-xul_blue", text: "text-white" },
             subject: { label: "Sujeto", icon: "user", bg: "bg-xul_terra", border: "border-xul_terra", text: "text-white" },
-            conflict: { label: "Situación", icon: "zap", bg: "bg-xul_yellow", border: "border-xul_yellow", text: "text-xul_ink" },
+            conflict: { label: "Situación", icon: "zap", bg: "bg-xul_green", border: "border-xul_green", text: "text-white" },
             variable: { label: "Variable", icon: "dices", bg: "bg-xul_pink", border: "border-xul_pink", text: "text-white" },
-            solution: { label: "Método", icon: "key", bg: "bg-xul_green", border: "border-xul_green", text: "text-xul_ink" }
+            solution: { label: "Método", icon: "key", bg: "bg-xul_yellow", border: "border-xul_yellow", text: "text-white" }
         };
 
         // Estado global para controlar la jugada actual
