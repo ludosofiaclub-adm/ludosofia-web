@@ -107,7 +107,7 @@
         
         <!-- Botón Volver -->
         <div class="w-full max-w-6xl px-6 pt-6 flex justify-start">
-            <a href="index.html" class="inline-flex items-center gap-2 text-xul_ink hover:text-xul_terra font-bold uppercase tracking-widest text-sm transition-colors group">
+            <a href="#" class="inline-flex items-center gap-2 text-xul_ink hover:text-xul_terra font-bold uppercase tracking-widest text-sm transition-colors group">
                 <i data-lucide="arrow-left" class="w-5 h-5 group-hover:-translate-x-1 transition-transform"></i> Volver a LUDOSOFÍA
             </a>
         </div>
@@ -164,7 +164,7 @@
         // LA BASE DE DATOS DEL JUEGO
         const db = {
             context: [
-                { type: "context", title: "Hospital Colapsado", text: "Plena pandemia mundial, las reservas de suministros están a cero y los pasillos desbordados." },
+                { type: "context", title: "Hospital Colapsado", text: "Estás en un hospital de campaña colapsado, donde los escasos suministros médicos restantes se han convertido en el único criterio para decidir quién tiene derecho a seguir viviendo.", image: "cartaC1.jpg" },
                 { type: "context", title: "Nave Generacional", text: "A mitad de un viaje de 400 años hacia Alpha Centauri. No hay retorno posible." },
                 { type: "context", title: "Simulación VR Total", text: "Un mundo virtual hiperrealista del que la mayoría de los habitantes no saben cómo desconectarse." },
                 { type: "context", title: "Búnker Post-Apocalíptico", text: "El exterior es radioactivo y letal. El ecosistema interno es frágil." },
@@ -276,7 +276,20 @@
         // Función para renderizar el HTML crudo de una sola carta
         function renderCardHTML(cardData) {
             const theme = typeInfo[cardData.type];
-            const artwork = getArtwork(cardData.type);
+            
+            // Lógica para mostrar imagen personalizada o el arte SVG por defecto
+            let artworkHtml = '';
+            if (cardData.image) {
+                // Si la carta tiene imagen, carga la URL/archivo. Usa un onerror para evitar que se rompa visualmente si el archivo no existe.
+                artworkHtml = `<img src="${cardData.image}" alt="${cardData.title}" class="w-full h-full object-cover absolute inset-0 transform group-hover:scale-105 transition-transform duration-700" onerror="this.onerror=null; this.src='https://placehold.co/400x400/E5E5E5/2A2A2A?text=Imagen+No+Encontrada';"/>`;
+            } else {
+                const artwork = getArtwork(cardData.type);
+                artworkHtml = `
+                    <svg viewBox="0 0 100 100" class="w-full h-full absolute inset-0 transform group-hover:scale-105 transition-transform duration-700">
+                        ${artwork}
+                    </svg>
+                `;
+            }
 
             return `
                 <div class="ludo-card-wrapper card-size relative perspective cursor-pointer group" onclick="this.querySelector('.card-inner').classList.toggle('rotate-y-180')">
@@ -293,10 +306,8 @@
                             </div>
                             
                             <div class="flex-grow relative border-b-[4px] border-xul_ink bg-[#E5E5E5] overflow-hidden flex items-center justify-center">
-                                <svg viewBox="0 0 100 100" class="w-full h-full absolute inset-0 transform group-hover:scale-105 transition-transform duration-700">
-                                    ${artwork}
-                                </svg>
-                                <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg width=\\'100\\' height=\\'100\\' viewBox=\\'0 0 100 100\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Cfilter id=\\'noise\\'%3E%3CfeTurbulence type=\\'fractalNoise\\' baseFrequency=\\'0.8\\' numOctaves=\\'4\\' stitchTiles=\\'stitch\\'/%3E%3C/filter%3E%3Crect width=\\'100\\' height=\\'100\\' filter=\\'url(%23noise)\\' opacity=\\'1\\'/%3E%3C/svg%3E')] mix-blend-overlay"></div>
+                                ${artworkHtml}
+                                <div class="absolute inset-0 opacity-10 bg-[url('data:image/svg+xml,%3Csvg width=\\'100\\' height=\\'100\\' viewBox=\\'0 0 100 100\\' xmlns=\\'http://www.w3.org/2000/svg\\'%3E%3Cfilter id=\\'noise\\'%3E%3CfeTurbulence type=\\'fractalNoise\\' baseFrequency=\\'0.8\\' numOctaves=\\'4\\' stitchTiles=\\'stitch\\'/%3E%3C/filter%3E%3Crect width=\\'100\\' height=\\'100\\' filter=\\'url(%23noise)\\' opacity=\\'1\\'/%3E%3C/svg%3E')] mix-blend-overlay pointer-events-none"></div>
                             </div>
                             
                             <div class="p-4 bg-white flex items-center justify-center min-h-[90px]">
