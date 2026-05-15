@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableros de Pensamiento | LUDOSOFÍA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #FDF8ED; 
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-border {
+            border: 3px solid #2A2A2A;
+            box-shadow: 6px 6px 0px #2A2A2A;
+            transition: all 0.2s ease;
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-xul { text-shadow: 3px 3px 0px #2A2A2A; }
+        
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
+
+        .locked-content {
+            filter: blur(4px);
+            user-select: none;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_green selection:text-white relative overflow-x-hidden">
+
+    <!-- Navbar Unificado -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="#" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="#" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="#" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="#" class="text-xul_ink hover:text-xul_terra transition-colors">Hackeados</a>
+                <span class="text-xul_terra border-b-2 border-xul_terra">Para Niños</span>
+                
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform cursor-pointer" title="Tu Membresía" onclick="document.getElementById('profile-modal').classList.remove('hidden')"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+            
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="#" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="#" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="#" class="mobile-link hover:text-xul_terra transition block">Hackeados</a>
+            <span class="mobile-link text-xul_terra block">Para Niños</span>
+            
+            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2 cursor-pointer" onclick="document.getElementById('profile-modal').classList.remove('hidden')"></div>
+
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HEADER / HERO -->
+    <header class="pt-32 pb-16 px-6 relative border-b-[3px] border-xul_ink bg-[#EBB134] overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #2A2A2A 0, #2A2A2A 2px, transparent 2px, transparent 15px);"></div>
+        
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-10">
+            <div class="text-center md:text-left flex-1">
+                <div class="inline-block bg-white border-[3px] border-xul_ink px-4 py-1 mb-6 shadow-[4px_4px_0px_#2A2A2A]">
+                    <span class="font-sans font-black text-xs md:text-sm uppercase tracking-widest text-xul_ink">Para Profesores y Facilitadores</span>
+                </div>
+                
+                <h1 class="xul-title text-5xl md:text-7xl font-black text-white tracking-tighter mb-4 text-shadow-xul uppercase">
+                    Tableros de Pensamiento
+                </h1>
+                
+                <p class="font-serif text-xl md:text-2xl text-xul_ink max-w-2xl font-semibold leading-relaxed bg-white/40 p-4 border-l-[4px] border-xul_ink backdrop-blur-sm shadow-[4px_4px_0px_rgba(42,42,42,0.3)]">
+                    Desarrolla habilidades cognitivas y percepciones filosóficas en niños utilizando juegos de mesa. Genera planes de diálogo, agendas de preguntas y ejercicios de clase.
+                </p>
+            </div>
+
+            <!-- Arte Xul Solar Infantil -->
+            <div class="w-64 h-64 relative flex items-center justify-center transform hover:-rotate-6 transition-transform duration-500 hidden md:flex">
+                <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[8px_8px_0px_#2A2A2A]">
+                    <rect x="20" y="70" width="60" height="20" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="3"/>
+                    <rect x="30" y="50" width="40" height="20" fill="#D1623A" stroke="#2A2A2A" stroke-width="3"/>
+                    <polygon points="50,10 70,50 30,50" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="3"/>
+                    <circle cx="50" cy="35" r="5" fill="#2A2A2A"/>
+                    <path d="M 15 30 L 20 20 L 25 30 Z" fill="#EBB134" stroke="#2A2A2A" stroke-width="2"/>
+                    <path d="M 75 40 L 85 30 L 90 45 Z" fill="#C96B8C" stroke="#2A2A2A" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA DE HERRAMIENTAS -->
+    <main class="max-w-7xl mx-auto px-4 py-16 w-full">
+        
+        <div class="text-center mb-12">
+            <h2 class="xul-title text-4xl md:text-5xl font-black text-xul_ink tracking-tight uppercase">Caja de Herramientas</h2>
+            <p class="font-sans text-gray-600 mt-2">Selecciona un instrumento según tu nivel de acceso al club.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            
+            <!-- TARJETA 1 -->
+            <div class="bg-white border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#6BA4C4] flex flex-col items-center text-center group cursor-pointer hover:-translate-y-1 transition-transform" onclick="activarHerramienta('planes')">
+                <div class="w-16 h-16 bg-xul_blue border-[3px] border-xul_ink rounded-full flex items-center justify-center mb-4 shadow-[4px_4px_0px_#2A2A2A] group-hover:scale-110 transition-transform">
+                    <i data-lucide="layout-template" class="w-8 h-8 text-white"></i>
+                </div>
+                <span class="bg-gray-100 text-gray-500 text-[10px] font-black uppercase px-2 py-1 border border-gray-300 mb-2">Acceso Libre</span>
+                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-2">Planes de Diálogo</h3>
+                <p class="font-serif text-gray-600 mb-6 flex-grow">Genera secuencias didácticas basadas en juegos clásicos para estructurar una clase de 45 minutos.</p>
+                <button class="w-full bg-white text-xul_ink font-black text-sm uppercase tracking-widest py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] transition-all">
+                    Usar Herramienta
+                </button>
+            </div>
+
+            <!-- TARJETA 2 -->
+            <div class="bg-white border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#75B07E] flex flex-col items-center text-center group cursor-pointer hover:-translate-y-1 transition-transform" onclick="verificarAcceso('socios', 'agendas')">
+                <div class="w-16 h-16 bg-xul_green border-[3px] border-xul_ink rounded-full flex items-center justify-center mb-4 shadow-[4px_4px_0px_#2A2A2A] group-hover:scale-110 transition-transform">
+                    <i data-lucide="list-todo" class="w-8 h-8 text-xul_ink"></i>
+                </div>
+                <span class="bg-xul_yellow text-xul_ink text-[10px] font-black uppercase px-2 py-1 border border-xul_ink mb-2 shadow-[2px_2px_0px_#2A2A2A]">Socios y Fundadores</span>
+                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-2">Agenda de Preguntas</h3>
+                <p class="font-serif text-gray-600 mb-6 flex-grow">Baterías de preguntas socráticas diseñadas para detonar el pensamiento crítico durante la partida.</p>
+                <button class="w-full bg-xul_green text-white font-black text-sm uppercase tracking-widest py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="lock" class="w-4 h-4 icon-lock-socios"></i> <span class="btn-text-socios">Desbloquear</span>
+                </button>
+            </div>
+
+            <!-- TARJETA 3 -->
+            <div class="bg-xul_ink border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#D1623A] flex flex-col items-center text-center group cursor-pointer hover:-translate-y-1 transition-transform" onclick="verificarAcceso('fundadores', 'taller')">
+                <div class="w-16 h-16 bg-xul_terra border-[3px] border-xul_ink rounded-full flex items-center justify-center mb-4 shadow-[4px_4px_0px_#FDF8ED] group-hover:scale-110 transition-transform">
+                    <i data-lucide="hammer" class="w-8 h-8 text-white"></i>
+                </div>
+                <span class="bg-white text-xul_terra text-[10px] font-black uppercase px-2 py-1 border border-xul_ink mb-2 shadow-[2px_2px_0px_#2A2A2A]">Solo Fundadores</span>
+                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-white mb-2">Taller de Creación</h3>
+                <p class="font-serif text-gray-400 mb-6 flex-grow">Acompañamiento asincrónico para diseñar tus propias mecánicas lúdico-filosóficas para el aula.</p>
+                <button class="w-full bg-xul_terra text-white font-black text-sm uppercase tracking-widest py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#FDF8ED] transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="lock" class="w-4 h-4 icon-lock-fundadores"></i> <span class="btn-text-fundadores">Solicitar Mentoría</span>
+                </button>
+            </div>
+
+        </div>
+
+        <!-- ÁREA DE TRABAJO -->
+        <div id="workspace" class="bg-white border-[4px] border-xul_ink p-8 md:p-12 shadow-[12px_12px_0px_#2A2A2A] relative min-h-[400px]">
+            
+            <!-- ESTADO INICIAL -->
+            <div id="view-initial" class="text-center py-10 opacity-60 transition-opacity">
+                <i data-lucide="box-select" class="w-16 h-16 mx-auto text-gray-400 mb-4"></i>
+                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-gray-500">Mesa de Trabajo Vacía</h3>
+                <p class="font-serif text-lg text-gray-500 mt-2">Selecciona una herramienta arriba para comenzar a planificar.</p>
+            </div>
+
+            <!-- VISTA: PLANES DE DIÁLOGO -->
+            <div id="view-planes" class="hidden">
+                <div class="flex items-center gap-3 mb-8 border-b-2 border-xul_blue pb-2">
+                    <i data-lucide="layout-template" class="w-6 h-6 text-xul_blue"></i>
+                    <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink">Generador de Planes</h3>
+                </div>
+                
+                <div class="flex flex-col md:flex-row gap-6 mb-8">
+                    <div class="flex-1">
+                        <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Juego Base</label>
+                        <select id="game-select" class="w-full border-[3px] border-xul_ink bg-xul_paper p-3 font-sans text-sm focus:outline-none focus:border-xul_blue transition-all cursor-pointer">
+                            <option value="jenga">Jenga (Equilibrio y Fundamentos)</option>
+                            <option value="adivina">¿Quién es Quién? (Identidad y Prejuicio)</option>
+                            <option value="uno">UNO (Justicia y Reglas Arbitrarias)</option>
+                            <option value="dixit">Dixit (Hermenéutica y Verdad)</option>
+                        </select>
+                    </div>
+                    <div class="flex items-end">
+                        <button onclick="generarPlan()" class="w-full md:w-auto bg-xul_blue text-white font-black px-8 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 transition-all uppercase tracking-widest">
+                            Generar Plan
+                        </button>
+                    </div>
+                </div>
+
+                <div id="plan-output" class="bg-gray-50 border-[3px] border-xul_ink p-6 font-serif text-lg leading-relaxed hidden modal-animate">
+                    <!-- Contenido inyectado por JS -->
+                </div>
+            </div>
+
+            <!-- VISTA: AGENDAS DE PREGUNTAS -->
+            <div id="view-agendas" class="hidden relative">
+                <div class="flex items-center gap-3 mb-8 border-b-2 border-xul_green pb-2">
+                    <i data-lucide="list-todo" class="w-6 h-6 text-xul_green"></i>
+                    <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink">Agenda de Preguntas (Nivel 1)</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="border-[3px] border-xul_ink p-4 bg-xul_paper shadow-[4px_4px_0px_#75B07E] hover:-translate-y-1 transition-transform">
+                        <h4 class="font-sans font-black uppercase text-sm mb-2 text-xul_green">Fase de Preparación</h4>
+                        <p class="font-serif italic text-gray-700">"Si cambiamos una regla antes de empezar, ¿el juego sigue siendo el mismo juego o es uno nuevo?"</p>
+                    </div>
+                    <div class="border-[3px] border-xul_ink p-4 bg-xul_paper shadow-[4px_4px_0px_#75B07E] hover:-translate-y-1 transition-transform">
+                        <h4 class="font-sans font-black uppercase text-sm mb-2 text-xul_green">Fase de Conflicto</h4>
+                        <p class="font-serif italic text-gray-700">"¿Actúas así porque es lo correcto, o porque es lo que te permite ganar?"</p>
+                    </div>
+                    <div class="border-[3px] border-xul_ink p-4 bg-xul_paper shadow-[4px_4px_0px_#75B07E] hover:-translate-y-1 transition-transform">
+                        <h4 class="font-sans font-black uppercase text-sm mb-2 text-xul_green">Fase de Resolución</h4>
+                        <p class="font-serif italic text-gray-700">"Si las reglas fueran injustas desde el principio, ¿la victoria del ganador tiene algún valor?"</p>
+                    </div>
+                    <div class="border-[3px] border-xul_ink p-4 bg-xul_paper shadow-[4px_4px_0px_#75B07E] flex items-center justify-center cursor-pointer hover:bg-xul_green group transition-colors">
+                        <button class="font-sans font-black uppercase text-xs tracking-widest text-xul_ink border-b-2 border-xul_ink group-hover:text-white group-hover:border-white transition-colors">
+                            Descargar PDF Completo
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VISTA: TALLER DE CREACIÓN -->
+            <div id="view-taller" class="hidden">
+                <div class="flex items-center gap-3 mb-8 border-b-2 border-xul_terra pb-2">
+                    <i data-lucide="hammer" class="w-6 h-6 text-xul_terra"></i>
+                    <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink">Laboratorio Virtual de Diseño</h3>
+                </div>
+
+                <div class="bg-xul_paper border-[3px] border-xul_ink p-8 text-center border-dashed">
+                    <div class="w-16 h-16 bg-white border-2 border-xul_ink rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i data-lucide="video" class="w-8 h-8 text-xul_terra"></i>
+                    </div>
+                    <h4 class="font-sans font-black text-xl uppercase tracking-widest text-xul_ink mb-2">Mentoría 1 a 1 Disponible</h4>
+                    <p class="font-serif text-lg text-gray-600 mb-6 max-w-lg mx-auto">
+                        Sube tu idea o prototipo de juego educativo. Nuestro equipo de ludósofos revisará tus mecánicas y agendaremos una sesión virtual para perfeccionarlo.
+                    </p>
+                    <button class="bg-xul_terra text-white font-black px-8 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 transition-all uppercase tracking-widest">
+                        Iniciar Nuevo Proyecto
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-xul_ink mt-12">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-700 pb-8">
+            <div class="flex items-center space-x-3">
+                <svg viewBox="0 0 100 100" class="w-8 h-8">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="currentColor" stroke-width="3"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="font-sans font-black tracking-widest text-lg leading-none">LUDOSOFÍA</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
+                <a href="#" class="hover:text-xul_yellow transition">Inicio</a>
+                <a href="#" class="hover:text-xul_yellow transition">Scholē</a>
+                <a href="#" class="hover:text-xul_yellow transition">FAQs</a>
+                <a href="#" class="hover:text-xul_yellow transition">Manifiesto</a>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-6 text-center text-sm font-sans text-gray-400">
+            &copy; 2026 Ludosofía - Club de Filosofía. El juego infinito del pensamiento.
+        </div>
+    </footer>
+
+    <!-- MODALES -->
+    
+    <!-- Modal Bloqueo/Upgrade -->
+    <div id="upgrade-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('upgrade-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-md w-full shadow-[12px_12px_0px_#D1623A] text-center">
+            <button onclick="document.getElementById('upgrade-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <div class="w-16 h-16 bg-xul_yellow border-[3px] border-xul_ink rounded-full flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="key" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-2">Zona Restringida</h3>
+            <p id="upgrade-message" class="font-sans text-gray-700 mb-8 font-medium">Esta herramienta de enseñanza requiere un nivel superior de membresía en el club.</p>
+            
+            <div class="flex flex-col gap-3">
+                <button onclick="abrirSimuladorLogin()" class="w-full bg-xul_terra text-white font-black py-3 uppercase tracking-widest border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 transition-transform">
+                    Simular Mejora de Plan
+                </button>
+                <button onclick="document.getElementById('upgrade-modal').classList.add('hidden')" class="w-full bg-white text-xul_ink font-black py-3 uppercase tracking-widest border-[3px] border-xul_ink hover:bg-gray-50 transition-colors">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Perfil -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] transform transition-all text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4">usuario@ludosofia.com</p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía Actual</p>
+                <p id="profile-role" class="font-black text-xl text-xul_ink uppercase tracking-wider text-xul_terra"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <!-- MOCK LOGIN MODAL (Simulador para Previsualización) -->
+    <div id="mock-login-modal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/90 backdrop-blur-md cursor-pointer" onclick="document.getElementById('mock-login-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-white border-[4px] border-xul_ink p-8 max-w-md w-full shadow-[12px_12px_0px_#EBB134] text-center">
+            <button onclick="document.getElementById('mock-login-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <div class="mb-6">
+                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-2">Simulador de Roles</h3>
+                <p class="font-serif text-sm text-gray-600">Elige un nivel de membresía para probar cómo reacciona la interfaz de herramientas.</p>
+            </div>
+            
+            <div class="flex flex-col gap-3">
+                <button onclick="simularLogin('PÚBLICO', 'publico@usuario.com')" class="w-full bg-gray-100 text-gray-700 font-black py-4 uppercase tracking-widest border-[3px] border-gray-400 hover:bg-gray-200 transition-colors flex items-center justify-center gap-2">
+                    <i data-lucide="user" class="w-5 h-5"></i> Visitante (Sin Permisos)
+                </button>
+                <button onclick="simularLogin('SOCIO', 'socio@ludosofia.com')" class="w-full bg-xul_green text-white font-black py-4 uppercase tracking-widest border-[3px] border-xul_ink hover:shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="star" class="w-5 h-5"></i> Ingresar como Socio
+                </button>
+                <button onclick="simularLogin('FUNDADOR', 'fundador@ludosofia.com')" class="w-full bg-xul_terra text-white font-black py-4 uppercase tracking-widest border-[3px] border-xul_ink hover:shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="crown" class="w-5 h-5"></i> Ingresar como Fundador
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS DE LA APLICACIÓN -->
+    <script>
+        // Inicializar Iconos
+        lucide.createIcons();
+
+        // UI BÁSICA (Menú móvil)
+        const btnMenu = document.getElementById('mobile-menu-btn');
+        const menuMobile = document.getElementById('mobile-menu');
+        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+
+        // ==========================================
+        // BASE DE DATOS DUMMY (Planes)
+        // ==========================================
+        const planesDB = {
+            'jenga': {
+                titulo: "Jenga: La Epistemología del Equilibrio",
+                objetivo: "Comprender cómo nuestras creencias forman una estructura, y qué sucede cuando cuestionamos las creencias base (duda metódica cartesiana).",
+                actividad: "Antes de quitar una pieza, el estudiante debe decir una creencia que da por cierta (ej: 'El sol saldrá mañana'). Si la torre cae, se discute: ¿Qué pasa cuando una certeza fundamental se derrumba en la ciencia o en la vida?"
+            },
+            'adivina': {
+                titulo: "¿Quién es Quién?: Categorías y Prejuicios",
+                objetivo: "Analizar cómo clasificamos a las personas y los sesgos implícitos en las preguntas que hacemos para definir la 'identidad'.",
+                actividad: "Prohibido usar características físicas (no vale '¿Tiene sombrero?'). Los alumnos solo pueden hacer preguntas existenciales o morales: '¿Esta persona devolvería una billetera encontrada?'."
+            },
+            'uno': {
+                titulo: "UNO: La Justicia y lo Arbitrario",
+                objetivo: "Cuestionar el origen de la ley y el castigo. ¿Por qué aceptamos reglas que nos perjudican?",
+                actividad: "Cuando alguien lanza un '+4', el jugador que recibe el castigo puede apelar a un 'tribunal' (el resto de la clase) argumentando por qué es injusto. El tribunal vota si la carta se anula."
+            },
+            'dixit': {
+                titulo: "Dixit: Hermenéutica y Multiplicidad de Verdades",
+                objetivo: "Entender que una misma imagen (o texto) puede tener múltiples interpretaciones válidas dependiendo del contexto del observador.",
+                actividad: "En lugar de adivinar la carta del narrador, los estudiantes deben agrupar tres cartas y construir un mito o relato sobre el origen del universo."
+            }
+        };
+
+        // ==========================================
+        // MANEJO DE VISTAS (Pestañas)
+        // ==========================================
+        function activarHerramienta(vista) {
+            document.getElementById('view-initial').classList.add('hidden');
+            document.getElementById('view-planes').classList.add('hidden');
+            document.getElementById('view-agendas').classList.add('hidden');
+            document.getElementById('view-taller').classList.add('hidden');
+
+            document.getElementById('view-' + vista).classList.remove('hidden');
+            document.getElementById('workspace').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function generarPlan() {
+            const select = document.getElementById('game-select');
+            const output = document.getElementById('plan-output');
+            const data = planesDB[select.value];
+
+            output.innerHTML = `
+                <h4 class="font-sans font-black uppercase text-xl mb-3 text-xul_blue">${data.titulo}</h4>
+                <p class="mb-4"><strong class="font-sans uppercase text-xs tracking-widest text-gray-500">Objetivo Filosófico:</strong><br>${data.objetivo}</p>
+                <p><strong class="font-sans uppercase text-xs tracking-widest text-gray-500">Dinámica de Clase (45 min):</strong><br>${data.actividad}</p>
+            `;
+            output.classList.remove('hidden');
+        }
+
+        // ==========================================
+        // SIMULADOR DE AUTH Y ROLES
+        // ==========================================
+        let usuarioActual = null; // null = deslogueado
+
+        function verificarAcceso(nivelRequerido, vista) {
+            let rolActual = usuarioActual ? usuarioActual.rol : 'PUBLICO';
+            let tieneAcceso = false;
+
+            if (nivelRequerido === 'socios' && (rolActual === 'SOCIO' || rolActual === 'FUNDADOR')) {
+                tieneAcceso = true;
+            } else if (nivelRequerido === 'fundadores' && rolActual === 'FUNDADOR') {
+                tieneAcceso = true;
+            }
+
+            if(tieneAcceso) {
+                activarHerramienta(vista);
+            } else {
+                let mensaje = nivelRequerido === 'socios' 
+                    ? "Esta agenda didáctica es un beneficio exclusivo para los Socios del club." 
+                    : "El taller de creación uno a uno es el beneficio máximo, reservado solo para Socios Fundadores.";
+                
+                document.getElementById('upgrade-message').innerText = mensaje;
+                document.getElementById('upgrade-modal').classList.remove('hidden');
+            }
+        }
+
+        function updateUIWithRole(rol) {
+            const lockSocios = document.querySelectorAll('.icon-lock-socios');
+            const textSocios = document.querySelectorAll('.btn-text-socios');
+            const lockFundadores = document.querySelectorAll('.icon-lock-fundadores');
+            const textFundadores = document.querySelectorAll('.btn-text-fundadores');
+
+            // Reset a estado "Cerrado"
+            lockSocios.forEach(el => el.setAttribute('data-lucide', 'lock'));
+            textSocios.forEach(el => el.innerText = 'Desbloquear');
+            lockFundadores.forEach(el => el.setAttribute('data-lucide', 'lock'));
+            textFundadores.forEach(el => el.innerText = 'Solicitar Mentoría');
+
+            // Aplicar permisos
+            if(rol === 'SOCIO' || rol === 'FUNDADOR') {
+                lockSocios.forEach(el => el.setAttribute('data-lucide', 'unlock'));
+                textSocios.forEach(el => el.innerText = 'Abrir Herramienta');
+            }
+            if(rol === 'FUNDADOR') {
+                lockFundadores.forEach(el => el.setAttribute('data-lucide', 'unlock'));
+                textFundadores.forEach(el => el.innerText = 'Abrir Herramienta');
+            }
+            lucide.createIcons();
+        }
+
+        function abrirSimuladorLogin() {
+            document.getElementById('upgrade-modal').classList.add('hidden');
+            document.getElementById('mock-login-modal').classList.remove('hidden');
+        }
+
+        function simularLogin(rol, email) {
+            usuarioActual = { rol: rol, email: email };
+            
+            // Cerrar modal
+            document.getElementById('mock-login-modal').classList.add('hidden');
+            
+            // Actualizar botones de Navbar
+            const nombreMostrar = rol === 'PUBLICO' ? 'Invitado' : rol;
+            document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar}`;
+            if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar}`;
+            
+            // Actualizar Icono de Perfil en Navbar
+            let iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+            if (rol === 'FUNDADOR') iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            else if (rol === 'SOCIO') iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            
+            document.getElementById('badge-container-desktop').innerHTML = iconHtml;
+            document.getElementById('badge-container-desktop').style.display = 'flex';
+            document.getElementById('badge-container-mobile').innerHTML = iconHtml;
+            document.getElementById('badge-container-mobile').style.display = 'flex';
+
+            // Preparar Modal de Perfil
+            document.getElementById('profile-email').innerText = email;
+            document.getElementById('profile-role').innerText = rol;
+
+            // Cambiar comportamiento de los botones de ingresar
+            document.getElementById('login-btn-desktop').onclick = () => document.getElementById('profile-modal').classList.remove('hidden');
+            document.getElementById('login-btn-mobile').onclick = () => document.getElementById('profile-modal').classList.remove('hidden');
+
+            updateUIWithRole(rol);
+        }
+
+        // Evento Logout
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            usuarioActual = null;
+            document.getElementById('profile-modal').classList.add('hidden');
+            
+            // Restaurar estado deslogueado
+            document.getElementById('login-text-desktop').innerText = 'INGRESAR';
+            if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = 'INGRESAR';
+            document.getElementById('badge-container-desktop').style.display = 'none';
+            document.getElementById('badge-container-mobile').style.display = 'none';
+            
+            document.getElementById('login-btn-desktop').onclick = abrirSimuladorLogin;
+            document.getElementById('login-btn-mobile').onclick = abrirSimuladorLogin;
+            
+            // Volver a la vista inicial y bloquear todo
+            activarHerramienta('initial');
+            updateUIWithRole('PUBLICO');
+        });
+
+        // Configuración inicial de los botones de login para el simulador
+        document.getElementById('login-btn-desktop').onclick = abrirSimuladorLogin;
+        document.getElementById('login-btn-mobile').onclick = abrirSimuladorLogin;
+
+    </script>
+</body>
+</html>
