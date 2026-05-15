@@ -1,1 +1,756 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alquimia de Letras | LUDOSOFÍA</title>
 
+    <!-- ========================================== -->
+    <!-- CONFIGURACIÓN DE ACCESO PARA ESTA PÁGINA   -->
+    <!-- ========================================== -->
+    <script>
+        const CONFIG_ACCESO = {
+            PUBLICO: true,         // 'true' = acceso libre
+            SOCIO: false,          // 'true' = acceso para Socios
+            FUNDADOR: false        // 'true' = acceso para Fundadores
+        };
+    </script>
+    <!-- Ejecución del validador de seguridad -->
+    <script src="seguridad.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #FDF8ED; 
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-border {
+            border: 3px solid #2A2A2A;
+            box-shadow: 6px 6px 0px #2A2A2A;
+            transition: all 0.2s ease;
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-xul { text-shadow: 4px 4px 0px #2A2A2A; }
+        
+        @keyframes pulse-border {
+            0% { border-color: #2A2A2A; }
+            50% { border-color: #D1623A; box-shadow: 0 0 15px #D1623A; }
+            100% { border-color: #2A2A2A; }
+        }
+        .fusing { animation: pulse-border 1s infinite; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #FDF8ED; border-left: 1px solid #2A2A2A; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #2A2A2A; }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-xul_green selection:text-white relative overflow-x-hidden">
+
+    <!-- Navbar Unificado -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="#schole" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="#cartas" class="text-xul_ink hover:text-xul_terra transition-colors">Cartas</a>
+                <span class="text-xul_terra border-b-2 border-xul_terra cursor-default">Alquimia</span>
+                
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+            
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="focus:outline-none active:scale-95 transition-transform p-2">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="#cartas" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
+            <span class="mobile-link text-xul_terra block">Alquimia</span>
+            
+            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
+
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HEADER / HERO -->
+    <header class="pt-32 pb-16 px-6 relative border-b-[3px] border-xul_ink bg-[#75B07E] overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(#2A2A2A 2px, transparent 2px); background-size: 30px 30px;"></div>
+        
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-10">
+            <div class="text-center md:text-left flex-1">
+                <div class="inline-block bg-white border-[3px] border-xul_ink px-4 py-1 mb-6 shadow-[4px_4px_0px_#2A2A2A]">
+                    <span class="font-sans font-black text-xs md:text-sm uppercase tracking-widest text-xul_ink">Laboratorio de Conceptos</span>
+                </div>
+                
+                <h1 class="xul-title text-5xl md:text-7xl font-black text-white tracking-tighter mb-4 text-shadow-xul uppercase">
+                    Alquimia de Letras
+                </h1>
+                
+                <p class="font-serif text-xl md:text-2xl text-xul_ink max-w-2xl font-semibold leading-relaxed bg-white/40 p-4 border-l-[4px] border-xul_ink backdrop-blur-sm shadow-[4px_4px_0px_rgba(42,42,42,0.3)]">
+                    Funde raíces para crear neologismos o haz chocar palabras con el Binomio Fantástico de Gianni Rodari.
+                </p>
+            </div>
+
+            <!-- Arte Xul Solar del Laboratorio -->
+            <div class="w-64 h-64 relative flex items-center justify-center transform hover:scale-105 transition-transform duration-500 hidden md:flex">
+                <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[8px_8px_0px_#2A2A2A]">
+                    <polygon points="30,80 70,80 60,40 60,10 40,10 40,40" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="3"/>
+                    <path d="M 35 75 Q 50 85 65 75" fill="none" stroke="#D1623A" stroke-width="4"/>
+                    <polygon points="50,100 35,85 45,85 30,70 50,80 70,70 55,85 65,85" fill="#EBB134" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="50" cy="55" r="8" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="50" cy="55" r="2" fill="#2A2A2A"/>
+                    <circle cx="45" cy="25" r="3" fill="#C96B8C" stroke="#2A2A2A" stroke-width="1.5"/>
+                    <circle cx="55" cy="15" r="4" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="1.5"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- EL LABORATORIO (INTERFAZ DE CREACIÓN) -->
+    <main class="max-w-7xl mx-auto px-4 py-16 w-full">
+        
+        <!-- SELECTOR DE MODOS -->
+        <div class="flex flex-col md:flex-row justify-center gap-4 mb-10">
+            <button id="mode-neologismo" onclick="setMode('neologismo')" class="mode-btn active bg-xul_ink text-white font-black uppercase tracking-widest px-8 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#D1623A] transition-all flex items-center justify-center gap-2">
+                <i data-lucide="test-tube-2" class="w-5 h-5"></i> Fusión de Neologismos
+            </button>
+            <button id="mode-binomio" onclick="setMode('binomio')" class="mode-btn bg-white text-xul_ink font-black uppercase tracking-widest px-8 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
+                <i data-lucide="zap" class="w-5 h-5"></i> Binomio Fantástico
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- COLUMNA 1: ELEMENTO A -->
+            <div class="bg-white border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#2A2A2A] flex flex-col h-full">
+                <div class="flex items-center gap-3 mb-6 border-b-[3px] border-xul_ink pb-3">
+                    <div id="col1-icon-bg" class="w-10 h-10 bg-xul_yellow border-2 border-xul_ink flex items-center justify-center rounded-full shrink-0">
+                        <i id="col1-icon" data-lucide="type" class="w-5 h-5 text-xul_ink"></i>
+                    </div>
+                    <h3 id="col1-title" class="font-sans font-black text-lg md:text-xl uppercase tracking-widest text-xul_ink">1. Materia Prima</h3>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar" id="listA-container">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+
+            <!-- COLUMNA 2: EL CRISOL -->
+            <div class="bg-xul_paper border-[3px] border-xul_ink p-6 md:p-8 shadow-[12px_12px_0px_#D1623A] flex flex-col h-full relative z-10 lg:scale-105">
+                <div class="text-center mb-4">
+                    <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink">El Crisol</h3>
+                </div>
+                
+                <!-- Pantalla de Fusión -->
+                <div id="crucible" class="bg-white border-[4px] border-xul_ink p-6 mb-6 text-center relative transition-all duration-300">
+                    <div id="crucible-formula" class="flex justify-center items-center gap-2 font-sans font-bold text-gray-400 text-[10px] md:text-sm uppercase tracking-widest mb-6">
+                        <span id="display-a" class="border-b-2 border-dashed border-xul_yellow pb-1 w-20 inline-block truncate">[ A ]</span> 
+                        <span id="display-operator">+</span> 
+                        <span id="display-b" class="border-b-2 border-dashed border-xul_pink pb-1 w-20 inline-block truncate">[ B ]</span>
+                    </div>
+                    
+                    <h2 id="result-word" class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase break-words min-h-[60px] flex items-center justify-center">
+                        ? ? ?
+                    </h2>
+
+                    <!-- Botón para mezclar preposición (Solo modo Binomio) -->
+                    <button id="btn-shuffle-prep" onclick="shufflePreposition()" class="hidden absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-xul_terra text-white p-2 border-[3px] border-xul_ink shadow-[2px_2px_0px_#2A2A2A] hover:bg-xul_ink transition-colors rounded-full" title="Cambiar preposición">
+                        <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    </button>
+                </div>
+
+                <!-- Formulario de Definición -->
+                <div class="flex-grow flex flex-col">
+                    <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Significado de la creación</label>
+                    <textarea id="definition-input" disabled placeholder="Combina dos conceptos para habilitar el pergamino..." class="w-full border-[3px] border-xul_ink bg-white p-4 font-serif text-lg focus:outline-none focus:border-xul_terra focus:shadow-[4px_4px_0px_#D1623A] transition-all resize-none flex-grow mb-6 disabled:bg-gray-100 disabled:cursor-not-allowed custom-scrollbar min-h-[120px]"></textarea>
+                    
+                    <button id="btn-save" disabled onclick="saveToGrimoire()" class="w-full bg-xul_ink text-white font-black text-lg uppercase tracking-widest py-4 border-[3px] border-xul_ink shadow-[6px_6px_0px_#6BA4C4] hover:-translate-y-1 hover:shadow-[8px_8px_0px_#6BA4C4] transition-all disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-[6px_6px_0px_#6BA4C4] flex items-center justify-center gap-2">
+                        <i data-lucide="book-bookmark" class="w-5 h-5"></i> Guardar en Grimorio
+                    </button>
+                </div>
+            </div>
+
+            <!-- COLUMNA 3: ELEMENTO B -->
+            <div class="bg-white border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#2A2A2A] flex flex-col h-full">
+                <div class="flex items-center gap-3 mb-6 border-b-[3px] border-xul_ink pb-3">
+                    <div id="col3-icon-bg" class="w-10 h-10 bg-xul_pink border-2 border-xul_ink flex items-center justify-center rounded-full shrink-0">
+                        <i id="col3-icon" data-lucide="flask-conical" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <h3 id="col3-title" class="font-sans font-black text-lg md:text-xl uppercase tracking-widest text-xul_ink">3. Catalizador</h3>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-3 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar" id="listB-container">
+                    <!-- Dinámico -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ============================================== -->
+        <!-- SECCIÓN DIVIDIDA: GRIMORIO Y ÁGORA DE PREGUNTAS-->
+        <!-- ============================================== -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-24">
+            
+            <!-- EL GRIMORIO (LISTA DE PALABRAS GUARDADAS) -->
+            <section class="flex flex-col h-full">
+                <div class="flex items-center gap-4 mb-8 border-b-[3px] border-xul_ink pb-4">
+                    <div class="w-12 h-12 bg-xul_terra border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] shrink-0">
+                        <i data-lucide="scroll-text" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <h2 class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase">El Grimorio</h2>
+                        <button onclick="showInfoModal('grimorio')" class="text-xul_terra hover:text-xul_ink transition-colors focus:outline-none bg-white rounded-full border-2 border-xul_ink hover:scale-110 shadow-[2px_2px_0px_#2A2A2A]" title="¿Qué es el Grimorio?">
+                            <i data-lucide="info" class="w-6 h-6 p-1"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="grimoire-list" class="space-y-6 overflow-y-auto max-h-[600px] pr-2 custom-scrollbar flex-grow">
+                    <!-- Dinámico -->
+                    <div id="empty-grimoire" class="border-[3px] border-dashed border-gray-400 p-10 text-center opacity-70">
+                        <i data-lucide="ghost" class="w-12 h-12 mx-auto text-gray-400 mb-4"></i>
+                        <p class="font-sans font-bold uppercase tracking-widest text-gray-500">El grimorio está vacío.</p>
+                        <p class="font-serif text-gray-500">Las páginas aguardan tus creaciones.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- EL ALAMBIQUE DE PREGUNTAS -->
+            <section class="flex flex-col h-full">
+                <div class="flex items-center gap-4 mb-8 border-b-[3px] border-xul_ink pb-4">
+                    <div class="w-12 h-12 bg-xul_blue border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] shrink-0">
+                        <i data-lucide="beaker" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <h2 class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase">El Alambique</h2>
+                        <button onclick="showInfoModal('alambique')" class="text-xul_blue hover:text-xul_ink transition-colors focus:outline-none bg-white rounded-full border-2 border-xul_ink hover:scale-110 shadow-[2px_2px_0px_#2A2A2A]" title="¿Qué es el Alambique?">
+                            <i data-lucide="info" class="w-6 h-6 p-1"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Formulario de Pregunta -->
+                <div class="bg-xul_paper border-[3px] border-xul_ink p-6 shadow-[6px_6px_0px_#6BA4C4] mb-8 relative">
+                    <div class="absolute -top-3 -right-3 w-8 h-8 bg-xul_blue border-2 border-xul_ink flex items-center justify-center shadow-[2px_2px_0px_#2A2A2A]">
+                        <i data-lucide="help-circle" class="w-4 h-4 text-white"></i>
+                    </div>
+                    
+                    <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">1. Selecciona el reactivo</label>
+                    <select id="alambique-select" class="w-full border-[3px] border-xul_ink bg-white p-3 font-sans text-sm focus:outline-none focus:border-xul_blue transition-all mb-4 appearance-none cursor-pointer">
+                        <option value="">Aún no hay creaciones en el Grimorio...</option>
+                    </select>
+
+                    <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">2. Destila el dilema</label>
+                    <textarea id="question-input" disabled rows="3" placeholder="Selecciona un reactivo arriba para poder destilar una pregunta o afirmación..." class="w-full border-[3px] border-xul_ink bg-white p-4 font-serif text-lg focus:outline-none focus:border-xul_blue focus:shadow-[4px_4px_0px_#6BA4C4] transition-all resize-none mb-4 custom-scrollbar disabled:bg-gray-100 disabled:cursor-not-allowed"></textarea>
+                    
+                    <button id="btn-ask" disabled onclick="saveQuestion()" class="w-full bg-xul_blue text-white font-black text-sm uppercase tracking-widest py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all disabled:opacity-50 disabled:hover:translate-y-0 disabled:hover:shadow-[4px_4px_0px_#2A2A2A] flex items-center justify-center gap-2">
+                        <i data-lucide="flame" class="w-4 h-4"></i> Destilar
+                    </button>
+                </div>
+
+                <!-- Lista de Preguntas -->
+                <div id="questions-list" class="space-y-4 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar flex-grow">
+                    <div id="empty-questions" class="border-[3px] border-dashed border-gray-400 p-8 text-center opacity-70">
+                        <p class="font-sans font-bold uppercase tracking-widest text-gray-500">Silencio en el Alambique.</p>
+                        <p class="font-serif text-gray-500 mt-2">Destila la primera gota de duda filosófica.</p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+    </main>
+
+    <!-- MODAL DE ALERTA PERSONALIZADO -->
+    <div id="alert-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="closeCustomAlert()"></div>
+        <div class="relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] text-center transform transition-all scale-100 opacity-100">
+            <div class="w-12 h-12 bg-xul_terra border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] mx-auto mb-4">
+                <i data-lucide="alert-circle" class="w-6 h-6 text-white"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-2">Aviso</h3>
+            <p id="alert-message" class="font-sans text-gray-700 mb-6 font-medium">Mensaje de alerta.</p>
+            <button onclick="closeCustomAlert()" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">Entendido</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE INFORMACIÓN (GRIMORIO/ALAMBIQUE) -->
+    <div id="info-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="closeInfoModal()"></div>
+        <div class="relative bg-white border-[3px] border-xul_ink p-8 max-w-md w-full shadow-[12px_12px_0px_#6BA4C4] text-center transform transition-all">
+            <div id="info-icon-container" class="w-14 h-14 bg-xul_yellow border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] mx-auto mb-4">
+                <i id="info-icon" data-lucide="info" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 id="info-title" class="xul-title text-4xl font-black text-xul_ink tracking-tight uppercase mb-4">Título</h3>
+            <p id="info-description" class="font-serif text-lg text-gray-700 mb-8 leading-relaxed">Descripción detallada.</p>
+            <button onclick="closeInfoModal()" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest hover:bg-xul_blue transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">Cerrar Tomo</button>
+        </div>
+    </div>
+
+    <!-- SCRIPT ALQUIMIA LÓGICA -->
+    <script>
+        // Bases de Datos de Conceptos
+        const dbNeologismos = {
+            raices: [
+                { word: "Crono", meaning: "Tiempo" }, { word: "Onto", meaning: "El Ser" },
+                { word: "Episteme", meaning: "Conocimiento" }, { word: "Doxa", meaning: "Opinión" },
+                { word: "Ethos", meaning: "Comportamiento" }, { word: "Polis", meaning: "La Ciudad" },
+                { word: "Soma", meaning: "Cuerpo" }, { word: "Psique", meaning: "Alma / Mente" },
+                { word: "Techno", meaning: "Técnica / Arte" }, { word: "Logo", meaning: "Razón / Palabra" },
+                { word: "Pan", meaning: "Todo" }, { word: "Ego", meaning: "El Yo" }
+            ],
+            sufijos: [
+                { word: "sofía", meaning: "Sabiduría / Amor por" }, { word: "logía", meaning: "Estudio de" },
+                { word: "cracia", meaning: "Poder / Gobierno" }, { word: "latría", meaning: "Adoración" },
+                { word: "fobia", meaning: "Miedo irracional" }, { word: "filia", meaning: "Afinidad / Simpatía" },
+                { word: "mancia", meaning: "Adivinación" }, { word: "poiesis", meaning: "Creación / Producción" },
+                { word: "arquía", meaning: "Principio / Mando" }, { word: "fagia", meaning: "Acción de comer" },
+                { word: "patía", meaning: "Sentimiento / Dolencia" }, { word: "grafía", meaning: "Descripción" }
+            ]
+        };
+
+        const dbBinomios = {
+            conceptos: [
+                "La Máquina", "El Alma", "El Estado", "El Lenguaje", "El Poder", "El Caos", 
+                "El Azar", "La Libertad", "El Arte", "La Muerte", "El Amor", "La Nada", 
+                "El Trabajo", "La Justicia", "El Juego", "La Verdad"
+            ],
+            preposiciones: ["contra", "sobre", "sin", "hacia", "bajo", "ante", "tras", "desde"]
+        };
+
+        let currentMode = 'neologismo'; // 'neologismo' o 'binomio'
+        let selectedA = null;
+        let selectedB = null;
+        let selectedPreposition = "contra";
+        
+        // Estado en Memoria
+        let savedWords = [];
+        let savedQuestions = [];
+
+        // Inicializar
+        function initAlquimia() {
+            lucide.createIcons();
+            setMode('neologismo');
+            renderGrimoire();
+            renderQuestions();
+            updateAlambiqueSelect();
+        }
+
+        // Utilidad de Menú Móvil
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Alerta Personalizada (Reemplazo de alert() nativo)
+        function showCustomAlert(message) {
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('alert-modal').classList.add('hidden');
+        }
+
+        // Modal de Información
+        function showInfoModal(section) {
+            const title = document.getElementById('info-title');
+            const desc = document.getElementById('info-description');
+            const iconContainer = document.getElementById('info-icon-container');
+            
+            if (section === 'grimorio') {
+                title.innerText = "El Grimorio";
+                desc.innerText = "Un grimorio es un antiguo libro de conocimiento mágico. Aquí es donde conservas los conceptos, neologismos y binomios que has logrado fusionar en El Crisol, junto a las definiciones únicas que tú mismo les has otorgado. Es el registro de tu alquimia mental.";
+                iconContainer.className = "w-14 h-14 bg-xul_terra border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] mx-auto mb-4";
+                iconContainer.innerHTML = '<i data-lucide="scroll-text" class="w-8 h-8 text-white"></i>';
+            } else if (section === 'alambique') {
+                title.innerText = "El Alambique";
+                desc.innerText = "El alambique es un instrumento clásico de destilación. En esta sección tomas tus creaciones previas del Grimorio como 'materia prima' para extraer de ellas una gota de pura filosofía: una pregunta profunda, un dilema o una afirmación que invite a la reflexión colectiva.";
+                iconContainer.className = "w-14 h-14 bg-xul_blue border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] mx-auto mb-4";
+                iconContainer.innerHTML = '<i data-lucide="beaker" class="w-8 h-8 text-white"></i>';
+            }
+            
+            lucide.createIcons();
+            document.getElementById('info-modal').classList.remove('hidden');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').classList.add('hidden');
+        }
+
+        // Cambio de Modo
+        function setMode(mode) {
+            currentMode = mode;
+            selectedA = null;
+            selectedB = null;
+            
+            // Actualizar Botones de Pestaña
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('bg-xul_ink', 'text-white', 'shadow-[4px_4px_0px_#D1623A]');
+                btn.classList.add('bg-white', 'text-xul_ink', 'shadow-[4px_4px_0px_#2A2A2A]');
+            });
+            const activeBtn = document.getElementById(`mode-${mode}`);
+            activeBtn.classList.remove('bg-white', 'text-xul_ink', 'shadow-[4px_4px_0px_#2A2A2A]');
+            activeBtn.classList.add('bg-xul_ink', 'text-white', 'shadow-[4px_4px_0px_#D1623A]');
+
+            // Actualizar Textos e Íconos
+            if(mode === 'neologismo') {
+                document.getElementById('col1-title').innerText = "1. Materia Prima";
+                document.getElementById('col3-title').innerText = "3. Catalizador";
+                document.getElementById('btn-shuffle-prep').classList.add('hidden');
+                document.getElementById('display-operator').innerText = "+";
+            } else {
+                document.getElementById('col1-title').innerText = "1. Tesis";
+                document.getElementById('col3-title').innerText = "2. Antítesis";
+                document.getElementById('btn-shuffle-prep').classList.remove('hidden');
+                shufflePreposition(); // Selecciona una al azar
+            }
+
+            renderLists();
+            updateCrucible();
+        }
+
+        function renderLists() {
+            const listA = document.getElementById('listA-container');
+            const listB = document.getElementById('listB-container');
+            listA.innerHTML = ''; listB.innerHTML = '';
+
+            if (currentMode === 'neologismo') {
+                dbNeologismos.raices.forEach(r => {
+                    const btn = document.createElement('button');
+                    btn.className = `btn-a font-sans font-bold text-sm uppercase tracking-widest text-xul_ink bg-gray-50 border-2 border-xul_ink p-2 hover:bg-xul_yellow hover:shadow-[3px_3px_0px_#2A2A2A] transition-all text-left flex flex-col justify-center focus:outline-none`;
+                    btn.innerHTML = `<span class="block text-lg mb-0.5">${r.word}</span><span class="block text-[9px] text-gray-500 font-serif normal-case leading-tight">${r.meaning}</span>`;
+                    btn.onclick = () => { selectedA = r.word; updateSelectionUI('.btn-a', btn, 'bg-xul_yellow'); updateCrucible(); };
+                    listA.appendChild(btn);
+                });
+                dbNeologismos.sufijos.forEach(s => {
+                    const btn = document.createElement('button');
+                    btn.className = `btn-b font-sans font-bold text-sm uppercase tracking-widest text-xul_ink bg-gray-50 border-2 border-xul_ink p-2 hover:bg-xul_pink hover:shadow-[3px_3px_0px_#2A2A2A] transition-all text-right flex flex-col justify-center focus:outline-none`;
+                    btn.innerHTML = `<span class="block text-lg mb-0.5">-${s.word}</span><span class="block text-[9px] text-gray-500 font-serif normal-case leading-tight">${s.meaning}</span>`;
+                    btn.onclick = () => { selectedB = s.word; updateSelectionUI('.btn-b', btn, 'bg-xul_pink'); updateCrucible(); };
+                    listB.appendChild(btn);
+                });
+            } else {
+                dbBinomios.conceptos.forEach(c => {
+                    const btn1 = document.createElement('button');
+                    btn1.className = `btn-a font-sans font-bold text-sm uppercase tracking-widest text-xul_ink bg-gray-50 border-2 border-xul_ink p-3 hover:bg-xul_yellow hover:shadow-[3px_3px_0px_#2A2A2A] transition-all text-center focus:outline-none`;
+                    btn1.innerHTML = c;
+                    btn1.onclick = () => { selectedA = c; updateSelectionUI('.btn-a', btn1, 'bg-xul_yellow'); updateCrucible(); };
+                    listA.appendChild(btn1);
+
+                    const btn2 = document.createElement('button');
+                    btn2.className = `btn-b font-sans font-bold text-sm uppercase tracking-widest text-xul_ink bg-gray-50 border-2 border-xul_ink p-3 hover:bg-xul_pink hover:shadow-[3px_3px_0px_#2A2A2A] transition-all text-center focus:outline-none`;
+                    btn2.innerHTML = c;
+                    btn2.onclick = () => { selectedB = c; updateSelectionUI('.btn-b', btn2, 'bg-xul_pink'); updateCrucible(); };
+                    listB.appendChild(btn2);
+                });
+            }
+        }
+
+        function updateSelectionUI(selector, activeElement, activeClass) {
+            document.querySelectorAll(selector).forEach(el => el.classList.remove(activeClass, 'shadow-[3px_3px_0px_#2A2A2A]'));
+            activeElement.classList.add(activeClass, 'shadow-[3px_3px_0px_#2A2A2A]');
+        }
+
+        function shufflePreposition() {
+            selectedPreposition = dbBinomios.preposiciones[Math.floor(Math.random() * dbBinomios.preposiciones.length)];
+            document.getElementById('display-operator').innerHTML = `<span class="text-xul_terra italic lowercase font-serif px-1">${selectedPreposition}</span>`;
+            if (selectedA && selectedB) updateCrucible();
+        }
+
+        function updateCrucible() {
+            const displayA = document.getElementById('display-a');
+            const displayB = document.getElementById('display-b');
+            const resultWord = document.getElementById('result-word');
+            const defInput = document.getElementById('definition-input');
+            const btnSave = document.getElementById('btn-save');
+            const crucibleBox = document.getElementById('crucible');
+
+            displayA.innerText = selectedA ? selectedA.toUpperCase() : '[ A ]';
+            displayB.innerText = selectedB ? (currentMode === 'neologismo' ? `-${selectedB.toUpperCase()}` : selectedB.toUpperCase()) : '[ B ]';
+
+            if (selectedA && selectedB) {
+                let combination = "";
+                if(currentMode === 'neologismo') {
+                    combination = selectedA.toLowerCase() + selectedB.toLowerCase();
+                    combination = combination.replace(/aa/g, 'a').replace(/oo/g, 'o');
+                } else {
+                    combination = `${selectedA} ${selectedPreposition} ${selectedB}`;
+                }
+                
+                resultWord.innerText = combination;
+                defInput.disabled = false;
+                btnSave.disabled = false;
+                defInput.placeholder = currentMode === 'neologismo' ? 
+                    `¿Qué significa "${combination.toUpperCase()}"?...` : 
+                    `¿Qué pregunta o afirmación surge de mezclar ${selectedA} con ${selectedB}?`;
+                
+                crucibleBox.classList.add('fusing');
+                setTimeout(() => crucibleBox.classList.remove('fusing'), 800);
+            } else {
+                resultWord.innerText = '? ? ?';
+                defInput.disabled = true;
+                btnSave.disabled = true;
+                defInput.value = '';
+            }
+        }
+
+        // ==========================
+        // GRIMORIO
+        // ==========================
+        function saveToGrimoire() {
+            const resultWord = document.getElementById('result-word').innerText;
+            const definition = document.getElementById('definition-input').value.trim();
+
+            if(!definition) {
+                return showCustomAlert("La página del grimorio no puede quedar en blanco. Escribe un significado antes de guardar.");
+            }
+
+            const typeColor = currentMode === 'neologismo' ? 'bg-xul_yellow' : 'bg-xul_blue';
+            const typeLabel = currentMode === 'neologismo' ? 'Neologismo' : 'Binomio';
+
+            const newEntry = { id: Date.now(), word: resultWord, def: definition, date: new Date().toLocaleDateString(), typeClass: typeColor, typeLabel: typeLabel };
+            savedWords.unshift(newEntry);
+            
+            document.getElementById('definition-input').value = '';
+            renderGrimoire();
+            updateAlambiqueSelect();
+            document.getElementById('grimoire-list').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function renderGrimoire() {
+            const container = document.getElementById('grimoire-list');
+            const emptyState = document.getElementById('empty-grimoire');
+            
+            if(savedWords.length === 0) {
+                emptyState.style.display = 'block';
+                Array.from(container.children).forEach(child => { if(child.id !== 'empty-grimoire') child.remove(); });
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            Array.from(container.children).forEach(child => { if(child.id !== 'empty-grimoire') child.remove(); });
+
+            savedWords.forEach(entry => {
+                const card = document.createElement('div');
+                card.className = "bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] relative group transition-all";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex gap-2 items-center">
+                            <span class="${entry.typeClass} text-xul_ink text-[8px] font-black uppercase px-2 py-0.5 border border-xul_ink">${entry.typeLabel}</span>
+                            <p class="font-sans text-[9px] font-black text-gray-400 uppercase tracking-widest">${entry.date}</p>
+                        </div>
+                        <button onclick="deleteFromGrimoire(${entry.id})" class="text-gray-300 hover:text-xul_terra transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:outline-none focus:opacity-100 p-1" aria-label="Borrar entrada">
+                            <i data-lucide="x-circle" class="w-5 h-5 md:w-4 md:h-4"></i>
+                        </button>
+                    </div>
+                    <h4 class="xul-title font-black text-2xl text-xul_ink uppercase tracking-tight mb-2 border-b-2 border-xul_ink pb-1">${entry.word}</h4>
+                    <p class="font-serif text-base text-gray-700 leading-relaxed">${entry.def}</p>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function deleteFromGrimoire(id) {
+            savedWords = savedWords.filter(w => w.id !== id);
+            
+            // También borramos preguntas asociadas si existieran (opcional, pero mantiene coherencia)
+            const deletedWord = savedWords.find(w => w.id === id);
+            if(deletedWord) {
+                savedQuestions = savedQuestions.filter(q => q.wordRef !== deletedWord.word);
+                renderQuestions();
+            }
+
+            renderGrimoire();
+            updateAlambiqueSelect();
+        }
+
+        // ==========================
+        // ALAMBIQUE DE PREGUNTAS
+        // ==========================
+        function updateAlambiqueSelect() {
+            const select = document.getElementById('alambique-select');
+            const textarea = document.getElementById('question-input');
+            const btnAsk = document.getElementById('btn-ask');
+            
+            select.innerHTML = '<option value="">-- Elige una creación de tu Grimorio --</option>';
+            
+            if(savedWords.length > 0) {
+                savedWords.forEach(w => {
+                    const opt = document.createElement('option');
+                    opt.value = w.word;
+                    opt.text = w.word;
+                    select.appendChild(opt);
+                });
+            } else {
+                select.innerHTML = '<option value="">Aún no hay creaciones en el Grimorio...</option>';
+                textarea.disabled = true;
+                btnAsk.disabled = true;
+                textarea.value = '';
+                textarea.placeholder = "Selecciona un reactivo arriba para poder destilar una pregunta o afirmación...";
+            }
+
+            select.onchange = (e) => {
+                if(e.target.value) {
+                    textarea.disabled = false;
+                    btnAsk.disabled = false;
+                    textarea.placeholder = `Escribe tu pregunta o afirmación sobre "${e.target.value}"...`;
+                } else {
+                    textarea.disabled = true;
+                    btnAsk.disabled = true;
+                    textarea.value = '';
+                }
+            };
+        }
+
+        function saveQuestion() {
+            const reactivo = document.getElementById('alambique-select').value;
+            const input = document.getElementById('question-input');
+            const text = input.value.trim();
+
+            if(!text || !reactivo) {
+                return showCustomAlert("Debes formular una destilación válida. Las gotas vacías no sirven para el alambique.");
+            }
+
+            const newQ = { id: Date.now(), wordRef: reactivo, text: text, date: new Date().toLocaleDateString() };
+            savedQuestions.unshift(newQ);
+            
+            input.value = '';
+            document.getElementById('alambique-select').value = '';
+            input.disabled = true;
+            document.getElementById('btn-ask').disabled = true;
+            renderQuestions();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-list');
+            const emptyState = document.getElementById('empty-questions');
+            
+            if(savedQuestions.length === 0) {
+                emptyState.style.display = 'block';
+                Array.from(container.children).forEach(child => { if(child.id !== 'empty-questions') child.remove(); });
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            Array.from(container.children).forEach(child => { if(child.id !== 'empty-questions') child.remove(); });
+
+            savedQuestions.forEach(q => {
+                const card = document.createElement('div');
+                card.className = "bg-white border-l-[6px] border-y-[3px] border-r-[3px] border-l-xul_blue border-y-xul_ink border-r-xul_ink p-4 shadow-[4px_4px_0px_#2A2A2A] relative group transition-all flex flex-col justify-between";
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-3">
+                            <div class="flex items-center gap-2">
+                                <span class="bg-xul_ink text-white text-[8px] font-black uppercase px-2 py-0.5 border border-xul_ink">${q.wordRef}</span>
+                                <span class="font-sans text-[9px] font-black text-gray-400 uppercase tracking-widest">${q.date}</span>
+                            </div>
+                            <button onclick="deleteQuestion(${q.id})" class="text-gray-300 hover:text-red-500 transition-colors opacity-100 md:opacity-0 md:group-hover:opacity-100 focus:outline-none focus:opacity-100 p-1" title="Borrar destilación">
+                                <i data-lucide="trash-2" class="w-5 h-5 md:w-4 md:h-4"></i>
+                            </button>
+                        </div>
+                        <p class="font-serif text-lg font-semibold text-xul_ink leading-relaxed italic mb-4">"${q.text}"</p>
+                    </div>
+                    
+                    <div class="flex gap-2 justify-end border-t-2 border-dashed border-gray-200 pt-3 mt-auto">
+                        <button onclick="shareQuestion(${q.id}, 'copy')" class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-xul_ink bg-gray-100 hover:bg-gray-200 px-3 py-1.5 border-2 border-xul_ink transition-colors shadow-[2px_2px_0px_#2A2A2A]" title="Copiar texto">
+                            <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar
+                        </button>
+                        <button onclick="shareQuestion(${q.id}, 'twitter')" class="flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-white bg-[#000000] hover:bg-gray-800 px-3 py-1.5 border-2 border-xul_ink transition-colors shadow-[2px_2px_0px_#2A2A2A]" title="Compartir en X">
+                            <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> 
+                            Post
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function shareQuestion(id, platform) {
+            const q = savedQuestions.find(x => x.id === id);
+            if (!q) return;
+            
+            const textToShare = `"${q.text}"\n\n— Destilado sobre el concepto [${q.wordRef}] en el Alambique de Ludosofía. 🧪✨`;
+
+            if (platform === 'twitter') {
+                const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(textToShare)}`;
+                window.open(twitterUrl, '_blank');
+            } else if (platform === 'copy') {
+                const textarea = document.createElement('textarea');
+                textarea.value = textToShare;
+                document.body.appendChild(textarea);
+                textarea.select();
+                try {
+                    document.execCommand('copy');
+                    showCustomAlert("¡La destilación se ha copiado al portapapeles con éxito! Ya puedes pegarla y compartirla donde desees.");
+                } catch (err) {
+                    showCustomAlert("Hubo un error al intentar copiar. Intenta seleccionar el texto manualmente.");
+                }
+                document.body.removeChild(textarea);
+            }
+        }
+
+        function deleteQuestion(id) {
+            savedQuestions = savedQuestions.filter(q => q.id !== id);
+            renderQuestions();
+        }
+
+        // Iniciar la magia al cargar el DOM
+        window.addEventListener('DOMContentLoaded', initAlquimia);
+    </script>
+</body>
+</html>
