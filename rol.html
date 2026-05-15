@@ -56,10 +56,9 @@
 </head>
 <body class="antialiased selection:bg-xul_pink selection:text-white relative overflow-x-hidden">
 
-    <!-- Navbar Unificado -->
     <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
         <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
-            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+            <a href="#" class="flex items-center space-x-3 cursor-pointer group">
                 <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
                     <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
                     <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
@@ -73,10 +72,10 @@
             </a>
             
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
-                <a href="index.html#modalidades" class="text-xul_ink hover:text-xul_terra transition-colors">Modalidades</a>
-                <a href="schole.html" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
-                <a href="index_biblio.html" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
-                <a href="index_hack.html" class="text-xul_ink hover:text-xul_terra transition-colors">Hackeados</a>
+                <a href="#modalidades" class="text-xul_ink hover:text-xul_terra transition-colors">Modalidades</a>
+                <a href="#schole" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="#hackeados" class="text-xul_ink hover:text-xul_terra transition-colors">Hackeados</a>
                 
                 <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A]" title="Tu Membresía"></div>
 
@@ -92,20 +91,19 @@
             </div>
         </div>
         
-        <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                    <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
                 <a href="https://www.ludosofiaclub.ar/#schole" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
                 <a href="https://www.ludosofiaclub.ar/index.html#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
-                <span class="text-xul_blue border-b-2 border-xul_blue">Juegos de rol</span>
-            
-            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
+                <span class="text-xul_blue border-b-2 border-xul_blue">Consultoría</span>
+                
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A]" title="Tu Membresía"></div>
 
-            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
-                <span id="login-text-mobile">Ingresar</span>
-            </button>
-        </div>
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
     </nav>
 
-    <!-- HEADER / HERO TEATRAL -->
     <header class="pt-32 pb-20 px-6 relative border-b-[3px] border-xul_ink bg-[#C96B8C] overflow-hidden">
         <!-- Trama Geométrica de Escenario -->
         <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #2A2A2A 0, #2A2A2A 2px, transparent 2px, transparent 20px);"></div>
@@ -155,7 +153,6 @@
         </div>
     </header>
 
-    <!-- ¿CÓMO FUNCIONA? (DINÁMICA) -->
     <section class="py-20 px-6 bg-white border-b-[3px] border-xul_ink">
         <div class="max-w-6xl mx-auto">
             <div class="text-center mb-16">
@@ -203,7 +200,6 @@
         </div>
     </section>
 
-    <!-- CARTELERA DE SESIONES -->
     <main id="cartelera" class="max-w-6xl mx-auto px-6 py-20 w-full">
         
         <div class="flex items-center gap-4 mb-12 border-b-[3px] border-xul_ink pb-4">
@@ -217,7 +213,6 @@
 
             <!-- EVENTO 1 -->
             <article class="bg-white border-[3px] border-xul_ink flex flex-col h-full shadow-[8px_8px_0px_#C96B8C] hover:-translate-y-2 hover:shadow-[12px_12px_0px_#C96B8C] transition-all group relative overflow-hidden">
-                <!-- Banner Imagen Abstracta -->
                 <div class="h-32 bg-xul_pink border-b-[3px] border-xul_ink relative flex items-center justify-center overflow-hidden">
                     <svg viewBox="0 0 200 100" class="absolute w-full h-full opacity-30">
                         <polygon points="0,100 100,0 200,100" fill="#FDF8ED"/>
@@ -249,7 +244,7 @@
                         <div class="text-sm font-sans font-bold text-gray-500 uppercase tracking-widest">
                             <i data-lucide="calendar" class="inline w-4 h-4 mb-1"></i> Viernes 15 | 21.00hs
                         </div>
-                        <button onclick="window.location.href='login.html'" class="bg-xul_ink text-white font-bold text-xs uppercase tracking-widest px-4 py-2 border-[2px] border-xul_ink shadow-[2px_2px_0px_#D1623A] hover:bg-xul_terra transition-colors">
+                        <button onclick="showAlert('Debes iniciar sesión para reservar una máscara.')" class="bg-xul_ink text-white font-bold text-xs uppercase tracking-widest px-4 py-2 border-[2px] border-xul_ink shadow-[2px_2px_0px_#D1623A] hover:bg-xul_terra transition-colors">
                             Reservar Máscara
                         </button>
                     </div>
@@ -258,7 +253,6 @@
 
             <!-- EVENTO 2 -->
             <article class="bg-white border-[3px] border-xul_ink flex flex-col h-full shadow-[8px_8px_0px_#6BA4C4] hover:-translate-y-2 hover:shadow-[12px_12px_0px_#6BA4C4] transition-all group relative overflow-hidden">
-                <!-- Banner Imagen Abstracta -->
                 <div class="h-32 bg-xul_blue border-b-[3px] border-xul_ink relative flex items-center justify-center overflow-hidden">
                     <svg viewBox="0 0 200 100" class="absolute w-full h-full opacity-30">
                         <rect x="20" y="20" width="160" height="60" fill="none" stroke="#2A2A2A" stroke-width="4" stroke-dasharray="10 5"/>
@@ -290,7 +284,7 @@
                         <div class="text-sm font-sans font-bold text-gray-500 uppercase tracking-widest">
                             <i data-lucide="calendar" class="inline w-4 h-4 mb-1"></i> Viernes 22 | 21.00hs
                         </div>
-                        <button onclick="window.location.href='login.html'" class="bg-xul_ink text-white font-bold text-xs uppercase tracking-widest px-4 py-2 border-[2px] border-xul_ink shadow-[2px_2px_0px_#EBB134] hover:bg-xul_yellow hover:text-xul_ink transition-colors">
+                        <button onclick="showAlert('Debes iniciar sesión para reservar una máscara.')" class="bg-xul_ink text-white font-bold text-xs uppercase tracking-widest px-4 py-2 border-[2px] border-xul_ink shadow-[2px_2px_0px_#EBB134] hover:bg-xul_yellow hover:text-xul_ink transition-colors">
                             Reservar Máscara
                         </button>
                     </div>
@@ -300,7 +294,6 @@
         </div>
     </main>
 
-    <!-- FOOTER UNIFICADO -->
     <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-gray-800 mt-12">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-700 pb-8">
             <div class="flex items-center space-x-3">
@@ -314,9 +307,9 @@
             </div>
             
             <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
-                <a href="index.html" class="hover:text-xul_blue transition">Inicio</a>
-                <a href="schole.html" class="hover:text-xul_blue transition">Scholē</a>
-                <a href="index.html#faqs" class="hover:text-xul_blue transition">FAQs</a>
+                <a href="#" class="hover:text-xul_blue transition">Inicio</a>
+                <a href="#" class="hover:text-xul_blue transition">Scholē</a>
+                <a href="#" class="hover:text-xul_blue transition">FAQs</a>
             </div>
         </div>
         <div class="max-w-6xl mx-auto mt-6 text-center text-sm font-sans text-gray-400">
@@ -324,7 +317,6 @@
         </div>
     </footer>
 
-    <!-- MODALES DE SESIÓN OCULTOS -->
     <div id="alert-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('alert-modal').classList.add('hidden')"></div>
         <div id="alert-box" class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] transform transition-all text-center">
@@ -351,24 +343,34 @@
         </div>
     </div>
 
-    <script>lucide.createIcons();</script>
+    <script>
+        lucide.createIcons();
 
-    <!-- EL CEREBRO DE FIREBASE (Autenticación Global) -->
+        // Helper para mostrar alertas estilizadas en lugar del alert() nativo
+        function showAlert(message, title = "Aviso") {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        }
+    </script>
+
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
-            authDomain: "ludosofia-1cdc7.firebaseapp.com",
-            projectId: "ludosofia-1cdc7"
+        // Obtener el ID de la aplicación y la configuración de Firebase de forma dinámica y segura
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ludosofia-preview';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+            // Un fallback simulado si se ejecuta fuera del entorno. Esto no funcionará, 
+            // pero evita errores fatales de parseo en entornos de prueba estrictos.
         };
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // UI Element bindings
         const btnMenu = document.getElementById('mobile-menu-btn');
         const menuMobile = document.getElementById('mobile-menu');
         if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
@@ -376,14 +378,28 @@
         const loginBtnDesktop = document.getElementById('login-btn-desktop');
         const loginBtnMobile = document.getElementById('login-btn-mobile');
         
-        if (loginBtnDesktop) loginBtnDesktop.onclick = () => window.location.href = 'login.html';
-        if (loginBtnMobile) loginBtnMobile.onclick = () => window.location.href = 'login.html';
+        // Manejador de Login Visual (Abre el perfil o avisa)
+        const handleLoginClick = () => {
+            if(auth.currentUser && auth.currentUser.isAnonymous === false) {
+                 document.getElementById('profile-modal').classList.remove('hidden');
+            } else {
+                 showAlert('Funcionalidad de login completo será delegada a la pantalla principal.', 'Ingreso');
+            }
+        };
 
+        if (loginBtnDesktop) loginBtnDesktop.onclick = handleLoginClick;
+        if (loginBtnMobile) loginBtnMobile.onclick = handleLoginClick;
+
+        // Actualizar UI según el rol
         function updateUIWithRole(rol) {
-            let r = (rol || '').toUpperCase().trim();
+            let r = (rol || 'SOCIO').toUpperCase().trim();
             let iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
-            if (r.includes('FUNDADOR')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
-            else if (r.includes('SOCIO')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            
+            if (r.includes('FUNDADOR')) {
+                iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            } else if (r.includes('SOCIO') || r.includes('EXPLORADOR')) {
+                iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            }
             
             const deskBadge = document.getElementById('badge-container-desktop');
             const mobBadge = document.getElementById('badge-container-mobile');
@@ -391,42 +407,72 @@
             if(mobBadge) { mobBadge.innerHTML = iconHtml; mobBadge.style.display = 'flex'; }
         }
 
+        // Authentication Bootstrapping
+        // Intentar usar Custom Token (si existe) para usuario logueado, sino usar Anónimo
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            signInWithCustomToken(auth, __initial_auth_token).catch(err => {
+                console.error("Error validando token, ingresando anónimamente:", err);
+                signInAnonymously(auth);
+            });
+        } else {
+            signInAnonymously(auth).catch(console.error);
+        }
+
+        // Listener del estado de la autenticación
         onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+            if (user && !user.isAnonymous) {
+                // UI de usuario Logueado
+                const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : (user.email ? user.email.split('@')[0] : 'Pensador');
+                
                 document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
                 if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
                 
                 loginBtnDesktop.onclick = () => document.getElementById('profile-modal').classList.remove('hidden');
                 if(loginBtnMobile) loginBtnMobile.onclick = () => document.getElementById('profile-modal').classList.remove('hidden');
 
-                document.getElementById('profile-email').innerText = user.email;
+                document.getElementById('profile-email').innerText = user.email || 'Identidad Oculta';
 
                 try {
-                    const docSnap = await getDoc(doc(db, "usuarios", user.uid));
-                    if (docSnap.exists()) {
-                        const datos = docSnap.data();
-                        localStorage.setItem('rol_usuario', datos.rol);
-                        document.getElementById('profile-role').innerText = datos.rol;
-                        updateUIWithRole(datos.rol);
+                    // Ruta obligatoria para datos privados del usuario (Regla de oro Firestore)
+                    const userRef = doc(db, 'artifacts', appId, 'users', user.uid, 'profile', 'data');
+                    const docSnap = await getDoc(userRef);
+                    let roleAsignado = "Socio Oculto";
+
+                    if (docSnap.exists() && docSnap.data().rol) {
+                        roleAsignado = docSnap.data().rol;
+                    } else {
+                        // Si no existe perfil en esta DB nueva, lo creamos virtualmente
+                        await setDoc(userRef, { rol: 'Explorador', creado: new Date() });
+                        roleAsignado = "Explorador";
                     }
-                } catch (error) { console.error(error); }
+
+                    document.getElementById('profile-role').innerText = roleAsignado;
+                    updateUIWithRole(roleAsignado);
+                    
+                } catch (error) { 
+                    console.error("Error al obtener perfil:", error); 
+                    document.getElementById('profile-role').innerText = "Invitado";
+                    updateUIWithRole("Invitado");
+                }
             } else {
+                // UI de usuario Invitado / Anónimo
                 document.getElementById('login-text-desktop').innerText = 'INGRESAR';
                 if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = 'INGRESAR';
+                
                 if(document.getElementById('badge-container-desktop')) document.getElementById('badge-container-desktop').style.display = 'none';
                 if(document.getElementById('badge-container-mobile')) document.getElementById('badge-container-mobile').style.display = 'none';
                 
-                loginBtnDesktop.onclick = () => window.location.href = 'login.html';
-                if(loginBtnMobile) loginBtnMobile.onclick = () => window.location.href = 'login.html';
-                localStorage.removeItem('rol_usuario');
+                loginBtnDesktop.onclick = () => showAlert('Conecta tu cuenta en el entorno para habilitar funciones avanzadas.', 'Autenticación');
+                if(loginBtnMobile) loginBtnMobile.onclick = () => showAlert('Conecta tu cuenta en el entorno para habilitar funciones avanzadas.', 'Autenticación');
             }
         });
 
+        // Logout
         document.getElementById('btn-logout').addEventListener('click', () => {
             signOut(auth).then(() => {
                 document.getElementById('profile-modal').classList.add('hidden');
-                window.location.reload(); 
+                // Al hacer logout aquí, en el canvas caerá en estado anónimo de nuevo
+                signInAnonymously(auth);
             });
         });
     </script>
