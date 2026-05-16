@@ -147,7 +147,7 @@
                 </h1>
                 
                 <p class="font-serif text-xl md:text-2xl text-xul_ink max-w-2xl font-semibold leading-relaxed bg-white/40 p-4 border-l-[4px] border-xul_ink backdrop-blur-sm shadow-[4px_4px_0px_rgba(42,42,42,0.3)]">
-                    Desarrolla habilidades cognitivas y percepciones filosóficas en niños utilizando juegos de mesa. Genera planes de diálogo, agendas de preguntas y ejercicios de clase.
+                    Desarrolla herramientas filosóficas en niños utilizando juegos de mesa. Genera planes de diálogo, agendas de preguntas y ejercicios de clase para potenciar tus propuestas.
                 </p>
             </div>
 
@@ -180,7 +180,7 @@
                     <i data-lucide="layout-template" class="w-8 h-8 text-white"></i>
                 </div>
                 <span class="bg-gray-100 text-gray-500 text-[10px] font-black uppercase px-2 py-1 border border-gray-300 mb-2">Acceso Libre</span>
-                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-2">Planes de Diálogo</h3>
+                <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-2">Rizoma</h3>
                 <p class="font-serif text-gray-600 mb-6 flex-grow text-lg">Genera secuencias didácticas basadas en juegos clásicos para estructurar una clase de 45 minutos.</p>
                 <button onclick="activarHerramienta('planes')" class="w-full bg-white text-xul_ink font-black text-sm uppercase tracking-widest py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:bg-xul_blue hover:text-white transition-colors active:translate-y-1 active:shadow-[2px_2px_0px_#2A2A2A]">
                     Usar Herramienta
@@ -207,7 +207,7 @@
                 </div>
                 <span class="bg-white text-xul_terra text-[10px] font-black uppercase px-2 py-1 border border-xul_ink mb-2 shadow-[2px_2px_0px_#2A2A2A]">Solo Fundadores</span>
                 <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-white mb-2">Taller de Creación</h3>
-                <p class="font-serif text-gray-400 mb-6 flex-grow text-lg">Acompañamiento virtual para diseñar tus propias dinámicas lúdico-filosóficas.</p>
+                <p class="font-serif text-gray-400 mb-6 flex-grow text-lg">Acompañamiento virtual para diseñar tus dinámicas lúdico-filosóficas personalizadas de acuerdo a tus necesidades.</p>
                 <button onclick="verificarAcceso('fundadores', 'taller')" class="w-full bg-xul_terra text-white font-black text-sm uppercase tracking-widest py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#FDF8ED] hover:shadow-[6px_6px_0px_#FDF8ED] hover:brightness-110 transition-all active:translate-y-1 active:shadow-[2px_2px_0px_#FDF8ED] flex items-center justify-center gap-2">
                     <i data-lucide="lock" class="w-4 h-4 icon-lock-fundadores"></i> <span class="btn-text-fundadores">Solicitar Mentoría</span>
                 </button>
@@ -230,8 +230,8 @@
                 <div class="bg-xul_blue text-white p-5 border-[3px] border-xul_ink shadow-[6px_6px_0px_#2A2A2A] mb-8 flex items-center justify-between shrink-0">
                     <div>
                         <h3 class="font-sans font-black text-2xl md:text-3xl uppercase tracking-widest flex items-center gap-3">
-                            <i class="ph ph-chats-circle text-4xl"></i>
-                            Armador de Planes
+                            <i class="ph ph-share-network text-4xl"></i>
+                            Rizoma
                         </h3>
                         <p class="font-serif text-lg mt-1 text-white/90">Diseña secuencias de preguntas filosóficas para tu aula</p>
                     </div>
@@ -399,7 +399,7 @@
                     </div>
                     <h4 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-4 relative z-10">Mentoría 1 a 1 Activa</h4>
                     <p class="font-serif text-xl text-gray-700 mb-8 max-w-2xl mx-auto relative z-10">
-                        Acompañamiento virtual para diseñar tus propias dinámicas lúdico-filosóficas. Sube tu prototipo y un ludósofo te guiará.
+                        Acompañamiento virtual para diseñar tus dinámicas lúdico-filosóficas personalizadas de acuerdo a tus necesidades. Sube tu prototipo y un ludósofo te guiará.
                     </p>
                     <button class="bg-xul_terra text-white font-black px-10 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all uppercase tracking-widest relative z-10 flex items-center gap-2">
                         <i data-lucide="plus" class="w-5 h-5"></i> Iniciar Nuevo Proyecto
@@ -719,7 +719,7 @@
         function copyPlan() {
             if (state.plan.length === 0) return;
             const topicData = temasData.find(t => t.id === state.selectedTopicId);
-            let text = `LUDOSOFÍA - TABLEROS DE PENSAMIENTO®\nPlan de Diálogo: ${topicData.tema.toUpperCase()}\n==========================================\n\nPREGUNTA PRINCIPAL:\n> ${topicData.preguntaBase}\n\nVARIANTES PARA EXPLORAR:\n`;
+            let text = `LUDOSOFÍA - RIZOMA®\nPlan de Diálogo: ${topicData.tema.toUpperCase()}\n==========================================\n\nPREGUNTA PRINCIPAL:\n> ${topicData.preguntaBase}\n\nVARIANTES PARA EXPLORAR:\n`;
             state.plan.forEach((p, i) => { text += `${i + 1}. ${p}\n`; });
             
             navigator.clipboard.writeText(text).then(() => {
@@ -736,31 +736,147 @@
             if (state.plan.length === 0) return;
             const topicData = temasData.find(t => t.id === state.selectedTopicId);
             const printWindow = window.open('', '_blank');
-            let html = `<html><head><title>Ludosofía - Plan de Diálogo</title>
+            let html = `<html><head><title>Ludosofía - Rizoma</title>
+            <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
             <style>
-                body { font-family: 'Courier New', monospace; line-height: 1.6; color: #2A2A2A; max-width: 800px; margin: 0 auto; padding: 40px; } 
-                .header-brand { text-align: center; margin-bottom: 30px; border-bottom: 3px solid #2A2A2A; padding-bottom: 20px; }
-                .header-brand h1 { margin: 0; text-transform: uppercase; font-size: 2.5em; letter-spacing: 2px; }
-                .header-brand p { margin: 5px 0 0; font-weight: bold; font-size: 1em; text-transform: uppercase; color: #6BA4C4; }
-                h2 { text-transform: uppercase; border-bottom: 2px dashed #2A2A2A; padding-bottom: 10px; margin-top: 40px; } 
-                .base-q { background: #FDF8ED; padding: 15px; border: 3px solid #2A2A2A; font-size: 1.2em; margin-bottom: 30px; font-weight: bold; } 
+                @media print {
+                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                }
+                body { 
+                    font-family: 'Outfit', sans-serif; 
+                    line-height: 1.6; 
+                    color: #2A2A2A; 
+                    max-width: 800px; 
+                    margin: 0 auto; 
+                    padding: 40px; 
+                    background-color: #FDF8ED;
+                } 
+                .header-brand { 
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    border-bottom: 4px solid #2A2A2A; 
+                    padding-bottom: 20px; 
+                    margin-bottom: 40px;
+                }
+                .brand-left h1 { 
+                    margin: 0; 
+                    text-transform: uppercase; 
+                    font-size: 2.5em; 
+                    letter-spacing: 2px; 
+                    font-family: 'Cormorant Garamond', serif;
+                    font-weight: 700;
+                    color: #2A2A2A;
+                }
+                .brand-left p { 
+                    margin: 5px 0 0; 
+                    font-weight: 900; 
+                    font-size: 1.2em; 
+                    text-transform: uppercase; 
+                    color: #6BA4C4; 
+                    letter-spacing: 2px;
+                }
+                .logo-svg { width: 60px; height: 60px; }
+                h2 { 
+                    text-transform: uppercase; 
+                    font-family: 'Cormorant Garamond', serif;
+                    font-size: 2.2em;
+                    margin-bottom: 20px;
+                    color: #D1623A;
+                } 
+                .base-q { 
+                    background: #EBB134; 
+                    padding: 25px; 
+                    border: 4px solid #2A2A2A; 
+                    font-size: 1.4em; 
+                    margin-bottom: 40px; 
+                    font-weight: 700;
+                    font-family: 'Cormorant Garamond', serif;
+                    box-shadow: 6px 6px 0px #2A2A2A;
+                } 
+                .base-q-label {
+                    font-family: 'Outfit', sans-serif;
+                    font-size: 0.6em;
+                    text-transform: uppercase;
+                    letter-spacing: 2px;
+                    font-weight: 900;
+                    display: block;
+                    margin-bottom: 10px;
+                    color: #2A2A2A;
+                }
+                h3 {
+                    font-size: 1.2em;
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                    border-bottom: 2px dashed #2A2A2A;
+                    padding-bottom: 10px;
+                    margin-bottom: 20px;
+                }
                 ul { list-style-type: none; padding: 0; } 
-                li { margin-bottom: 15px; font-size: 1.1em; display:flex; gap: 10px; } 
-                .num { font-weight: bold; }
-                .footer { margin-top: 50px; font-size: 0.9em; text-align: center; border-top: 2px solid #2A2A2A; padding-top: 20px; font-weight: bold; font-family: sans-serif; text-transform: uppercase; letter-spacing: 1px;}
+                li { 
+                    background: #fff;
+                    margin-bottom: 15px; 
+                    padding: 15px 20px;
+                    font-size: 1.2em; 
+                    font-family: 'Cormorant Garamond', serif;
+                    font-weight: 600;
+                    display:flex; 
+                    gap: 15px;
+                    border: 2px solid #2A2A2A;
+                    box-shadow: 3px 3px 0px #2A2A2A;
+                    align-items: flex-start;
+                } 
+                .num { 
+                    font-family: 'Outfit', sans-serif;
+                    font-weight: 900; 
+                    background: #2A2A2A;
+                    color: #fff;
+                    width: 28px;
+                    height: 28px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 0.8em;
+                    flex-shrink: 0;
+                    margin-top: 2px;
+                    border-radius: 50%;
+                }
+                .footer { 
+                    margin-top: 60px; 
+                    font-size: 0.9em; 
+                    text-align: center; 
+                    border-top: 2px solid #2A2A2A; 
+                    padding-top: 20px; 
+                    font-weight: 700; 
+                    text-transform: uppercase; 
+                    letter-spacing: 1px;
+                    color: #6BA4C4;
+                }
             </style></head>
             <body>
                 <div class="header-brand">
-                    <h1>LUDOSOFÍA</h1>
-                    <p>Tableros de Pensamiento®</p>
+                    <div class="brand-left">
+                        <h1>LUDOSOFÍA</h1>
+                        <p>Rizoma®</p>
+                    </div>
+                    <svg viewBox="0 0 100 100" class="logo-svg">
+                        <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="4"/>
+                        <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="4"/>
+                        <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="4"/>
+                    </svg>
                 </div>
                 <h2>${topicData.tema}</h2>
-                <div class="base-q">Pregunta Base: ${topicData.preguntaBase}</div>
+                <div class="base-q">
+                    <span class="base-q-label">Pregunta Base</span>
+                    ${topicData.preguntaBase}
+                </div>
                 <h3>Variantes de análisis:</h3><ul>`;
-            state.plan.forEach((p, i) => { html += `<li><span class="num">${i+1}.</span> <span>${p}</span></li>`; });
-            html += `</ul><div class="footer">Generado con Tableros de Pensamiento® por Ludosofía. Derechos Reservados.</div></body></html>`;
+            state.plan.forEach((p, i) => { html += `<li><span class="num">${i+1}</span> <span>${p}</span></li>`; });
+            html += `</ul><div class="footer">Generado con Rizoma® por Ludosofía. El juego infinito del pensamiento.</div></body></html>`;
             printWindow.document.write(html); printWindow.document.close();
-            setTimeout(() => { printWindow.print(); }, 250);
+            
+            // Retraso de 500ms para asegurar que las fuentes de Google carguen antes de abrir el diálogo de impresión
+            setTimeout(() => { printWindow.print(); }, 500);
         }
 
         function showToast(message, iconClass, isError = false) {
