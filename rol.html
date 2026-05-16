@@ -208,83 +208,160 @@
             <h2 class="xul-title text-3xl md:text-4xl font-black text-xul_ink uppercase tracking-tight">Cartelera de Sesiones</h2>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-
-            <!-- EVENTO 1 -->
-            <article class="bg-white border-[3px] border-xul_ink flex flex-col h-full shadow-[8px_8px_0px_#C96B8C] hover:-translate-y-2 hover:shadow-[12px_12px_0px_#C96B8C] transition-all group relative overflow-hidden">
-                <div class="h-32 bg-xul_pink border-b-[3px] border-xul_ink relative flex items-center justify-center overflow-hidden">
-                    <svg viewBox="0 0 200 100" class="absolute w-full h-full opacity-30">
-                        <polygon points="0,100 100,0 200,100" fill="#FDF8ED"/>
-                        <circle cx="100" cy="50" r="20" fill="#2A2A2A"/>
-                    </svg>
-                    <span class="relative z-10 bg-xul_paper border-2 border-xul_ink px-3 py-1 font-black text-xs uppercase tracking-widest text-xul_ink shadow-[2px_2px_0px_#2A2A2A] transform -rotate-2">Próxima Función</span>
+        <!-- EVENTO PRINCIPAL CONFIRMADO -->
+        <article class="mb-20 bg-white border-[3px] border-xul_ink flex flex-col md:flex-row shadow-[8px_8px_0px_#D1623A] hover:-translate-y-1 hover:shadow-[12px_12px_0px_#D1623A] transition-all group relative overflow-hidden">
+            <div class="md:w-1/3 h-48 md:h-auto bg-xul_terra border-b-[3px] md:border-b-0 md:border-r-[3px] border-xul_ink relative flex items-center justify-center overflow-hidden">
+                <svg viewBox="0 0 100 100" class="absolute w-full h-full opacity-30">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#2A2A2A" stroke-width="4" stroke-dasharray="8 4"/>
+                    <path d="M 50 10 L 50 90 M 10 50 L 90 50" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="50" cy="50" r="8" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="3"/>
+                </svg>
+                <span class="relative z-10 bg-xul_paper border-2 border-xul_ink px-4 py-2 font-black text-xs md:text-sm uppercase tracking-widest text-xul_ink shadow-[3px_3px_0px_#2A2A2A] transform -rotate-3 text-center">
+                    Sesión<br>Confirmada
+                </span>
+            </div>
+            
+            <div class="p-8 md:p-10 flex flex-col flex-grow md:w-2/3">
+                <div class="flex flex-col md:flex-row justify-between items-start mb-4 gap-4">
+                    <div>
+                        <span class="font-sans font-black text-xul_terra uppercase tracking-widest text-xs mb-2 block">Libre Albedrío vs. Determinismo</span>
+                        <h3 class="xul-title text-4xl font-bold text-xul_ink leading-tight">El Criminal Predestinado</h3>
+                    </div>
+                    <span class="bg-xul_ink text-white border-2 border-xul_ink px-3 py-1 text-[10px] font-black uppercase tracking-widest whitespace-nowrap">Tribunal de Sentencia</span>
                 </div>
                 
-                <div class="p-8 flex flex-col flex-grow">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="xul-title text-3xl font-bold text-xul_ink leading-tight">Juicio a la Inteligencia Artificial</h3>
-                        <span class="bg-xul_yellow border border-xul_ink px-2 py-1 text-[10px] font-black uppercase tracking-widest">Debate Abierto</span>
+                <p class="font-serif text-gray-700 text-xl mb-8 flex-grow leading-relaxed">
+                    El sistema Panóptico-IA ha predicho con un 99.9% de exactitud que un ciudadano cometerá un asesinato múltiple en exactamente 48 horas. Sin embargo, en el presente, el ciudadano es inocente y ni siquiera ha planeado el crimen aún. El tribunal supremo debate si debe ser encarcelado antes del acto, sacrificando su libertad por la seguridad absoluta.
+                </p>
+                
+                <div class="bg-xul_paper border-2 border-xul_ink p-5 mb-8 shadow-[inset_2px_2px_0px_rgba(42,42,42,0.1)]">
+                    <p class="font-sans text-xs font-black uppercase tracking-widest text-xul_ink mb-3 flex items-center gap-2">
+                        <i data-lucide="masks" class="w-4 h-4 text-xul_terra"></i> Máscaras Disponibles:
+                    </p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-white border border-xul_ink px-3 py-1.5 text-xs font-bold text-xul_ink shadow-[1px_1px_0px_#2A2A2A] hover:bg-xul_yellow transition-colors cursor-default">Jean-Paul Sartre</span>
+                        <span class="bg-white border border-xul_ink px-3 py-1.5 text-xs font-bold text-xul_ink shadow-[1px_1px_0px_#2A2A2A] hover:bg-xul_yellow transition-colors cursor-default">Baruch Spinoza</span>
+                        <span class="bg-white border border-xul_ink px-3 py-1.5 text-xs font-bold text-xul_ink shadow-[1px_1px_0px_#2A2A2A] hover:bg-xul_yellow transition-colors cursor-default">John Stuart Mill</span>
+                        <span class="bg-white border border-xul_ink px-3 py-1.5 text-xs font-bold text-xul_ink shadow-[1px_1px_0px_#2A2A2A] hover:bg-xul_yellow transition-colors cursor-default">Thomas Hobbes</span>
+                        <span class="bg-white border border-xul_ink px-3 py-1.5 text-xs font-bold text-xul_ink shadow-[1px_1px_0px_#2A2A2A] hover:bg-xul_yellow transition-colors cursor-default">Michel Foucault</span>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-between border-t-[3px] border-gray-100 pt-6 gap-4">
+                    <div class="text-sm font-sans font-black text-xul_ink uppercase tracking-widest flex items-center bg-xul_yellow/30 px-4 py-2 border-2 border-xul_yellow">
+                        <i data-lucide="calendar" class="w-5 h-5 mr-2 text-xul_terra"></i> Viernes 19 | 21.00hs
+                    </div>
+                    <button onclick="showAlert('Debes iniciar sesión para reservar una máscara. Los cupos son limitados.', 'Reserva de Roles')" class="w-full sm:w-auto bg-xul_ink text-white font-black text-sm uppercase tracking-widest px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#EBB134] hover:bg-xul_yellow hover:text-xul_ink hover:shadow-[6px_6px_0px_#2A2A2A] transition-all transform active:scale-95">
+                        ¡Reservá tu lugar!
+                    </button>
+                </div>
+            </div>
+        </article>
+
+        <!-- SECCIÓN DE VOTACIÓN (EL ORÁCULO) -->
+        <div class="flex items-center gap-4 mb-8 border-b-[3px] border-xul_ink pb-4 mt-12">
+            <div class="w-12 h-12 bg-xul_yellow flex items-center justify-center border-2 border-xul_ink shadow-[2px_2px_0px_#2A2A2A]">
+                <i data-lucide="bar-chart-2" class="w-6 h-6 text-xul_ink"></i>
+            </div>
+            <div>
+                <h2 class="xul-title text-3xl font-black text-xul_ink uppercase tracking-tight">El Oráculo</h2>
+                <p class="font-sans text-sm font-bold uppercase tracking-widest text-gray-500">Vota la próxima sesión</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- PROPUESTA 2 -->
+            <article class="bg-white border-[3px] border-xul_ink flex flex-col h-full shadow-[6px_6px_0px_#75B07E] relative">
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="mb-4">
+                        <span class="font-sans font-black text-xul_green uppercase tracking-widest text-[10px] mb-1 block">Bioética y Naturaleza Humana</span>
+                        <h3 class="xul-title text-2xl font-bold text-xul_ink leading-tight mb-2">La Quimera Genética</h3>
+                        <span class="inline-block bg-gray-100 border border-xul_ink px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-gray-600">Comité de Ética</span>
                     </div>
                     
-                    <p class="font-serif text-gray-700 text-lg mb-6 flex-grow">
-                        Una IA ha tomado control de los suministros de energía global. Para convencerla de devolverlos, tres filósofos son enviados como embajadores de la humanidad.
+                    <p class="font-serif text-gray-700 text-base mb-6 flex-grow">
+                        Un laboratorio ha gestado al primer humano genéticamente "perfecto": inmune a enfermedades y de intelecto superior, pero carente del gen del miedo o la empatía. ¿Debe integrarse a la sociedad o el proyecto debe ser terminado?
                     </p>
                     
-                    <div class="bg-gray-50 border-2 border-dashed border-gray-300 p-4 mb-6">
-                        <p class="font-sans text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Máscaras Disponibles:</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="bg-white border border-xul_ink px-2 py-1 text-xs font-bold text-xul_ink">Immanuel Kant</span>
-                            <span class="bg-white border border-xul_ink px-2 py-1 text-xs font-bold text-xul_ink">Nicolás Maquiavelo</span>
-                            <span class="bg-white border border-xul_ink px-2 py-1 text-xs font-bold text-xul_ink">Alan Turing</span>
-                        </div>
+                    <div class="border-t-2 border-dashed border-gray-200 pt-4 mb-6">
+                        <p class="font-sans text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Máscaras:</p>
+                        <p class="font-sans text-xs font-bold text-xul_ink leading-relaxed">
+                            Nietzsche • Aristóteles • Kant • Mary Shelley • Peter Singer
+                        </p>
                     </div>
 
-                    <div class="flex items-center justify-between border-t-2 border-gray-200 pt-4 mt-auto">
-                        <div class="text-sm font-sans font-bold text-gray-500 uppercase tracking-widest">
-                            <i data-lucide="calendar" class="inline w-4 h-4 mb-1"></i> Viernes 15 | 21.00hs
-                        </div>
-                        <button onclick="showAlert('Debes iniciar sesión para reservar una máscara.')" class="bg-xul_ink text-white font-bold text-xs uppercase tracking-widest px-4 py-2 border-[2px] border-xul_ink shadow-[2px_2px_0px_#D1623A] hover:bg-xul_terra transition-colors">
-                            Reservar Máscara
+                    <div class="flex items-center justify-between border-t-[3px] border-xul_ink pt-4 mt-auto">
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center">
+                            <i data-lucide="clock" class="w-3 h-3 mr-1"></i> Próximamente
+                        </span>
+                        <button data-prop="2" class="vote-btn flex items-center gap-2 bg-white border-2 border-xul_ink px-4 py-2 font-black text-xs uppercase tracking-widest text-xul_ink shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-all">
+                            <i data-lucide="thumbs-up" class="w-4 h-4 transition-colors"></i>
+                            <span id="count-2" class="vote-count">42</span>
                         </button>
                     </div>
                 </div>
             </article>
 
-            <!-- EVENTO 2 -->
-            <article class="bg-white border-[3px] border-xul_ink flex flex-col h-full shadow-[8px_8px_0px_#6BA4C4] hover:-translate-y-2 hover:shadow-[12px_12px_0px_#6BA4C4] transition-all group relative overflow-hidden">
-                <div class="h-32 bg-xul_blue border-b-[3px] border-xul_ink relative flex items-center justify-center overflow-hidden">
-                    <svg viewBox="0 0 200 100" class="absolute w-full h-full opacity-30">
-                        <rect x="20" y="20" width="160" height="60" fill="none" stroke="#2A2A2A" stroke-width="4" stroke-dasharray="10 5"/>
-                        <circle cx="100" cy="50" r="25" fill="#FDF8ED"/>
-                    </svg>
-                    <span class="relative z-10 bg-xul_paper border-2 border-xul_ink px-3 py-1 font-black text-xs uppercase tracking-widest text-xul_ink shadow-[2px_2px_0px_#2A2A2A] transform rotate-2">Mesa Redonda</span>
-                </div>
-                
-                <div class="p-8 flex flex-col flex-grow">
-                    <div class="flex justify-between items-start mb-4">
-                        <h3 class="xul-title text-3xl font-bold text-xul_ink leading-tight">El Contrato Roto</h3>
-                        <span class="bg-xul_green text-white border border-xul_ink px-2 py-1 text-[10px] font-black uppercase tracking-widest">Política</span>
+            <!-- PROPUESTA 3 -->
+            <article class="bg-white border-[3px] border-xul_ink flex flex-col h-full shadow-[6px_6px_0px_#6BA4C4] relative">
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="mb-4">
+                        <span class="font-sans font-black text-xul_blue uppercase tracking-widest text-[10px] mb-1 block">Metafísica y Realidad</span>
+                        <h3 class="xul-title text-2xl font-bold text-xul_ink leading-tight mb-2">El Éxodo Digital</h3>
+                        <span class="inline-block bg-gray-100 border border-xul_ink px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-gray-600">Roleplay de Supervivencia</span>
                     </div>
                     
-                    <p class="font-serif text-gray-700 text-lg mb-6 flex-grow">
-                        El gobierno mundial ha colapsado. Tres líderes emergen de las ruinas y deben redactar la primera constitución de la nueva era para evitar la guerra de todos contra todos.
+                    <p class="font-serif text-gray-700 text-base mb-6 flex-grow">
+                        La Tierra enfrenta el colapso. Una corporación ofrece subir permanentemente la consciencia de toda la humanidad a una Realidad Virtual utópica, dejando morir los cuerpos físicos. ¿Es nuestra salvación o nuestro suicidio final?
                     </p>
                     
-                    <div class="bg-gray-50 border-2 border-dashed border-gray-300 p-4 mb-6">
-                        <p class="font-sans text-xs font-bold uppercase tracking-widest text-gray-500 mb-2">Máscaras Disponibles:</p>
-                        <div class="flex flex-wrap gap-2">
-                            <span class="bg-white border border-xul_ink px-2 py-1 text-xs font-bold text-xul_ink">Thomas Hobbes</span>
-                            <span class="bg-white border border-xul_ink px-2 py-1 text-xs font-bold text-xul_ink">J.J. Rousseau</span>
-                            <span class="bg-white border border-xul_ink px-2 py-1 text-xs font-bold text-xul_ink">Hannah Arendt</span>
-                        </div>
+                    <div class="border-t-2 border-dashed border-gray-200 pt-4 mb-6">
+                        <p class="font-sans text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Máscaras:</p>
+                        <p class="font-sans text-xs font-bold text-xul_ink leading-relaxed">
+                            Platón • René Descartes • Jean Baudrillard • Martin Heidegger • Donna Haraway
+                        </p>
                     </div>
 
-                    <div class="flex items-center justify-between border-t-2 border-gray-200 pt-4 mt-auto">
-                        <div class="text-sm font-sans font-bold text-gray-500 uppercase tracking-widest">
-                            <i data-lucide="calendar" class="inline w-4 h-4 mb-1"></i> Viernes 22 | 21.00hs
-                        </div>
-                        <button onclick="showAlert('Debes iniciar sesión para reservar una máscara.')" class="bg-xul_ink text-white font-bold text-xs uppercase tracking-widest px-4 py-2 border-[2px] border-xul_ink shadow-[2px_2px_0px_#EBB134] hover:bg-xul_yellow hover:text-xul_ink transition-colors">
-                            Reservar Máscara
+                    <div class="flex items-center justify-between border-t-[3px] border-xul_ink pt-4 mt-auto">
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center">
+                            <i data-lucide="clock" class="w-3 h-3 mr-1"></i> Próximamente
+                        </span>
+                        <button data-prop="3" class="vote-btn flex items-center gap-2 bg-white border-2 border-xul_ink px-4 py-2 font-black text-xs uppercase tracking-widest text-xul_ink shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-all">
+                            <i data-lucide="thumbs-up" class="w-4 h-4 transition-colors"></i>
+                            <span id="count-3" class="vote-count">87</span>
+                        </button>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PROPUESTA 4 -->
+            <article class="bg-white border-[3px] border-xul_ink flex flex-col h-full shadow-[6px_6px_0px_#C96B8C] relative">
+                <div class="p-6 flex flex-col flex-grow">
+                    <div class="mb-4">
+                        <span class="font-sans font-black text-xul_pink uppercase tracking-widest text-[10px] mb-1 block">Emociones y Existencialismo</span>
+                        <h3 class="xul-title text-2xl font-bold text-xul_ink leading-tight mb-2">La Píldora del Desamor</h3>
+                        <span class="inline-block bg-gray-100 border border-xul_ink px-2 py-0.5 text-[9px] font-black uppercase tracking-widest text-gray-600">Sesión Legislativa</span>
+                    </div>
+                    
+                    <p class="font-serif text-gray-700 text-base mb-6 flex-grow">
+                        Se ha comercializado la "Ataraxina", una píldora que elimina la capacidad de sentir dolor emocional o duelo. La tasa de suicidios es cero, pero la pasión muere. ¿Debemos prohibir la cura y devolverle el sufrimiento al mundo?
+                    </p>
+                    
+                    <div class="border-t-2 border-dashed border-gray-200 pt-4 mb-6">
+                        <p class="font-sans text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Máscaras:</p>
+                        <p class="font-sans text-xs font-bold text-xul_ink leading-relaxed">
+                            Schopenhauer • Epicuro • Simone de Beauvoir • Kierkegaard • Byung-Chul Han
+                        </p>
+                    </div>
+
+                    <div class="flex items-center justify-between border-t-[3px] border-xul_ink pt-4 mt-auto">
+                        <span class="text-xs font-bold uppercase tracking-widest text-gray-500 flex items-center">
+                            <i data-lucide="clock" class="w-3 h-3 mr-1"></i> Próximamente
+                        </span>
+                        <button data-prop="4" class="vote-btn flex items-center gap-2 bg-white border-2 border-xul_ink px-4 py-2 font-black text-xs uppercase tracking-widest text-xul_ink shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-all">
+                            <i data-lucide="thumbs-up" class="w-4 h-4 transition-colors"></i>
+                            <span id="count-4" class="vote-count">56</span>
                         </button>
                     </div>
                 </div>
@@ -293,6 +370,7 @@
         </div>
     </main>
 
+    <!-- FOOTER UNIFICADO -->
     <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-gray-800 mt-12">
         <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-700 pb-8">
             <div class="flex items-center space-x-3">
@@ -306,9 +384,9 @@
             </div>
             
             <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
-                <a href="#" class="hover:text-xul_blue transition">Inicio</a>
-                <a href="#" class="hover:text-xul_blue transition">Scholē</a>
-                <a href="#" class="hover:text-xul_blue transition">FAQs</a>
+                <a href="index.html" class="hover:text-xul_blue transition">Inicio</a>
+                <a href="index.html#schole" class="hover:text-xul_blue transition">Scholē</a>
+                <a href="index.html#faqs" class="hover:text-xul_blue transition">FAQs</a>
             </div>
         </div>
         <div class="max-w-6xl mx-auto mt-6 text-center text-sm font-sans text-gray-400">
@@ -316,6 +394,7 @@
         </div>
     </footer>
 
+    <!-- MODALES DE SESIÓN OCULTOS -->
     <div id="alert-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('alert-modal').classList.add('hidden')"></div>
         <div id="alert-box" class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] transform transition-all text-center">
@@ -342,34 +421,27 @@
         </div>
     </div>
 
-    <script>
-        lucide.createIcons();
-
-        // Helper para mostrar alertas estilizadas en lugar del alert() nativo
-        function showAlert(message, title = "Aviso") {
-            document.getElementById('alert-title').innerText = title;
-            document.getElementById('alert-message').innerText = message;
-            document.getElementById('alert-modal').classList.remove('hidden');
-        }
-    </script>
+    <script>lucide.createIcons();</script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Obtener el ID de la aplicación y la configuración de Firebase de forma dinámica y segura
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ludosofia-preview';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            // Un fallback simulado si se ejecuta fuera del entorno. Esto no funcionará, 
-            // pero evita errores fatales de parseo en entornos de prueba estrictos.
-        };
-
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ludosofia-rol';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // UI Element bindings
+        // Funciones utilitarias para Modales
+        window.showAlert = (message, title = 'Aviso') => {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        };
+
         const btnMenu = document.getElementById('mobile-menu-btn');
         const menuMobile = document.getElementById('mobile-menu');
         if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
@@ -474,6 +546,46 @@
                 signInAnonymously(auth);
             });
         });
+
+        // Lógica de votación en memoria (Oráculo)
+        const setupVoting = () => {
+            const voteBtns = document.querySelectorAll('.vote-btn');
+            voteBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    // Validar que el usuario sea real y no un anónimo del sistema
+                    if (!auth.currentUser || auth.currentUser.isAnonymous) {
+                        showAlert('Debes conectar tu perfil de Ludosofía en el panel para votar en el Oráculo.', 'Acceso Restringido');
+                        return;
+                    }
+
+                    const propId = btn.dataset.prop;
+                    const counter = document.getElementById(`count-${propId}`);
+                    const icon = btn.querySelector('svg');
+                    
+                    let currentCount = parseInt(counter.innerText);
+
+                    // Toggle simple de estado en memoria
+                    if (btn.classList.contains('voted')) {
+                        btn.classList.remove('voted', 'bg-xul_yellow');
+                        btn.classList.add('bg-white');
+                        counter.innerText = currentCount - 1;
+                        icon.classList.remove('fill-current');
+                    } else {
+                        btn.classList.add('voted', 'bg-xul_yellow');
+                        btn.classList.remove('bg-white');
+                        counter.innerText = currentCount + 1;
+                        icon.classList.add('fill-current');
+                        
+                        // Pequeño efecto visual de rebote
+                        btn.style.transform = 'scale(1.1)';
+                        setTimeout(() => btn.style.transform = '', 150);
+                    }
+                });
+            });
+        };
+
+        // Inicializar eventos de votación
+        setupVoting();
     </script>
 </body>
 </html>
