@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Esquemas de Círculos | LUDOSOFÍA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #FDF8ED; 
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-border { border: 3px solid #2A2A2A; box-shadow: 4px 4px 0px #2A2A2A; transition: all 0.2s ease; }
+        .xul-border:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #2A2A2A; }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        
+        .text-shadow-xul { text-shadow: 2px 2px 0px #6BA4C4; }
+        
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #FDF8ED; border-left: 1px solid #2A2A2A; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #2A2A2A; }
+
+        @keyframes modalFadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
+        
+        .svg-layer { transition: opacity 0.5s ease-in-out; }
+
+        /* ======================================= */
+        /* Estilos exclusivos para IMPRESIÓN (PDF) */
+        /* ======================================= */
+        .print-layout { display: none; }
+        @media print {
+            body { background: white !important; background-image: none !important; }
+            .no-print { display: none !important; }
+            .print-layout { 
+                display: block !important; 
+                width: 100%;
+            }
+            .ficha-print {
+                page-break-inside: avoid;
+                border: 3px solid #000000;
+                margin-bottom: 20px;
+                padding: 20px;
+                background-color: white;
+            }
+            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_blue selection:text-white relative overflow-x-hidden">
+
+    <!-- Navbar Unificado -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300 no-print">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="schole.html" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="index_biblio.html" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="index_hack.html" class="text-xul_ink hover:text-xul_terra transition-colors">Hackeados</a>
+                
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A]" title="Tu Membresía"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[2px_2px_0px_#2A2A2A] hover:translate-y-[-1px] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+            
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="schole.html" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="index_biblio.html" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="index_hack.html" class="mobile-link hover:text-xul_terra transition block">Hackeados</a>
+            
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HEADER DE LA HERRAMIENTA -->
+    <header class="pt-32 pb-10 px-6 border-b-[3px] border-xul_ink bg-white relative overflow-hidden no-print">
+        <svg class="absolute top-0 right-0 w-64 h-64 opacity-10 transform translate-x-1/4 -translate-y-1/4 pointer-events-none" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#2A2A2A" stroke-width="2"/>
+            <circle cx="30" cy="50" r="25" fill="none" stroke="#2A2A2A" stroke-width="2"/>
+            <circle cx="70" cy="50" r="25" fill="none" stroke="#2A2A2A" stroke-width="2"/>
+        </svg>
+
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="flex items-center gap-6">
+                <div class="w-16 h-16 bg-xul_blue border-[3px] border-xul_ink flex-shrink-0 flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] transform -rotate-3">
+                    <i data-lucide="settings-2" class="w-8 h-8 text-white"></i>
+                </div>
+                <div>
+                    <div class="inline-block bg-xul_paper border-2 border-xul_ink px-3 py-1 mb-2">
+                        <span class="font-sans font-black text-[10px] uppercase tracking-widest text-black">Lógica Formal • Herramienta Pedagógica</span>
+                    </div>
+                    <h1 class="xul-title text-4xl md:text-5xl font-black text-black tracking-tight mb-2 text-shadow-xul uppercase">
+                        ESQUEMAS DE CÍRCULOS
+                    </h1>
+                </div>
+            </div>
+            
+            <button onclick="window.print()" class="bg-white text-black font-black uppercase tracking-widest px-6 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#D1623A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#D1623A] transition-all flex items-center gap-2">
+                <i data-lucide="printer" class="w-4 h-4 text-black"></i> Imprimir Fichas (4 Tipos)
+            </button>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL DE TRABAJO (WEB) -->
+    <main class="flex-grow py-12 px-6 max-w-7xl mx-auto w-full no-print">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- PANEL DE CONTROL (IZQUIERDA) -->
+            <div class="lg:col-span-5 flex flex-col gap-6">
+                
+                <!-- Selector de Modos -->
+                <div class="flex gap-3">
+                    <button id="tab-manual" onclick="setModo(false)" class="flex-1 py-3 px-4 border-[3px] border-xul_ink font-black uppercase tracking-widest text-sm transition-all bg-xul_ink text-white shadow-[4px_4px_0px_#6BA4C4]">
+                        Modo Manual
+                    </button>
+                    <button id="tab-ludico" onclick="setModo(true)" class="flex-1 py-3 px-4 border-[3px] border-xul_ink font-black uppercase tracking-widest text-sm transition-all bg-white text-black shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1">
+                        <i data-lucide="gamepad-2" class="inline w-4 h-4 mb-1 text-black"></i> Modo Lúdico
+                    </button>
+                </div>
+
+                <!-- CONTENIDO: MODO MANUAL -->
+                <div id="panel-manual" class="bg-white border-[3px] border-xul_ink p-6 shadow-[6px_6px_0px_#2A2A2A]">
+                    <h2 class="font-sans font-black text-lg text-black uppercase tracking-widest border-b-2 border-xul_ink pb-2 mb-6">1. Definir Clases</h2>
+                    
+                    <div class="space-y-4 mb-8">
+                        <div>
+                            <label class="block font-bold text-xs uppercase tracking-widest text-black mb-2">Clase Sujeto (S)</label>
+                            <input type="text" id="input-sujeto" oninput="updateState('sujeto', this.value)" class="w-full border-[3px] border-xul_ink bg-xul_paper p-3 font-sans font-black text-black focus:outline-none focus:border-xul_terra transition-all uppercase">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-xs uppercase tracking-widest text-black mb-2">Clase Predicado (P)</label>
+                            <input type="text" id="input-predicado" oninput="updateState('predicado', this.value)" class="w-full border-[3px] border-xul_ink bg-xul_paper p-3 font-sans font-black text-black focus:outline-none focus:border-xul_blue transition-all uppercase">
+                        </div>
+                    </div>
+
+                    <h2 class="font-sans font-black text-lg text-black uppercase tracking-widest border-b-2 border-xul_ink pb-2 mb-6">2. Tipo de Oración</h2>
+                    <div class="grid grid-cols-2 gap-3 mb-8">
+                        <button id="btn-tipo-A" onclick="updateState('tipoOracion', 'A')" class="py-3 border-[3px] border-xul_ink font-black text-black text-lg transition-all hover:bg-gray-100">A</button>
+                        <button id="btn-tipo-E" onclick="updateState('tipoOracion', 'E')" class="py-3 border-[3px] border-xul_ink font-black text-black text-lg transition-all hover:bg-gray-100">E</button>
+                        <button id="btn-tipo-I" onclick="updateState('tipoOracion', 'I')" class="py-3 border-[3px] border-xul_ink font-black text-black text-lg transition-all hover:bg-gray-100">I</button>
+                        <button id="btn-tipo-O" onclick="updateState('tipoOracion', 'O')" class="py-3 border-[3px] border-xul_ink font-black text-black text-lg transition-all hover:bg-gray-100">O</button>
+                    </div>
+
+                    <h2 class="font-sans font-black text-sm uppercase tracking-widest border-b-2 border-xul_ink pb-2 mb-4 text-xul_terra">Ejemplos del Manual</h2>
+                    <div id="ejemplos-container" class="space-y-4 max-h-64 overflow-y-auto pr-2 custom-scrollbar">
+                        <!-- Generado por JS -->
+                    </div>
+                </div>
+
+                <!-- CONTENIDO: MODO LÚDICO -->
+                <div id="panel-ludico" class="hidden bg-xul_paper border-[3px] border-xul_ink p-6 shadow-[6px_6px_0px_#D1623A]">
+                    
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                        <!-- PASO 1: LA RULETA -->
+                        <div class="bg-white border-[3px] border-xul_ink p-4 flex flex-col items-center text-center shadow-[4px_4px_0px_#2A2A2A]">
+                            <h3 class="font-black text-black uppercase tracking-widest text-xs mb-4">1. Extraer Tema</h3>
+                            <div id="ruleta-visual" class="w-20 h-20 rounded-full border-[3px] border-xul_ink transition-transform duration-[3000ms] ease-out mb-4 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.3)]" style="background: conic-gradient(#6BA4C4 0 90deg, #D1623A 90deg 180deg, #EBB134 180deg 270deg, #75B07E 270deg 360deg);">
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <div class="w-8 h-8 bg-white rounded-full border-[2px] border-xul_ink"></div>
+                                </div>
+                            </div>
+                            <button id="btn-tirar-tema" onclick="tirarTema()" class="w-full bg-xul_blue text-white font-black py-2 uppercase tracking-widest border-2 border-xul_ink hover:-translate-y-1 transition-all text-[10px]">
+                                Girar Ruleta
+                            </button>
+                            <p id="res-tema" class="text-xs font-black text-xul_terra uppercase mt-3 h-8 flex items-center justify-center leading-none"></p>
+                        </div>
+
+                        <!-- PASO 2: EL DADO -->
+                        <div class="bg-white border-[3px] border-xul_ink p-4 flex flex-col items-center text-center shadow-[4px_4px_0px_#2A2A2A]">
+                            <h3 class="font-black text-black uppercase tracking-widest text-xs mb-4">2. Lanzar Dado</h3>
+                            <div class="w-20 h-20 bg-xul_yellow border-[3px] border-xul_ink flex items-center justify-center mb-4">
+                                <span id="res-dado" class="text-4xl font-black text-black">?</span>
+                            </div>
+                            <button id="btn-tirar-dado" disabled onclick="tirarDado()" class="w-full bg-xul_green text-white font-black py-2 uppercase tracking-widest border-2 border-xul_ink hover:-translate-y-1 transition-all text-[10px] disabled:opacity-50 disabled:hover:translate-y-0 disabled:cursor-not-allowed">
+                                Lanzar Oración
+                            </button>
+                            <p id="ludico-dado-res" class="text-xs font-black text-black uppercase mt-3 h-8 flex items-center justify-center leading-none"></p>
+                        </div>
+                    </div>
+
+                    <!-- Resultados del Juego -->
+                    <div id="resultado-ludico" class="hidden animate-in fade-in zoom-in duration-500">
+                        <div class="bg-white border-[3px] border-xul_ink p-4 shadow-[4px_4px_0px_#2A2A2A] mb-4">
+                            <p id="res-ejemplo" class="text-sm font-serif text-black font-bold italic border-l-4 border-xul_yellow pl-3"></p>
+                        </div>
+                        <div class="bg-white border-[3px] border-xul_ink p-4 shadow-[4px_4px_0px_#2A2A2A]">
+                            <label class="block font-bold text-[10px] uppercase tracking-widest text-black mb-2">Construye la Oración (Propuesta)</label>
+                            <textarea id="ludico-input" rows="2" class="w-full border-2 border-xul_ink bg-xul_paper p-2 font-sans text-sm focus:outline-none resize-none mb-3 text-black font-bold"></textarea>
+                            
+                            <label class="block font-bold text-[10px] uppercase tracking-widest text-xul_terra mb-2">Desafío: Contraejemplo</label>
+                            <textarea id="contra-input" rows="2" placeholder="¿Alguien puede refutarlo?" class="w-full border-2 border-xul_terra bg-red-50 p-2 font-sans text-sm focus:outline-none resize-none text-black font-bold"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ÁREA DE VISUALIZACIÓN SVG (DERECHA) -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+                
+                <!-- Caja de Información de la Oración -->
+                <div id="info-box" class="bg-white border-[3px] border-xul_ink p-5 flex gap-4 shadow-[6px_6px_0px_#2A2A2A] transition-colors duration-300">
+                    <div class="w-10 h-10 bg-xul_ink border-2 border-xul_ink flex-shrink-0 flex items-center justify-center text-white">
+                        <i data-lucide="info" class="w-5 h-5 text-white"></i>
+                    </div>
+                    <div>
+                        <h3 id="info-nombre" class="font-black text-lg text-black uppercase tracking-widest border-b-2 border-gray-200 pb-1 mb-2">Universal Afirmativa (A)</h3>
+                        <p id="info-estructura" class="xul-title text-2xl font-bold text-black leading-none mb-2">"Todos los Gatos son Mamíferos"</p>
+                        <p class="font-sans text-sm text-black mb-1"><strong class="uppercase tracking-widest text-black text-xs">Relación:</strong> <span id="info-relacion" class="text-black">Inclusión</span></p>
+                        <p id="info-desc" class="font-serif text-sm text-black font-bold leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <!-- CANVAS SVG -->
+                <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[6px_6px_0px_#6BA4C4] flex-grow flex items-center justify-center relative min-h-[400px] overflow-hidden">
+                    <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#2A2A2A 1px, transparent 1px), linear-gradient(90deg, #2A2A2A 1px, transparent 1px); background-size: 20px 20px;"></div>
+                    
+                    <svg viewBox="0 0 500 300" class="w-full max-w-xl overflow-visible relative z-10">
+                        
+                        <!-- TIPO A (Inclusión) -->
+                        <g id="svg-A" class="svg-layer hidden">
+                            <text x="250" y="35" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="16" fill="#000000" class="uppercase tracking-widest svg-text-p">PREDICADO</text>
+                            <circle cx="250" cy="160" r="110" fill="#6BA4C4" fill-opacity="0.3" stroke="#000000" stroke-width="4" stroke-dasharray="8 4"/>
+                            
+                            <text x="250" y="130" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="14" fill="#000000" class="uppercase tracking-widest svg-text-s">SUJETO</text>
+                            <circle cx="250" cy="200" r="60" fill="#D1623A" fill-opacity="0.8" stroke="#000000" stroke-width="4"/>
+                        </g>
+
+                        <!-- TIPO E (Exclusión) -->
+                        <g id="svg-E" class="svg-layer hidden">
+                            <text x="130" y="50" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="16" fill="#000000" class="uppercase tracking-widest svg-text-s">SUJETO</text>
+                            <circle cx="130" cy="160" r="90" fill="#D1623A" fill-opacity="0.8" stroke="#000000" stroke-width="4"/>
+                            
+                            <line x1="240" y1="160" x2="260" y2="160" stroke="#000000" stroke-width="4" stroke-dasharray="4 4"/>
+
+                            <text x="370" y="50" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="16" fill="#000000" class="uppercase tracking-widest svg-text-p">PREDICADO</text>
+                            <circle cx="370" cy="160" r="90" fill="#6BA4C4" fill-opacity="0.8" stroke="#000000" stroke-width="4"/>
+                        </g>
+
+                        <!-- TIPO I / O -->
+                        <g id="svg-I" class="svg-layer hidden">
+                            <text x="130" y="40" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="14" fill="#000000" class="uppercase tracking-widest svg-text-s">SUJETO</text>
+                            <circle cx="180" cy="160" r="100" fill="#D1623A" fill-opacity="0.5" stroke="#000000" stroke-width="4"/>
+
+                            <text x="370" y="40" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="14" fill="#000000" class="uppercase tracking-widest svg-text-p">PREDICADO</text>
+                            <circle cx="320" cy="160" r="100" fill="#6BA4C4" fill-opacity="0.5" stroke="#000000" stroke-width="4"/>
+
+                            <!-- Símbolo Dado (I - Intersección) -->
+                            <g class="animate-pulse" transform="translate(250, 160)">
+                                <rect x="-15" y="-15" width="30" height="30" rx="4" fill="#EBB134" stroke="#000000" stroke-width="2"/>
+                                <circle cx="0" cy="0" r="4" fill="#000000"/>
+                                <text x="0" y="35" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="10" fill="#000000" class="uppercase tracking-widest">Al menos uno</text>
+                            </g>
+                        </g>
+
+                        <g id="svg-O" class="svg-layer hidden">
+                            <text x="130" y="40" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="14" fill="#000000" class="uppercase tracking-widest svg-text-s">SUJETO</text>
+                            <circle cx="180" cy="160" r="100" fill="#D1623A" fill-opacity="0.5" stroke="#000000" stroke-width="4"/>
+
+                            <text x="370" y="40" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="14" fill="#000000" class="uppercase tracking-widest svg-text-p">PREDICADO</text>
+                            <circle cx="320" cy="160" r="100" fill="#6BA4C4" fill-opacity="0.5" stroke="#000000" stroke-width="4"/>
+
+                            <!-- Símbolo Dado (O - Fuera de Intersección) -->
+                            <g class="animate-pulse" transform="translate(110, 160)">
+                                <rect x="-15" y="-15" width="30" height="30" rx="4" fill="#EBB134" stroke="#000000" stroke-width="2"/>
+                                <circle cx="0" cy="0" r="4" fill="#000000"/>
+                                <text x="0" y="35" text-anchor="middle" font-family="'Outfit', sans-serif" font-weight="900" font-size="10" fill="#000000" class="uppercase tracking-widest">Al menos uno</text>
+                            </g>
+                        </g>
+                    </svg>
+                </div>
+
+                <!-- Caja de Reflexión Pedagógica -->
+                <div id="reflection-box" class="hidden bg-xul_yellow border-[3px] border-xul_ink p-6 shadow-[6px_6px_0px_#2A2A2A]">
+                    <h4 class="font-black text-sm uppercase tracking-widest text-black mb-2 flex items-center gap-2">
+                        <i data-lucide="lightbulb" class="w-5 h-5 text-black"></i> Para la Comunidad de Indagación:
+                    </h4>
+                    <p id="reflection-text" class="font-serif text-xl font-bold italic text-black leading-relaxed"></p>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- ============================================== -->
+    <!-- ÁREA DE IMPRESIÓN (VISIBLE SOLO EN PDF/PRINT)  -->
+    <!-- ============================================== -->
+    <div class="print-layout max-w-4xl mx-auto py-10 px-8">
+        <div class="text-center mb-10 border-b-4 border-black pb-4">
+            <h1 class="xul-title font-black text-4xl text-black uppercase">Lógica Formal: Esquemas de Círculos</h1>
+            <p class="font-sans font-bold text-black uppercase text-sm">Material de Referencia Pedagógica - Ludosofía</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-8">
+            <!-- Impresión A -->
+            <div class="ficha-print">
+                <h2 class="font-black text-xl text-black border-b-2 border-black mb-2 uppercase">Tipo A (Universal Afirmativa)</h2>
+                <p class="font-serif italic font-bold text-black mb-4">"Todos los <strong class="uppercase text-black">S</strong> son <strong class="uppercase text-black">P</strong>"</p>
+                <svg viewBox="0 0 50 30" class="w-full">
+                    <text x="25" y="4" text-anchor="middle" font-weight="900" font-size="2" fill="#000000">PREDICADO</text>
+                    <circle cx="25" cy="16" r="11" fill="none" stroke="#000000" stroke-width="0.5" stroke-dasharray="1 0.5"/>
+                    <text x="25" y="13" text-anchor="middle" font-weight="900" font-size="1.5" fill="#000000">SUJETO</text>
+                    <circle cx="25" cy="20" r="6" fill="#e5e5e5" stroke="#000000" stroke-width="0.5"/>
+                </svg>
+                <p class="text-xs font-sans text-black mt-2"><strong>Inclusión:</strong> La clase sujeto está completamente contenida en el predicado.</p>
+            </div>
+
+            <!-- Impresión E -->
+            <div class="ficha-print">
+                <h2 class="font-black text-xl text-black border-b-2 border-black mb-2 uppercase">Tipo E (Universal Negativa)</h2>
+                <p class="font-serif italic font-bold text-black mb-4">"Ningún <strong class="uppercase text-black">S</strong> es <strong class="uppercase text-black">P</strong>"</p>
+                <svg viewBox="0 0 50 30" class="w-full">
+                    <text x="13" y="5" text-anchor="middle" font-weight="900" font-size="2" fill="#000000">SUJETO</text>
+                    <circle cx="13" cy="16" r="9" fill="#e5e5e5" stroke="#000000" stroke-width="0.5"/>
+                    <line x1="24" y1="16" x2="26" y2="16" stroke="#000000" stroke-width="0.5" stroke-dasharray="1 0.5"/>
+                    <text x="37" y="5" text-anchor="middle" font-weight="900" font-size="2" fill="#000000">PREDICADO</text>
+                    <circle cx="37" cy="16" r="9" fill="none" stroke="#000000" stroke-width="0.5"/>
+                </svg>
+                <p class="text-xs font-sans text-black mt-2"><strong>Exclusión:</strong> Ambas clases están completamente separadas.</p>
+            </div>
+
+            <!-- Impresión I -->
+            <div class="ficha-print">
+                <h2 class="font-black text-xl text-black border-b-2 border-black mb-2 uppercase">Tipo I (Particular Afirmativa)</h2>
+                <p class="font-serif italic font-bold text-black mb-4">"Algunos <strong class="uppercase text-black">S</strong> son <strong class="uppercase text-black">P</strong>"</p>
+                <svg viewBox="0 0 50 30" class="w-full">
+                    <text x="13" y="4" text-anchor="middle" font-weight="900" font-size="2" fill="#000000">SUJETO</text>
+                    <circle cx="18" cy="16" r="10" fill="none" stroke="#000000" stroke-width="0.5"/>
+                    <text x="37" y="4" text-anchor="middle" font-weight="900" font-size="2" fill="#000000">PREDICADO</text>
+                    <circle cx="32" cy="16" r="10" fill="none" stroke="#000000" stroke-width="0.5"/>
+                    <g transform="translate(25, 16)">
+                        <rect x="-1.5" y="-1.5" width="3" height="3" rx="0.5" fill="#fff" stroke="#000" stroke-width="0.3"/>
+                        <circle cx="0" cy="0" r="0.5" fill="#000"/>
+                        <text x="0" y="3.5" text-anchor="middle" font-weight="900" font-size="1" fill="#000">Al menos uno</text>
+                    </g>
+                </svg>
+                <p class="text-xs font-sans text-black mt-2"><strong>Intersección:</strong> Existe al menos un elemento que pertenece a ambas clases.</p>
+            </div>
+
+            <!-- Impresión O -->
+            <div class="ficha-print">
+                <h2 class="font-black text-xl text-black border-b-2 border-black mb-2 uppercase">Tipo O (Particular Negativa)</h2>
+                <p class="font-serif italic font-bold text-black mb-4">"Algunos <strong class="uppercase text-black">S</strong> no son <strong class="uppercase text-black">P</strong>"</p>
+                <svg viewBox="0 0 50 30" class="w-full">
+                    <text x="13" y="4" text-anchor="middle" font-weight="900" font-size="2" fill="#000000">SUJETO</text>
+                    <circle cx="18" cy="16" r="10" fill="none" stroke="#000000" stroke-width="0.5"/>
+                    <text x="37" y="4" text-anchor="middle" font-weight="900" font-size="2" fill="#000000">PREDICADO</text>
+                    <circle cx="32" cy="16" r="10" fill="none" stroke="#000000" stroke-width="0.5"/>
+                    <g transform="translate(11, 16)">
+                        <rect x="-1.5" y="-1.5" width="3" height="3" rx="0.5" fill="#fff" stroke="#000" stroke-width="0.3"/>
+                        <circle cx="0" cy="0" r="0.5" fill="#000"/>
+                        <text x="0" y="3.5" text-anchor="middle" font-weight="900" font-size="1" fill="#000">Al menos uno</text>
+                    </g>
+                </svg>
+                <p class="text-xs font-sans text-black mt-2"><strong>Exclusión Parcial:</strong> Existe al menos un elemento en S que no pertenece a P.</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- FOOTER -->
+    <footer class="bg-xul_ink text-[#FDF8ED] py-8 px-6 mt-12 border-t-[3px] border-xul_ink no-print">
+        <div class="max-w-6xl mx-auto flex justify-between items-center text-sm font-sans">
+            <span class="font-bold tracking-widest uppercase">La Scholē de Ludosofía</span>
+            <span class="text-gray-400">&copy; 2026. Herramienta Pedagógica.</span>
+        </div>
+    </footer>
+
+    <!-- LOGICA DE LA APLICACIÓN (VANILLA JS) -->
+    <script>
+        lucide.createIcons();
+
+        // 1. BASE DE DATOS Y ESTADO GLOBAL
+        const state = {
+            sujeto: 'Gatos',
+            predicado: 'Mamíferos',
+            tipoOracion: 'A',
+            preguntaReflexion: '',
+            modoJuego: false,
+            temaActual: null,
+            girandoTema: false,
+            girandoDado: false,
+            anguloRuleta: 0
+        };
+
+        const oraciones = {
+            A: {
+                codigo: 'A', nombre: 'Universal Afirmativa', estructura: 'Todos los {S} son {P}', relacion: 'Inclusión Total',
+                descripcion: 'La clase del sujeto está totalmente incluida dentro de la clase del predicado. No hay ningún elemento del sujeto que no pertenezca también al predicado.',
+                color: 'bg-white border-xul_ink text-black shadow-[6px_6px_0px_#6BA4C4]'
+            },
+            E: {
+                codigo: 'E', nombre: 'Universal Negativa', estructura: 'Ningún {S} es {P}', relacion: 'Exclusión',
+                descripcion: 'Las dos clases están totalmente separadas. No comparten ningún elemento en común. La intersección es vacía.',
+                color: 'bg-white border-xul_ink text-black shadow-[6px_6px_0px_#D1623A]'
+            },
+            I: {
+                codigo: 'I', nombre: 'Particular Afirmativa', estructura: 'Algunos {S} son {P}', relacion: 'Intersección',
+                descripcion: 'Existe al menos un elemento que pertenece tanto a la clase del sujeto como a la del predicado. Representamos esta existencia con un "DADO" en la intersección.',
+                color: 'bg-white border-xul_ink text-black shadow-[6px_6px_0px_#75B07E]'
+            },
+            O: {
+                codigo: 'O', nombre: 'Particular Negativa', estructura: 'Algunos {S} no son {P}', relacion: 'Intersección (Exclusión parcial)',
+                descripcion: 'Existe al menos un elemento que pertenece a la clase del sujeto, pero NO a la clase del predicado. Lo marcamos con un "DADO" en la zona exclusiva del sujeto.',
+                color: 'bg-white border-xul_ink text-black shadow-[6px_6px_0px_#EBB134]'
+            }
+        };
+
+        const temasRuleta = [
+            { tema: "Justicia y Castigos", ejemplo: "Piensa en la relación entre 'Castigos' y 'Cosas dolorosas'.", s: "Castigos", p: "Cosas dolorosas" },
+            { tema: "Felicidad y Deseos", ejemplo: "Piensa en la relación entre 'Millonarios' y 'Felices'.", s: "Millonarios", p: "Felices" },
+            { tema: "Identidad y Cambio", ejemplo: "Relaciona 'Cosas que crecen' con 'Cosas que cambian'.", s: "Cosas que crecen", p: "Cosas que cambian" },
+            { tema: "Verdad y Mentira", ejemplo: "¿Qué pasa si relacionas 'Mentiras piadosas' con 'Acciones malas'?", s: "Mentiras piadosas", p: "Acciones malas" }
+        ];
+
+        const temasPedagogicos = [
+            {
+                titulo: "Ética y Responsabilidad",
+                ejemplos: [
+                    { s: 'Actos libres', p: 'Actos responsables', tipo: 'A', pregunta: 'Si todos nuestros actos libres nos hacen responsables, ¿qué ocurre si alguien te obliga a hacer algo?' },
+                    { s: 'Castigos', p: 'Cosas justas', tipo: 'O', pregunta: 'Si "algunos castigos no son justos", ¿cómo decidimos cuándo un castigo cruzó la línea hacia la injusticia?' }
+                ]
+            },
+            {
+                titulo: "Identidad y Pensamiento",
+                ejemplos: [
+                    { s: 'Ideas', p: 'Cosas físicas', tipo: 'E', pregunta: 'Si ninguna idea se puede tocar, ¿entonces de qué están hechas las ideas? ¿Son reales?' },
+                    { s: 'Palabras', p: 'Cosas verdaderas', tipo: 'I', pregunta: 'Si solo algunas palabras son verdaderas, ¿cómo descubrimos cuáles son inventos?' }
+                ]
+            }
+        ];
+
+        // 2. LÓGICA DE ACTUALIZACIÓN DE INTERFAZ (RENDER)
+        function renderUI() {
+            const pManual = document.getElementById('panel-manual');
+            const pLudico = document.getElementById('panel-ludico');
+
+            if (state.modoJuego) {
+                pLudico.classList.remove('hidden'); pManual.classList.add('hidden');
+                document.getElementById('tab-ludico').className = "flex-1 py-3 px-4 border-[3px] border-xul_ink font-black uppercase tracking-widest text-sm transition-all bg-xul_ink text-white shadow-[4px_4px_0px_#D1623A]";
+                document.getElementById('tab-manual').className = "flex-1 py-3 px-4 border-[3px] border-xul_ink font-black uppercase tracking-widest text-sm transition-all bg-white text-black shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1";
+            } else {
+                pManual.classList.remove('hidden'); pLudico.classList.add('hidden');
+                document.getElementById('tab-manual').className = "flex-1 py-3 px-4 border-[3px] border-xul_ink font-black uppercase tracking-widest text-sm transition-all bg-xul_ink text-white shadow-[4px_4px_0px_#6BA4C4]";
+                document.getElementById('tab-ludico').className = "flex-1 py-3 px-4 border-[3px] border-xul_ink font-black uppercase tracking-widest text-sm transition-all bg-white text-black shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1";
+            }
+
+            document.getElementById('input-sujeto').value = state.sujeto;
+            document.getElementById('input-predicado').value = state.predicado;
+
+            ['A', 'E', 'I', 'O'].forEach(t => {
+                const btn = document.getElementById(`btn-tipo-${t}`);
+                if (state.tipoOracion === t) {
+                    btn.classList.add('bg-xul_ink', 'text-white', 'shadow-[inset_4px_4px_0px_#6BA4C4]');
+                    btn.classList.remove('text-black');
+                } else {
+                    btn.classList.remove('bg-xul_ink', 'text-white', 'shadow-[inset_4px_4px_0px_#6BA4C4]');
+                    btn.classList.add('text-black');
+                }
+            });
+
+            const info = oraciones[state.tipoOracion];
+            document.getElementById('info-box').className = `bg-white border-[3px] border-xul_ink p-5 flex gap-4 transition-colors duration-300 ${info.color}`;
+            document.getElementById('info-nombre').innerText = `${info.nombre} (${info.codigo})`;
+            
+            // Reemplazo de estructura asegurando S y P en negro y mayúsculas
+            const sujLabel = `<strong class="text-black uppercase">${(state.sujeto || '[S]')} (S)</strong>`;
+            const predLabel = `<strong class="text-black uppercase">${(state.predicado || '[P]')} (P)</strong>`;
+            document.getElementById('info-estructura').innerHTML = info.estructura.replace('{S}', sujLabel).replace('{P}', predLabel);
+            
+            document.getElementById('info-relacion').innerText = info.relacion;
+            document.getElementById('info-desc').innerText = info.descripcion;
+
+            ['A', 'E', 'I', 'O'].forEach(t => {
+                document.getElementById(`svg-${t}`).style.display = (state.tipoOracion === t) ? 'block' : 'none';
+            });
+            document.querySelectorAll('.svg-text-s').forEach(el => el.textContent = state.sujeto.toUpperCase());
+            document.querySelectorAll('.svg-text-p').forEach(el => el.textContent = state.predicado.toUpperCase());
+
+            const refBox = document.getElementById('reflection-box');
+            if (state.preguntaReflexion) {
+                refBox.classList.remove('hidden');
+                document.getElementById('reflection-text').innerText = `"${state.preguntaReflexion}"`;
+            } else {
+                refBox.classList.add('hidden');
+            }
+        }
+
+        // 3. FUNCIONES DE CONTROL
+        function updateState(key, value) {
+            state[key] = value;
+            if (key === 'tipoOracion') state.preguntaReflexion = ''; 
+            renderUI();
+        }
+
+        function setModo(isLudico) {
+            state.modoJuego = isLudico;
+            renderUI();
+        }
+
+        function cargarEjemplo(s, p, tipo, pregunta) {
+            state.sujeto = s;
+            state.predicado = p;
+            state.tipoOracion = tipo;
+            state.preguntaReflexion = pregunta;
+            renderUI();
+        }
+
+        // LÓGICA DE JUEGO LÚDICO SEPARADA (Ruleta -> Dado)
+        function tirarTema() {
+            if (state.girandoTema) return;
+            state.girandoTema = true;
+            document.getElementById('resultado-ludico').classList.add('hidden');
+            document.getElementById('btn-tirar-dado').disabled = true;
+
+            const ruleta = document.getElementById('ruleta-visual');
+            const btn = document.getElementById('btn-tirar-tema');
+            
+            state.anguloRuleta += 1440 + Math.floor(Math.random() * 360);
+            ruleta.style.transform = `rotate(${state.anguloRuleta}deg)`;
+            btn.innerText = 'Girando...';
+
+            setTimeout(() => {
+                const randTema = temasRuleta[Math.floor(Math.random() * temasRuleta.length)];
+                state.temaActual = randTema;
+                state.sujeto = randTema.s;
+                state.predicado = randTema.p;
+
+                document.getElementById('res-tema').innerText = randTema.tema;
+                document.getElementById('btn-tirar-dado').disabled = false;
+                
+                state.girandoTema = false;
+                btn.innerText = 'Girar Ruleta';
+                renderUI();
+            }, 3000);
+        }
+
+        function tirarDado() {
+            if (state.girandoDado) return;
+            state.girandoDado = true;
+
+            const dadoTexto = document.getElementById('res-dado');
+            const btn = document.getElementById('btn-tirar-dado');
+            btn.innerText = 'Lanzando...';
+
+            let flips = 0;
+            let interval = setInterval(() => {
+                dadoTexto.innerText = ['A', 'E', 'I', 'O'][Math.floor(Math.random() * 4)];
+                flips++;
+                if (flips > 15) {
+                    clearInterval(interval);
+                    const randDado = ['A', 'E', 'I', 'O', 'A', 'E'][Math.floor(Math.random() * 6)]; 
+                    state.tipoOracion = randDado;
+                    dadoTexto.innerText = randDado;
+                    
+                    document.getElementById('ludico-dado-res').innerText = `Oración Tipo ${randDado}`;
+                    document.getElementById('res-ejemplo').innerText = state.temaActual.ejemplo;
+                    document.getElementById('resultado-ludico').classList.remove('hidden');
+                    
+                    state.girandoDado = false;
+                    btn.innerText = 'Lanzar Oración';
+                    renderUI();
+                }
+            }, 100);
+        }
+
+        // 4. INICIALIZACIÓN
+        window.onload = () => {
+            const container = document.getElementById('ejemplos-container');
+            temasPedagogicos.forEach(tema => {
+                const group = document.createElement('div');
+                group.className = "mb-4";
+                group.innerHTML = `<h4 class="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">${tema.titulo}</h4>`;
+                
+                tema.ejemplos.forEach(ej => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left font-sans text-sm bg-gray-50 border-2 border-gray-200 hover:border-xul_terra p-2 mb-2 flex justify-between items-center group transition-colors";
+                    btn.innerHTML = `
+                        <span class="truncate pr-2 text-black transition-colors">
+                            <strong class="uppercase text-black">${ej.s} (S)</strong> / <strong class="uppercase text-black">${ej.p} (P)</strong>
+                        </span>
+                        <span class="font-black text-black bg-white border-2 border-xul_ink px-2 py-0.5">${ej.tipo}</span>
+                    `;
+                    btn.onclick = () => cargarEjemplo(ej.s, ej.p, ej.tipo, ej.pregunta);
+                    group.appendChild(btn);
+                });
+                container.appendChild(group);
+            });
+
+            renderUI();
+        };
+    </script>
+</body>
+</html>
