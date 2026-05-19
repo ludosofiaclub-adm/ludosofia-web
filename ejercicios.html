@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero de Ejercicios | LUDOSOFÍA</title>
+    
+    <!-- Configuración de Seguridad para seguridad.js -->
+    <script>
+        window.CONFIG_ACCESO = {
+            PUBLICO: false,
+            SOCIO: true,
+            SOCIO_FUNDADOR: true
+        };
+    </script>
+    <script type="module" src="seguridad.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fuentes Google -->
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Iconos -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        catan_desert: '#EABF73'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #FDF8ED; 
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-xul { text-shadow: 3px 3px 0px #2A2A2A; }
+        
+        /* Animaciones */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        .casillero { 
+            opacity: 0;
+            animation: fadeInScale 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+        }
+
+        /* ====== SISTEMA HEXAGONAL ESTILO CATÁN ====== */
+        .hex-board-container {
+            width: 100%;
+            /* En móviles permitirá scroll horizontal para no achicar los hexágonos */
+            overflow-x: auto;
+            padding-bottom: 2rem;
+            padding-top: 2rem;
+            -ms-overflow-style: none;  
+            scrollbar-width: none; 
+        }
+        .hex-board-container::-webkit-scrollbar { display: none; }
+        
+        .hex-board {
+            position: relative;
+            width: 100%;
+            min-width: 700px; /* Tamaño mínimo para mantener legibilidad */
+            max-width: 900px;
+            aspect-ratio: 1 / 0.866; /* Proporción matemática exacta del layout de 7 hexágonos */
+            margin: 0 auto;
+        }
+
+        .hex-wrapper {
+            position: absolute;
+            width: 30%;   /* 30% del ancho del tablero */
+            height: 40%;  /* 40% del alto del tablero (mantiene ratio 1:1.15) */
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            transition: z-index 0s, transform 0.2s ease;
+        }
+
+        .hex-wrapper:hover {
+            z-index: 10;
+            transform: translate(-50%, -50%) scale(1.08) !important; /* El hover siempre debe sobrescribir la animación base */
+        }
+
+        .hex-shape {
+            /* Clip path que corta la caja cuadrada en un hexágono con punta superior */
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .hex-outer {
+            background-color: #2A2A2A;
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.5); /* Sombra interna para dar profundidad */
+        }
+
+        .hex-inner {
+            position: absolute;
+            /* Estos márgenes simulan el borde grueso de Xul Solar */
+            top: 6px; left: 5px; right: 5px; bottom: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 15px;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.08"/%3E%3C/svg%3E');
+        }
+
+        /* Fichas numéricas (Tokens) */
+        .catan-token {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 44px;
+            height: 44px;
+            background-color: #FDF8ED;
+            border: 3px solid #2A2A2A;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #2A2A2A;
+            font-weight: 900;
+            font-size: 1.25rem;
+            line-height: 1;
+            box-shadow: 2px 2px 0px rgba(42,42,42,0.8);
+            z-index: 5;
+        }
+
+        /* Evitar hover en hexágonos bloqueados */
+        .hex-locked:hover {
+            transform: translate(-50%, -50%) scale(1) !important;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_terra selection:text-white relative overflow-x-hidden min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="index.html#schole" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="index.html#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="index.html#tablero" class="text-xul_ink hover:text-xul_terra transition-colors">Caja de Herramientas</a>
+                <span class="text-xul_green border-b-2 border-xul_green cursor-default">Ejercicios</span>
+                
+                <div id="badge-container-desktop" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform hidden"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Mi Perfil</span>
+                </button>
+            </div>
+            
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="index.html#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="index.html#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="index.html#tablero" class="mobile-link hover:text-xul_terra transition block">Caja de Herramientas</a>
+            <span class="mobile-link text-xul_green block">Ejercicios</span>
+            
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2 active:translate-y-1">
+                <span id="login-text-mobile">Mi Perfil</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="pt-32 pb-10 px-6 relative border-b-[3px] border-xul_ink bg-[#75B07E] overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #2A2A2A 0, #2A2A2A 2px, transparent 2px, transparent 15px);"></div>
+        
+        <div class="max-w-4xl mx-auto relative z-10 text-center">
+            <div class="inline-block bg-white border-[3px] border-xul_ink px-4 py-1 mb-4 shadow-[4px_4px_0px_#2A2A2A] transform rotate-1">
+                <span class="font-sans font-black text-xs uppercase tracking-widest text-xul_ink">Acceso Desbloqueado</span>
+            </div>
+            
+            <h1 class="xul-title text-4xl md:text-6xl font-black text-white tracking-tighter mb-4 text-shadow-xul uppercase">
+                Tablero de Ejercicios
+            </h1>
+            
+            <p class="font-serif text-lg md:text-xl text-xul_ink font-semibold leading-relaxed bg-white/60 p-3 border-[3px] border-xul_ink backdrop-blur-sm shadow-[4px_4px_0px_rgba(42,42,42,0.3)] mx-auto">
+                Recorre el mapa siguiendo los números y descubre las dinámicas lúdico-filosóficas para tu aula.
+            </p>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL: EL TABLERO HEXAGONAL (TIPO CATÁN) -->
+    <main class="w-full flex-grow relative bg-[#FDF8ED] flex flex-col justify-center py-4">
+        
+        <!-- Indicador Móvil para scroll -->
+        <div class="md:hidden text-center text-xul_ink font-bold text-[10px] uppercase tracking-widest mb-2 animate-pulse mt-4">
+            <i class="ph ph-arrows-left-right text-base align-middle mr-1"></i> Desliza para explorar el tablero
+        </div>
+
+        <div class="hex-board-container">
+            <div class="hex-board">
+                
+                <!-- 0. CENTRO: EL DESIERTO -->
+                <div class="hex-wrapper casillero" style="left: 50%; top: 50%; animation-delay: 0s;">
+                    <div class="hex-outer hex-shape">
+                        <div class="hex-inner hex-shape bg-catan_desert text-xul_ink">
+                            <i class="ph ph-sun-horizon text-6xl opacity-40 mt-4 mb-2"></i>
+                            <h3 class="font-sans font-black text-xl uppercase tracking-widest opacity-60">El Desierto</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 1. IZQUIERDA: DIAGRAMAS DE VENN -->
+                <a href="ejercicio-venn.html" class="hex-wrapper group casillero block" style="left: 20%; top: 50%; animation-delay: 0.1s;">
+                    <div class="hex-outer hex-shape transition-colors group-hover:bg-xul_blue">
+                        <div class="hex-inner hex-shape bg-xul_blue text-white">
+                            <div class="catan-token">1</div>
+                            <i class="ph ph-circles-three text-5xl mb-1 mt-6 opacity-90 drop-shadow-md"></i>
+                            <h3 class="font-sans font-black text-lg uppercase tracking-widest leading-none drop-shadow-md">Diagramas<br>de Venn</h3>
+                            <span class="mt-3 text-[10px] bg-xul_ink text-white px-2 py-0.5 uppercase tracking-widest border border-xul_ink">Lógica</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 2. ARRIBA-IZQUIERDA: JENGA EPISTEMOLÓGICO -->
+                <a href="ejercicio-jenga.html" class="hex-wrapper group casillero block" style="left: 35%; top: 24.02%; animation-delay: 0.2s;">
+                    <div class="hex-outer hex-shape transition-colors group-hover:bg-xul_yellow">
+                        <div class="hex-inner hex-shape bg-xul_yellow text-xul_ink">
+                            <div class="catan-token">2</div>
+                            <i class="ph ph-stack text-5xl mb-1 mt-6 opacity-90 drop-shadow-md"></i>
+                            <h3 class="font-sans font-black text-lg uppercase tracking-widest leading-none drop-shadow-md">Jenga<br>Epistemológico</h3>
+                            <span class="mt-3 text-[10px] bg-white text-xul_ink px-2 py-0.5 uppercase tracking-widest border border-xul_ink">Verdad</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 3. ARRIBA-DERECHA: TRIBUNAL DEL UNO -->
+                <a href="ejercicio-uno.html" class="hex-wrapper group casillero block" style="left: 65%; top: 24.02%; animation-delay: 0.3s;">
+                    <div class="hex-outer hex-shape transition-colors group-hover:bg-xul_pink">
+                        <div class="hex-inner hex-shape bg-xul_pink text-xul_ink">
+                            <div class="catan-token">3</div>
+                            <i class="ph ph-cards text-5xl mb-1 mt-6 opacity-90 drop-shadow-md"></i>
+                            <h3 class="font-sans font-black text-lg uppercase tracking-widest leading-none drop-shadow-md">El Tribunal<br>del UNO</h3>
+                            <span class="mt-3 text-[10px] bg-white text-xul_ink px-2 py-0.5 uppercase tracking-widest border border-xul_ink">Justicia</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 4. DERECHA: ¿QUIÉN ES QUIÉN? -->
+                <a href="ejercicio-quien.html" class="hex-wrapper group casillero block" style="left: 80%; top: 50%; animation-delay: 0.4s;">
+                    <div class="hex-outer hex-shape transition-colors group-hover:bg-xul_terra">
+                        <div class="hex-inner hex-shape bg-xul_terra text-white">
+                            <div class="catan-token">4</div>
+                            <i class="ph ph-mask-happy text-5xl mb-1 mt-6 opacity-90 drop-shadow-md"></i>
+                            <h3 class="font-sans font-black text-lg uppercase tracking-widest leading-none drop-shadow-md">¿Quién es<br>Quién?</h3>
+                            <span class="mt-3 text-[10px] bg-xul_ink text-white px-2 py-0.5 uppercase tracking-widest border border-xul_ink">Identidad</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- 5. ABAJO-DERECHA: INCÓGNITA 1 -->
+                <div class="hex-wrapper hex-locked casillero block" style="left: 65%; top: 75.98%; animation-delay: 0.5s;">
+                    <div class="hex-outer hex-shape opacity-60">
+                        <div class="hex-inner hex-shape bg-[#D9D9D9] text-gray-500">
+                            <div class="catan-token bg-gray-300 text-gray-500 border-gray-400">?</div>
+                            <i class="ph ph-lock-key text-4xl mb-1 mt-6 opacity-60"></i>
+                            <h3 class="font-sans font-black text-xl uppercase tracking-widest leading-none opacity-80 mt-2">Incógnita</h3>
+                            <span class="mt-3 text-[9px] bg-gray-400 text-white px-2 py-0.5 uppercase tracking-widest border border-gray-400">Próximamente</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 6. ABAJO-IZQUIERDA: INCÓGNITA 2 -->
+                <div class="hex-wrapper hex-locked casillero block" style="left: 35%; top: 75.98%; animation-delay: 0.6s;">
+                    <div class="hex-outer hex-shape opacity-60">
+                        <div class="hex-inner hex-shape bg-[#D9D9D9] text-gray-500">
+                            <div class="catan-token bg-gray-300 text-gray-500 border-gray-400">?</div>
+                            <i class="ph ph-lock-key text-4xl mb-1 mt-6 opacity-60"></i>
+                            <h3 class="font-sans font-black text-xl uppercase tracking-widest leading-none opacity-80 mt-2">Incógnita</h3>
+                            <span class="mt-3 text-[9px] bg-gray-400 text-white px-2 py-0.5 uppercase tracking-widest border border-gray-400">Próximamente</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-xul_ink mt-auto">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-700 pb-8">
+            <div class="flex items-center space-x-3">
+                <svg viewBox="0 0 100 100" class="w-8 h-8">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="currentColor" stroke-width="3"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="font-sans font-black tracking-widest text-lg leading-none">LUDOSOFÍA</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
+                <a href="index.html" class="hover:text-xul_yellow transition">Inicio</a>
+                <a href="index.html#schole" class="hover:text-xul_yellow transition">Scholē</a>
+                <a href="index.html#tablero" class="hover:text-xul_yellow transition">Caja de Herramientas</a>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-6 text-center text-sm font-sans text-gray-400">
+            &copy; 2026 Ludosofía - Club de Filosofía. El juego infinito del pensamiento.
+        </div>
+    </footer>
+
+    <!-- Script UI -->
+    <script>
+        // Inicializar íconos Phosphor/Lucide
+        if(typeof lucide !== 'undefined') lucide.createIcons();
+        
+        const btnMenu = document.getElementById('mobile-menu-btn');
+        const menuMobile = document.getElementById('mobile-menu');
+        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+
+        // Mock visual si se corre en local sin servidor web (bypass de seguridad para desarrollo)
+        window.addEventListener('load', () => {
+            let rolGuardado = localStorage.getItem('rol_usuario');
+            if(window.location.protocol === 'file:' && (!rolGuardado || rolGuardado === 'PUBLICO')) {
+                document.documentElement.style.display = '';
+                console.warn("Seguridad evadida visualmente por protocolo local file://");
+            }
+        });
+    </script>
+</body>
+</html>
