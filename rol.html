@@ -3,14 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Roles | LUDOSOFÍA</title>
+    <title>Juegos de rola | LUDOSOFÍA</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
-    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_silver: '#C4CAD0',
+                        xul_orange: '#E87524'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #FDF8ED; 
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-border {
+            border: 3px solid #2A2A2A;
+            box-shadow: 6px 6px 0px #2A2A2A;
+            transition: all 0.2s ease;
+        }
+        .xul-border:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px #2A2A2A;
+        }
+        .xul-title {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        .text-shadow-xul {
+            text-shadow: 4px 4px 0px #2A2A2A;
+        }
+
+        /* Animación para Socio Fundador */
+        @keyframes fundadorFloat {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-3px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .anim-fundador {
+            animation: fundadorFloat 3s infinite ease-in-out;
+        }
+        /* Animación Modal */
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate {
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
+    </style>
+
+    <!-- CEREBRO DE FIREBASE - GUARDIÁN DE LA PÁGINA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
@@ -20,60 +85,20 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-        const db = getFirestore(app);
 
-        const rutaActual = window.location.pathname.split('/').pop() || 'index.html';
-
-        onAuthStateChanged(auth, async (user) => {
+        // Escuchador de estado de sesión
+        onAuthStateChanged(auth, (user) => {
             if (!user) {
-                // Si no hay sesión válida, guardamos ruta y expulsamos al login
-                localStorage.setItem('destino_post_login', rutaActual);
-                window.location.replace('login.html'); 
+                // Si el usuario NO existe (no está logueado), lo mandamos al login
+                // window.location.replace('login.html'); 
+                console.log("Visitante público viendo la página.");
             } else {
-                let rolUsuario = 'socio'; // Definimos un rol base por seguridad
-
-                try {
-                    let docRef;
-                    if (typeof __app_id !== 'undefined') {
-                        docRef = doc(db, 'artifacts', __app_id, 'users', user.uid, 'usuarios', 'perfil'); 
-                    } else {
-                        docRef = doc(db, "usuarios", user.uid);
-                    }
-
-                    const docSnap = await getDoc(docRef);
-                    if (docSnap.exists()) {
-                        rolUsuario = docSnap.data().rol || 'socio';
-                    }
-                } catch (error) {
-                    // Si ocurre un error (como la suspensión del proyecto), lo registramos en consola
-                    console.error("Aviso: No se pudo consultar Firestore. Usando rol local.", error);
-                    // Intentamos recuperar el último rol guardado localmente antes de la falla
-                    rolUsuario = localStorage.getItem('rol_usuario') || 'socio';
-                }
-                
-                // MANTENIMIENTO DEL ESTADO E INTERFAZ (Fuera del bloque try-catch)
-                localStorage.setItem('rol_usuario', rolUsuario);
-
-                // Ocultamos la carga y permitimos el ingreso pase lo que pase
-                document.getElementById('pantalla-carga').classList.add('hidden');
-                document.getElementById('contenido-pagina').classList.remove('hidden');
-                
-                // Inyectamos los textos correspondientes
-                if (document.getElementById('user-email')) document.getElementById('user-email').innerText = user.email;
-                if (document.getElementById('user-role')) document.getElementById('user-role').innerText = rolUsuario;
+                // El usuario está logueado, se le permite ver la página.
+                console.log("Acceso concedido al socio:", user.email);
             }
         });
     </script>
-    <style>
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background-color: #FDF8ED; 
-            color: #2A2A2A;
-        }
-        .xul-title { font-family: 'Cormorant Garamond', serif; }
-    </style>
-</head>
-<body class="antialiased min-h-screen flex flex-col justify-center items-center p-4">
+</head><body class="antialiased min-h-screen flex flex-col justify-center items-center p-4">
 
     <div id="pantalla-carga" class="text-base font-black uppercase tracking-widest text-gray-500 flex flex-col items-center gap-4">
         <svg class="animate-spin h-8 w-8 text-xul_terra" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
