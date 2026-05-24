@@ -114,26 +114,18 @@
         </div>
     </nav>
 
-    <div id="pantalla-carga" class="text-base font-black uppercase tracking-widest text-gray-500 flex flex-col items-center gap-4 mt-12">
-        <svg class="animate-spin h-8 w-8 text-xul_terra" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-        Verificando credenciales del Club...
-    </div>
-
-    <main id="contenido-pagina" class="hidden w-full max-w-md bg-white border-[3px] border-[#2A2A2A] p-8 shadow-[12px_12px_0px_#EBB134] mt-12">
+    <main id="contenido-pagina" class="w-full max-w-md bg-white border-[3px] border-[#2A2A2A] p-8 shadow-[12px_12px_0px_#EBB134] mt-12">
         <h1 class="xul-title text-4xl font-black uppercase tracking-tight mb-2 text-[#2A2A2A]">Panel de Control</h1>
         <p class="text-xs text-gray-500 font-bold uppercase tracking-wider mb-6">Área de Credenciales</p>
         
         <div class="border-[3px] border-[#2A2A2A] p-4 mb-6 bg-[#FDF8ED] text-sm space-y-3 font-medium">
             <p class="flex justify-between border-b border-gray-300 pb-2">
                 <span class="text-gray-500 uppercase tracking-wider text-xs font-bold">Socio:</span> 
-                <span id="user-email" class="font-bold text-[#2A2A2A]">Cargando...</span>
+                <span id="user-email" class="font-bold text-[#2A2A2A]">Invitado</span>
             </p>
             <p class="flex justify-between pt-1">
                 <span class="text-gray-500 uppercase tracking-wider text-xs font-bold">Rol en Tablero:</span> 
-                <span id="user-role" class="uppercase font-black text-xul_terra tracking-widest">Cargando...</span>
+                <span id="user-role" class="uppercase font-black text-gray-400 tracking-widest">Visitante</span>
             </p>
         </div>
 
@@ -214,7 +206,7 @@
         
         lucide.createIcons();
 
-        // Elementos de UI Base
+        // Control del Menú Móvil
         const btnMenu = document.getElementById('mobile-menu-btn');
         const menuMobile = document.getElementById('mobile-menu');
         if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
@@ -257,13 +249,10 @@
             if(mobBadge) { mobBadge.innerHTML = iconHtml; mobBadge.style.display = 'flex'; }
         }
 
-        // Manejo del estado de sesión principal
+        // Observador del estado de autenticación (Cerebro de la página)
         onAuthStateChanged(auth, async (user) => {
-            const pantallaCarga = document.getElementById('pantalla-carga');
-            const contenidoPagina = document.getElementById('contenido-pagina');
-
             if (user) {
-                // UI Navbar
+                // Configuración de la interfaz para usuarios conectados
                 const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
                 document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
                 if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
@@ -272,9 +261,7 @@
                 if(loginBtnMobile) loginBtnMobile.onclick = toggleProfileModal;
                 document.getElementById('profile-email').innerText = user.email;
 
-                // Lógica específica de rol.html
-                if (pantallaCarga) pantallaCarga.classList.add('hidden');
-                if (contenidoPagina) contenidoPagina.classList.remove('hidden');
+                // Actualizar los datos del panel con la información del socio
                 document.getElementById('user-email').innerText = user.email;
 
                 try {
@@ -283,14 +270,19 @@
                         const datos = docSnap.data();
                         localStorage.setItem('rol_usuario', datos.rol);
                         document.getElementById('profile-role').innerText = datos.rol;
-                        document.getElementById('user-role').innerText = datos.rol;
+                        
+                        const roleSpan = document.getElementById('user-role');
+                        roleSpan.innerText = datos.rol;
+                        roleSpan.classList.remove('text-gray-400');
+                        roleSpan.classList.add('text-xul_terra');
+                        
                         updateUIWithRole(datos.rol);
                     } else {
                         document.getElementById('user-role').innerText = 'SIN ROL';
                     }
                 } catch (error) { console.error(error); }
             } else {
-                // UI Navbar desconectado
+                // Configuración de la interfaz para visitantes públicos
                 document.getElementById('login-text-desktop').innerText = 'INGRESAR';
                 if(document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = 'INGRESAR';
                 if(document.getElementById('badge-container-desktop')) document.getElementById('badge-container-desktop').style.display = 'none';
@@ -300,15 +292,17 @@
                 if(loginBtnMobile) loginBtnMobile.onclick = toggleLoginModal;
                 localStorage.removeItem('rol_usuario');
 
-                // Lógica específica de rol.html al estar desconectado
-                if (pantallaCarga) {
-                    pantallaCarga.innerHTML = 'Debes iniciar sesión en el club para ver tu tablero.';
-                }
-                if (contenidoPagina) contenidoPagina.classList.add('hidden');
+                // Restaurar los valores visuales por defecto del panel público
+                document.getElementById('user-email').innerText = 'Invitado';
+                const roleSpan = document.getElementById('user-role');
+                roleSpan.innerText = 'Visitante';
+                roleSpan.classList.remove('text-xul_terra');
+                roleSpan.classList.add('text-gray-400');
+                console.log("Visitante público observando el panel.");
             }
         });
 
-        // Eventos del formulario Login
+        // Manejo del formulario de Login / Registro
         let isLoginMode = true;
         document.getElementById('btn-toggle-mode').addEventListener('click', (e) => {
             e.preventDefault();
@@ -327,7 +321,7 @@
             
             promesaAuth.then(() => {
                 loginModal.classList.add('hidden');
-                mostrarAlerta('Conectado', '¡Credenciales verificadas!', '#75B07E');
+                mostrarAlerta('Conectado', '¡Bienvenido al Ágora!', '#75B07E');
             }).catch(err => mostrarAlerta('Error', err.message));
         });
 
