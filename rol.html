@@ -22,17 +22,16 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Capturamos el nombre de este archivo para la redirección inteligente si el token expira o no existe
         const rutaActual = window.location.pathname.split('/').pop() || 'index.html';
 
-        // Escuchador asíncrono obligatorio para determinar el estado real del usuario
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                // Si NO está logueado, guardamos la ubicación en la memoria local y redirigimos al login
+                // Si no hay sesión válida, guardamos ruta y expulsamos al login
                 localStorage.setItem('destino_post_login', rutaActual);
                 window.location.replace('login.html'); 
             } else {
-                // SI está logueado, procedemos a verificar su documento de perfil en Firestore
+                let rolUsuario = 'socio'; // Definimos un rol base por seguridad
+
                 try {
                     let docRef;
                     if (typeof __app_id !== 'undefined') {
@@ -42,26 +41,26 @@
                     }
 
                     const docSnap = await getDoc(docRef);
-                    let rolUsuario = 'socio'; // Rol base por defecto
-
                     if (docSnap.exists()) {
                         rolUsuario = docSnap.data().rol || 'socio';
                     }
-                    
-                    // Almacenamos el rol en LocalStorage para consultas rápidas en elementos de la interfaz
-                    localStorage.setItem('rol_usuario', rolUsuario);
-
-                    // Una vez todo verificado, ocultamos el mensaje de carga y revelamos el contenido real
-                    document.getElementById('pantalla-carga').classList.add('hidden');
-                    document.getElementById('contenido-pagina').classList.remove('hidden');
-                    
-                    // Vinculamos los datos obtenidos a las etiquetas del contenedor protegido
-                    if (document.getElementById('user-email')) document.getElementById('user-email').innerText = user.email;
-                    if (document.getElementById('user-role')) document.getElementById('user-role').innerText = rolUsuario;
-
                 } catch (error) {
-                    console.error("Error al validar el rol del usuario en la base de datos:", error);
+                    // Si ocurre un error (como la suspensión del proyecto), lo registramos en consola
+                    console.error("Aviso: No se pudo consultar Firestore. Usando rol local.", error);
+                    // Intentamos recuperar el último rol guardado localmente antes de la falla
+                    rolUsuario = localStorage.getItem('rol_usuario') || 'socio';
                 }
+                
+                // MANTENIMIENTO DEL ESTADO E INTERFAZ (Fuera del bloque try-catch)
+                localStorage.setItem('rol_usuario', rolUsuario);
+
+                // Ocultamos la carga y permitimos el ingreso pase lo que pase
+                document.getElementById('pantalla-carga').classList.add('hidden');
+                document.getElementById('contenido-pagina').classList.remove('hidden');
+                
+                // Inyectamos los textos correspondientes
+                if (document.getElementById('user-email')) document.getElementById('user-email').innerText = user.email;
+                if (document.getElementById('user-role')) document.getElementById('user-role').innerText = rolUsuario;
             }
         });
     </script>
