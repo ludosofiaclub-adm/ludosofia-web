@@ -203,17 +203,7 @@
                 const docSnap = await getDoc(doc(db, "usuarios", user.uid));
                 if (docSnap.exists()) {
                     const datos = docSnap.data();
-                    const rol = (datos.rol || '').toUpperCase().trim();
-                    const tieneAcceso = rol.includes('SOCIO') || rol.includes('FUNDADOR');
-                    
-                    if (!tieneAcceso) {
-                        localStorage.setItem('destino_post_login', rutaActual);
-                        window.location.replace('login.html');
-                        return;
-                    }
-                    
-                    // Tiene acceso correcto
-                    currentUser = user; // Guardar usuario globalmente para los comentarios
+                    currentUser = user;
                     localStorage.setItem('rol_usuario', datos.rol);
                     actualizarNavbar(user, datos.rol);
                     
