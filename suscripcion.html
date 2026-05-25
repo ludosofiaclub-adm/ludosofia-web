@@ -347,6 +347,12 @@
 
         detectarRegion(); // precarga en background al abrir la página
 
+        // Auto-abrir modal si viene con ?plan= desde index.html
+        const urlPlan = new URLSearchParams(window.location.search).get('plan');
+        if (urlPlan && ['publico', 'socio', 'fundador'].includes(urlPlan)) {
+            window.addEventListener('load', () => openModal(urlPlan));
+        }
+
         const PLAN_INFO = {
             publico: {
                 titulo: 'Crear Cuenta Base',
