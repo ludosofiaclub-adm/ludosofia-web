@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Biblioteca | LUDOSOFÍA</title>
+
+    <script>
+        window.CONFIG_ACCESO = {
+            PUBLICO: true,
+            SOCIO: true,
+            SOCIO_FUNDADOR: true
+        };
+    </script>
+    <script type="module" src="seguridad.js"></script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -506,20 +516,13 @@
     </script>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+                import { getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
-            authDomain: "ludosofia-1cdc7.firebaseapp.com",
-            projectId: "ludosofia-1cdc7"
-        };
-
-        const app = initializeApp(firebaseConfig);
+        const app = getApp();
         const auth = getAuth(app);
         const db = getFirestore(app);
-
         // UI BÁSICA RESTANTE
         const btnMenu = document.getElementById('mobile-menu-btn');
         const menuMobile = document.getElementById('mobile-menu');
