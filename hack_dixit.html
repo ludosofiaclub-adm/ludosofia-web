@@ -47,7 +47,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
@@ -60,6 +60,8 @@
         const db = getFirestore(app);
 
         const rutaActual = window.location.pathname.split('/').pop() || 'index.html';
+        const commentsCollection = collection(db, 'artifacts', 'ludosofia-dixit', 'public', 'data', 'comentarios');
+        let currentUser = null;
 
         function getIconByRole(rol) {
             const r = (rol || '').toUpperCase().trim();
@@ -101,6 +103,83 @@
             }
         }
 
+        function cargarComentarios() {
+            onSnapshot(commentsCollection, (snapshot) => {
+                let comentarios = [];
+                snapshot.forEach(doc => {
+                    comentarios.push({ id: doc.id, ...doc.data() });
+                });
+                comentarios.sort((a, b) => b.timestamp - a.timestamp);
+                renderComentarios(comentarios);
+            }, (error) => {
+                console.error("Error obteniendo comentarios:", error);
+            });
+        }
+
+        function renderComentarios(comentarios) {
+            const list = document.getElementById('comments-list');
+            if (!list) return;
+            list.innerHTML = '';
+            if (comentarios.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 italic p-4 text-center">Aún no hay mensajes. ¡Abre el debate!</p>';
+                return;
+            }
+            comentarios.forEach(c => {
+                const date = new Date(c.timestamp);
+                const dateString = isNaN(date.getTime()) ? '' : date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                list.innerHTML += `
+                    <div class="bg-white border-2 border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] relative">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-xul_blue border-2 border-xul_ink rounded-full flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0px_#2A2A2A]">
+                                <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-black text-sm uppercase tracking-widest text-xul_ink leading-none mb-1">${c.authorName}</p>
+                                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">${dateString}</p>
+                            </div>
+                        </div>
+                        <p class="font-sans text-gray-800 text-base leading-relaxed whitespace-pre-wrap">${c.text}</p>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('comment-form');
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    if (!currentUser) return;
+                    const input = document.getElementById('comment-input');
+                    const text = input.value.trim();
+                    if (!text) return;
+                    const btnSubmit = document.getElementById('submit-comment');
+                    const originalText = btnSubmit.innerHTML;
+                    btnSubmit.disabled = true;
+                    btnSubmit.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline mr-2"></i> Enviando...';
+                    lucide.createIcons();
+                    try {
+                        const nombre = currentUser.displayName ? currentUser.displayName.split(' ')[0] : currentUser.email.split('@')[0];
+                        await addDoc(commentsCollection, {
+                            text: text,
+                            authorId: currentUser.uid,
+                            authorName: nombre,
+                            timestamp: Date.now()
+                        });
+                        input.value = '';
+                    } catch(error) {
+                        console.error("Error publicando comentario:", error);
+                        btnSubmit.innerHTML = 'Error al publicar';
+                        setTimeout(() => btnSubmit.innerHTML = originalText, 2000);
+                    } finally {
+                        btnSubmit.disabled = false;
+                        if (btnSubmit.innerHTML !== 'Error al publicar') btnSubmit.innerHTML = originalText;
+                    }
+                });
+            }
+        });
+
         onAuthStateChanged(auth, async (user) => {
             if (!user) {
                 localStorage.setItem('destino_post_login', rutaActual);
@@ -118,8 +197,10 @@
                         window.location.replace('login.html');
                         return;
                     }
+                    currentUser = user;
                     localStorage.setItem('rol_usuario', datos.rol);
                     actualizarNavbar(user, datos.rol);
+                    cargarComentarios();
                 } else {
                     localStorage.setItem('destino_post_login', rutaActual);
                     window.location.replace('login.html');
@@ -433,6 +514,37 @@
                 </div>
             </section>
 
+            <!-- 6. EL ÁGORA (SECCIÓN DE COMENTARIOS) -->
+            <section id="comentarios" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#D1623A]">
+                        <span class="text-white font-black text-xl font-sans">6</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">El Ágora</h3>
+                </div>
+
+                <div class="bg-xul_paper border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#EBB134] mb-10">
+                    <h4 class="font-sans font-black text-xl uppercase text-xul_ink mb-4 border-b-2 border-xul_ink pb-2">Suma tu voz al debate</h4>
+                    <form id="comment-form" class="space-y-4">
+                        <textarea id="comment-input" required rows="3" class="w-full border-2 border-xul_ink bg-white p-4 font-sans text-base focus:outline-none focus:border-xul_blue transition-all" placeholder="Comparte los debates que surgieron en tu mesa..."></textarea>
+                        <div class="flex justify-end">
+                            <button type="submit" id="submit-comment" class="bg-xul_ink text-white font-black text-sm py-3 px-6 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] flex items-center gap-2">
+                                <i data-lucide="send" class="w-4 h-4"></i> Publicar Comentario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="space-y-6">
+                    <h4 class="font-sans font-black text-xl uppercase text-xul_ink border-b-2 border-xul_ink pb-2">Comunidad Ludosofía</h4>
+                    <div id="comments-list" class="space-y-5">
+                        <div class="flex items-center justify-center p-8">
+                            <i data-lucide="loader-2" class="w-8 h-8 text-xul_blue animate-spin"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
         </div>
 
         <!-- COLUMNA LATERAL (ÍNDICE FIJO) -->
@@ -453,11 +565,12 @@
                         </div>
 
                         <a href="#debriefing" class="block hover:text-xul_terra transition-colors">3. Guía de Debriefing</a>
+                        <a href="#comentarios" class="block hover:text-xul_terra transition-colors">4. El Ágora (Foro)</a>
                     </nav>
                 </div>
 
-                <!-- Banner Promocional -->
-                <div class="bg-xul_ink border-[3px] border-xul_ink p-6 text-center text-white relative overflow-hidden group hover:shadow-[6px_6px_0px_#EBB134] transition-all cursor-pointer">
+                <!-- Banner → Ágora -->
+                <a href="#comentarios" class="block bg-xul_ink border-[3px] border-xul_ink p-6 text-center text-white relative overflow-hidden group hover:shadow-[6px_6px_0px_#EBB134] transition-all">
                     <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
                         <i data-lucide="message-circle" class="w-32 h-32"></i>
                     </div>
@@ -465,10 +578,10 @@
                     <p class="font-sans text-xs text-gray-300 mb-4 relative z-10">
                         Comparte los resultados de tu laboratorio hermenéutico en nuestra comunidad.
                     </p>
-                    <a href="#" class="inline-block bg-transparent border-2 border-white px-6 py-2 font-bold text-[10px] uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors relative z-10">
-                        Ir al Foro
-                    </a>
-                </div>
+                    <span class="inline-block bg-transparent border-2 border-white px-6 py-2 font-bold text-[10px] uppercase tracking-widest group-hover:bg-white group-hover:text-xul_ink transition-colors relative z-10">
+                        Ir a Comentarios
+                    </span>
+                </a>
             </div>
         </div>
     </main>
