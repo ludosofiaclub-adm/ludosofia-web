@@ -179,27 +179,7 @@
         
         document.getElementById('btn-toggle-mode').addEventListener('click', (e) => {
             e.preventDefault();
-            isLoginMode = !isLoginMode;
-            
-            document.getElementById('main-title').innerText = isLoginMode ? 'ENTRAR AL CLUB' : 'CREAR CUENTA';
-            document.getElementById('main-subtitle').innerText = isLoginMode ? 'Identifícate para continuar tu partida.' : 'Obtén tu pase para ingresar a la Scholē.';
-            document.getElementById('submit-btn').innerText = isLoginMode ? 'ENTRAR CON CLAVE' : 'REGISTRARSE';
-            document.getElementById('toggle-question').innerText = isLoginMode ? '¿Aún no eres miembro del Club?' : '¿Ya tienes acceso al tablero?';
-            e.target.innerText = isLoginMode ? 'REGÍSTRATE AQUÍ' : 'INGRESA AQUÍ';
-
-            const nameGroup = document.getElementById('name-group');
-            const nameInput = document.getElementById('name-input');
-            const btnForgot = document.getElementById('btn-forgot-password');
-
-            if (isLoginMode) {
-                nameGroup.classList.add('hidden');
-                nameInput.removeAttribute('required');
-                btnForgot.classList.remove('hidden');
-            } else {
-                nameGroup.classList.remove('hidden');
-                nameInput.setAttribute('required', 'true');
-                btnForgot.classList.add('hidden');
-            }
+            window.location.href = 'suscripcion.html';
         });
 
         const passwordInput = document.getElementById('password-input');
