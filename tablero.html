@@ -14,19 +14,12 @@
     </script>
     <script type="module" src="seguridad.js"></script>
 
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Fuentes Google -->
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
-    
-    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Phosphor Icons y PapaParse (Para la nueva herramienta) -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -48,22 +41,18 @@
             }
         }
     </script>
-    
+
     <style>
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background-color: #FDF8ED; 
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDF8ED;
             color: #2A2A2A;
             background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
         }
-        .xul-border {
-            border: 3px solid #2A2A2A;
-            box-shadow: 6px 6px 0px #2A2A2A;
-            transition: all 0.2s ease;
-        }
+        .xul-border { border: 3px solid #2A2A2A; box-shadow: 6px 6px 0px #2A2A2A; transition: all 0.2s ease; }
         .xul-title { font-family: 'Cormorant Garamond', serif; }
         .text-shadow-xul { text-shadow: 3px 3px 0px #2A2A2A; }
-        
+
         @keyframes modalFadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -76,13 +65,8 @@
         }
         .fade-in-scale { animation: fadeInScale 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
 
-        .locked-content {
-            filter: blur(4px);
-            user-select: none;
-            pointer-events: none;
-        }
-        
-        /* Ocultar barra de desplazamiento para un look más limpio */
+        .locked-content { filter: blur(4px); user-select: none; pointer-events: none; }
+
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: #FDF8ED; border-left: 2px solid #2A2A2A; }
         ::-webkit-scrollbar-thumb { background: #D1623A; border: 2px solid #2A2A2A; }
@@ -92,7 +76,6 @@
 
     <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
         <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
-            <!-- Logo -->
             <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
                 <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
                     <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
@@ -105,34 +88,31 @@
                     <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
                 </div>
             </a>
-            
-            <!-- Menú Desktop -->
+
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
                 <a href="index.html#schole" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
                 <a href="index.html#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
                 <span class="text-xul_terra border-b-2 border-xul_terra cursor-default">Tablero</span>
-                
+
                 <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía"></div>
 
-                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2 group">
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
                     <span id="login-text-desktop">Ingresar</span>
                 </button>
             </div>
-            
-            <!-- Botón Menú Móvil -->
+
             <div class="md:hidden">
                 <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
                     <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
                 </button>
             </div>
         </div>
-        
-        <!-- Menú Desplegable Móvil -->
+
         <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
             <a href="index.html#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
             <a href="index.html#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
             <span class="mobile-link text-xul_terra block">Tablero</span>
-            
+
             <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
 
             <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2 active:translate-y-1">
@@ -142,25 +122,23 @@
     </nav>
 
     <header class="pt-32 pb-16 px-6 relative border-b-[3px] border-xul_ink bg-[#EBB134] overflow-hidden">
-        <!-- Patrón de fondo -->
         <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #2A2A2A 0, #2A2A2A 2px, transparent 2px, transparent 15px);"></div>
-        
+
         <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-10">
             <div class="text-center md:text-left flex-1">
                 <div class="inline-block bg-white border-[3px] border-xul_ink px-4 py-1 mb-6 shadow-[4px_4px_0px_#2A2A2A] transform -rotate-1">
                     <span class="font-sans font-black text-xs md:text-sm uppercase tracking-widest text-xul_ink">Para Profesores y Facilitadores</span>
                 </div>
-                
+
                 <h1 class="xul-title text-5xl md:text-7xl font-black text-white tracking-tighter mb-4 text-shadow-xul uppercase">
                     Tableros de Pensamiento
                 </h1>
-                
+
                 <p class="font-serif text-xl md:text-2xl text-xul_ink max-w-2xl font-semibold leading-relaxed bg-white/40 p-4 border-l-[4px] border-xul_ink backdrop-blur-sm shadow-[4px_4px_0px_rgba(42,42,42,0.3)]">
                     Desarrolla herramientas filosóficas utilizando juegos y técnicas de gamificación. Genera planes de diálogo, agendas de preguntas y ejercicios de clase para potenciar tus propuestas.
                 </p>
             </div>
 
-            <!-- Arte Xul Solar Infantil -->
             <div class="w-64 h-64 relative flex items-center justify-center transform hover:-rotate-6 transition-transform duration-500 hidden md:flex">
                 <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[8px_8px_0px_#2A2A2A]">
                     <rect x="20" y="70" width="60" height="20" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="3"/>
@@ -175,14 +153,14 @@
     </header>
 
     <main class="max-w-7xl mx-auto px-4 py-16 w-full flex-grow">
-        
+
         <div class="text-center mb-12">
             <h2 class="xul-title text-4xl md:text-5xl font-black text-xul_ink tracking-tight uppercase">Caja de Herramientas</h2>
             <p class="font-sans text-gray-600 mt-2 font-medium">Selecciona un instrumento según tu nivel de acceso al club.</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-            
+
             <!-- TARJETA 1: PÚBLICO -->
             <div class="bg-white border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#6BA4C4] flex flex-col items-center text-center group hover:-translate-y-1 transition-transform duration-300">
                 <div class="w-16 h-16 bg-xul_blue border-[3px] border-xul_ink rounded-full flex items-center justify-center mb-4 shadow-[4px_4px_0px_#2A2A2A] group-hover:scale-110 transition-transform">
@@ -225,7 +203,7 @@
         </div>
 
         <div id="workspace" class="bg-white border-[4px] border-xul_ink p-8 md:p-12 shadow-[12px_12px_0px_#2A2A2A] relative min-h-[400px] overflow-hidden">
-            
+
             <!-- ESTADO INICIAL -->
             <div id="view-initial" class="text-center py-16 opacity-60 flex flex-col items-center justify-center h-full fade-in-scale">
                 <i data-lucide="box-select" class="w-20 h-20 text-gray-300 mb-4 animate-pulse"></i>
@@ -233,9 +211,8 @@
                 <p class="font-serif text-xl text-gray-500 mt-2">Selecciona una herramienta arriba para comenzar a planificar.</p>
             </div>
 
-            <!-- VISTA: PLANES DE DIÁLOGO (INTEGRACIÓN DE NUEVA HERRAMIENTA) -->
+            <!-- VISTA: PLANES DE DIÁLOGO -->
             <div id="view-planes" class="hidden fade-in-scale h-full flex flex-col">
-                <!-- Header de la Herramienta -->
                 <div class="bg-xul_blue text-white p-5 border-[3px] border-xul_ink shadow-[6px_6px_0px_#2A2A2A] mb-8 flex items-center justify-between shrink-0">
                     <div>
                         <h3 class="font-sans font-black text-2xl md:text-3xl uppercase tracking-widest flex items-center gap-3">
@@ -246,13 +223,11 @@
                     </div>
                 </div>
 
-                <!-- Contenedor Principal Split -->
                 <div class="flex-1 flex flex-col md:flex-row gap-8 overflow-hidden">
-                    
+
                     <!-- Panel Izquierdo -->
                     <div class="w-full md:w-1/2 flex flex-col gap-6 overflow-y-auto pr-2 pb-4">
-                        
-                        <!-- Paso 1 -->
+
                         <div class="bg-white p-5 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">
                             <h4 class="font-sans font-black text-lg uppercase tracking-widest text-xul_ink mb-3 flex items-center gap-2">
                                 <span class="bg-xul_blue text-white w-6 h-6 flex items-center justify-center text-sm border-2 border-xul_ink">1</span>
@@ -260,7 +235,6 @@
                             </h4>
                             <select id="topicSelect" class="w-full p-4 border-[3px] border-xul_ink bg-xul_paper font-sans text-lg focus:outline-none focus:ring-2 focus:ring-xul_blue cursor-pointer appearance-none shadow-inner">
                                 <option value="" disabled selected>Elige un tema filosófico...</option>
-                                <!-- Opciones cargadas por JS -->
                             </select>
 
                             <div id="baseQuestionContainer" class="mt-4 p-4 bg-xul_yellow/20 border-l-[4px] border-xul_yellow hidden">
@@ -269,25 +243,18 @@
                             </div>
                         </div>
 
-                        <!-- Paso 2 -->
                         <div id="variantsSection" class="bg-white p-5 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hidden flex-1 flex flex-col">
                             <h4 class="font-sans font-black text-lg uppercase tracking-widest text-xul_ink mb-2 flex items-center gap-2">
                                 <span class="bg-xul_blue text-white w-6 h-6 flex items-center justify-center text-sm border-2 border-xul_ink">2</span>
                                 Explorar Variantes
                             </h4>
                             <p class="font-serif text-gray-600 mb-4">Añade complejidad analizando diferentes variables.</p>
-                            
-                            <!-- Pestañas -->
-                            <div class="flex flex-wrap gap-2 mb-4" id="categoryTabs">
-                                <!-- Botones cargados por JS -->
-                            </div>
 
-                            <!-- Caja Separada para las Preguntas -->
+                            <div class="flex flex-wrap gap-2 mb-4" id="categoryTabs"></div>
+
                             <div class="bg-xul_yellow/10 border-[3px] border-xul_ink p-4 flex-1 flex flex-col overflow-hidden shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] mt-2">
                                 <h5 class="font-sans font-black text-xs uppercase tracking-widest text-xul_ink mb-3 border-b-2 border-xul_ink/20 pb-2">Preguntas Sugeridas</h5>
-                                <div id="questionsContainer" class="flex-1 overflow-y-auto pr-2 space-y-3 max-h-[250px]">
-                                    <!-- Preguntas cargadas por JS -->
-                                </div>
+                                <div id="questionsContainer" class="flex-1 overflow-y-auto pr-2 space-y-3 max-h-[250px]"></div>
                             </div>
                         </div>
                     </div>
@@ -298,7 +265,7 @@
                             <h4 class="font-sans font-black text-xl uppercase tracking-widest flex items-center gap-2 text-xul_ink">
                                 <i class="ph ph-list-checks text-2xl text-xul_blue"></i> Tu Plan
                             </h4>
-                            <span id="planCount" class="bg-xul_ink text-white px-3 py-1 text-xs font-black uppercase tracking-widest shadow-[2px_2px_0px_#6BA4C4]">0 previas</span>
+                            <span id="planCount" class="bg-xul_ink text-white px-3 py-1 text-xs font-black uppercase tracking-widest shadow-[2px_2px_0px_#6BA4C4]">0 preguntas</span>
                         </div>
 
                         <div id="selectedPlanContainer" class="flex-1 overflow-y-auto space-y-3 bg-white border-[3px] border-xul_ink p-4 min-h-[250px] shadow-inner relative">
@@ -319,25 +286,24 @@
                     </div>
                 </div>
 
-                <!-- Toast Notification Integrado -->
                 <div id="toast" class="fixed bottom-6 right-6 bg-xul_green border-[3px] border-xul_ink text-white px-6 py-4 shadow-[6px_6px_0px_#2A2A2A] flex items-center gap-3 transform translate-y-32 opacity-0 transition-all duration-300 z-[200]">
                     <i class="ph ph-check-circle text-2xl"></i>
                     <span id="toastMessage" class="font-sans font-black uppercase tracking-widest text-sm">Acción completada</span>
                 </div>
             </div>
 
-            <!-- VISTA: AGENDAS DE PREGUNTAS (SOCIOS) -->
+            <!-- VISTA: EJERCICIOS FILOSÓFICOS (SOCIOS) -->
             <div id="view-agendas" class="hidden fade-in-scale relative h-full">
                 <div class="flex items-center gap-3 mb-8 border-b-2 border-xul_green pb-2">
                     <i data-lucide="list-todo" class="w-8 h-8 text-xul_green"></i>
-                    <h3 class="font-sans font-black text-2xl md:text-3xl uppercase tracking-widest text-xul_ink">Ejercicios Filosóficos (Nivel 1)</h3>
+                    <h3 class="font-sans font-black text-2xl md:text-3xl uppercase tracking-widest text-xul_ink">Ejercicios Filosóficos</h3>
                 </div>
-                
+
                 <div class="flex flex-col md:flex-row gap-6 mb-8 bg-xul_paper p-6 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">
                     <div class="flex-1">
                         <label class="block font-bold text-sm uppercase tracking-widest text-xul_ink mb-2">Selecciona un Juego Base</label>
-                        <select id="game-select" class="w-full border-[3px] border-xul_ink bg-white p-4 font-sans text-lg focus:outline-none focus:ring-2 focus:ring-xul_blue transition-all cursor-pointer shadow-inner appearance-none relative">
-                            <option value="jenga">🧱 Jenga (Equilibrio y Fundamentos)</option>
+                        <select id="game-select" class="w-full border-[3px] border-xul_ink bg-white p-4 font-sans text-lg focus:outline-none focus:ring-2 focus:ring-xul_blue transition-all cursor-pointer shadow-inner appearance-none">
+                            <option value="jenga">🧱 Jenga (Equilibrio y Responsabilidad)</option>
                             <option value="adivina">👤 ¿Quién es Quién? (Identidad y Prejuicio)</option>
                             <option value="uno">🃏 UNO (Justicia y Reglas Arbitrarias)</option>
                             <option value="dixit">🖼️ Dixit (Hermenéutica y Verdad)</option>
@@ -356,38 +322,7 @@
                 </div>
 
                 <div id="plan-output" class="hidden flex flex-col gap-6 fade-in-scale">
-                    <!-- El contenido del plan se inyecta aquí -->
-                </div>
-            </div>
-
-            <!-- VISTA: AGENDAS DE PREGUNTAS (SOCIOS) -->
-            <div id="view-agendas" class="hidden fade-in-scale relative h-full">
-                <div class="flex items-center gap-3 mb-8 border-b-2 border-xul_green pb-2">
-                    <i data-lucide="list-todo" class="w-8 h-8 text-xul_green"></i>
-                    <h3 class="font-sans font-black text-2xl md:text-3xl uppercase tracking-widest text-xul_ink">Agenda de Preguntas (Nivel 1)</h3>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="border-[3px] border-xul_ink p-6 bg-xul_paper shadow-[4px_4px_0px_#75B07E] hover:-translate-y-1 transition-transform">
-                        <h4 class="font-sans font-black uppercase text-sm mb-3 text-xul_green border-b border-xul_green/30 pb-1">Fase de Preparación</h4>
-                        <p class="font-serif italic text-gray-700 text-lg">"Si cambiamos una regla antes de empezar, ¿el juego sigue siendo el mismo juego o es uno nuevo?"</p>
-                    </div>
-                    <div class="border-[3px] border-xul_ink p-6 bg-xul_paper shadow-[4px_4px_0px_#75B07E] hover:-translate-y-1 transition-transform">
-                        <h4 class="font-sans font-black uppercase text-sm mb-3 text-xul_green border-b border-xul_green/30 pb-1">Fase de Conflicto</h4>
-                        <p class="font-serif italic text-gray-700 text-lg">"¿Actúas así porque es lo correcto, o porque es lo que te permite ganar en este momento?"</p>
-                    </div>
-                    <div class="border-[3px] border-xul_ink p-6 bg-xul_paper shadow-[4px_4px_0px_#75B07E] hover:-translate-y-1 transition-transform">
-                        <h4 class="font-sans font-black uppercase text-sm mb-3 text-xul_green border-b border-xul_green/30 pb-1">Fase de Resolución</h4>
-                        <p class="font-serif italic text-gray-700 text-lg">"Si las reglas fueran injustas desde el principio, ¿la victoria del ganador tiene algún valor real?"</p>
-                    </div>
-                    <div class="border-[3px] border-xul_ink p-6 bg-xul_green/10 shadow-[4px_4px_0px_#75B07E] flex items-center justify-center group cursor-pointer hover:bg-xul_green/20 transition-colors">
-                        <div class="text-center">
-                            <i data-lucide="download" class="w-8 h-8 text-xul_ink mx-auto mb-2 group-hover:scale-110 transition-transform"></i>
-                            <span class="font-sans font-black uppercase text-sm tracking-widest text-xul_ink">
-                                Descargar PDF Completo
-                            </span>
-                        </div>
-                    </div>
+                    <!-- Contenido generado por JS -->
                 </div>
             </div>
 
@@ -402,7 +337,7 @@
                     <div class="absolute -top-10 -right-10 opacity-10">
                         <i data-lucide="microscope" class="w-64 h-64 text-xul_terra"></i>
                     </div>
-                    
+
                     <div class="w-20 h-20 bg-white border-4 border-xul_ink rounded-full flex items-center justify-center mx-auto mb-6 relative z-10 shadow-[4px_4px_0px_#2A2A2A]">
                         <i data-lucide="video" class="w-10 h-10 text-xul_terra"></i>
                     </div>
@@ -426,11 +361,9 @@
                     <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="currentColor" stroke-width="3"/>
                     <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="currentColor" stroke-width="3"/>
                 </svg>
-                <div class="flex flex-col">
-                    <span class="font-sans font-black tracking-widest text-lg leading-none">LUDOSOFÍA</span>
-                </div>
+                <span class="font-sans font-black tracking-widest text-lg leading-none">LUDOSOFÍA</span>
             </div>
-            
+
             <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
                 <a href="index.html" class="hover:text-xul_yellow transition">Inicio</a>
                 <a href="index.html#schole" class="hover:text-xul_yellow transition">Scholē</a>
@@ -447,13 +380,15 @@
     <div id="upgrade-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer transition-opacity" onclick="document.getElementById('upgrade-modal').classList.add('hidden')"></div>
         <div class="modal-animate relative bg-xul_paper border-[4px] border-xul_ink p-8 md:p-10 max-w-md w-full shadow-[12px_12px_0px_#D1623A] text-center">
-            <button onclick="document.getElementById('upgrade-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors bg-white border-2 border-xul_ink rounded-full p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <button onclick="document.getElementById('upgrade-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors bg-white border-2 border-xul_ink rounded-full p-1">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
             <div class="w-20 h-20 bg-xul_yellow border-[3px] border-xul_ink rounded-full flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0px_#2A2A2A]">
                 <i data-lucide="key" class="w-10 h-10 text-xul_ink"></i>
             </div>
             <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-3 border-b-2 border-xul_ink pb-2">Zona Restringida</h3>
             <p id="upgrade-message" class="font-sans text-gray-700 mb-8 font-medium text-lg">Esta herramienta requiere un nivel superior de membresía.</p>
-            
+
             <div class="flex flex-col gap-3">
                 <button onclick="window.location.href='suscripcion.html';" class="w-full bg-xul_terra text-white font-black py-4 uppercase tracking-widest border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 transition-transform">
                     Ver Planes de Membresía
@@ -469,31 +404,57 @@
     <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
         <div class="modal-animate relative bg-xul_paper border-[4px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] text-center">
-            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra bg-white border-2 border-xul_ink rounded-full p-1"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra bg-white border-2 border-xul_ink rounded-full p-1">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
             <div class="w-20 h-20 bg-xul_blue border-[3px] border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
                 <i data-lucide="user" class="w-10 h-10 text-xul_paper"></i>
             </div>
             <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-1">Mi Perfil</h3>
             <p id="profile-email" class="font-sans text-sm text-gray-500 mb-6">usuario@ejemplo.com</p>
-            
-            <div class="bg-white border-[3px] border-xul_ink p-4 mb-6 shadow-inner relative">
+
+            <div class="bg-white border-[3px] border-xul_ink p-4 mb-6 shadow-inner">
                 <label class="block font-bold text-xs uppercase tracking-widest text-gray-500 mb-2">Tu Membresía</label>
                 <p id="profile-role" class="font-black text-xl text-center uppercase tracking-wider text-xul_terra">—</p>
             </div>
-            
+
             <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_ink hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">Cerrar Sesión</button>
         </div>
     </div>
 
     <script>
-        // Inicializar iconos
         lucide.createIcons();
 
-        window._rolActual = 'PUBLICO'; // actualizado por el módulo Firebase al cargar
+        window._rolActual = 'PUBLICO';
 
-        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJ3AofQf3NgIwrESLVgUvwtk_4grsHsD1Zd3_zjxhW9HqYUP1s-9aDeDbDWz_NjhPsdTlmNa2Gld1z/pub?output=csv"; 
+        // ─── Base de datos de ejercicios filosóficos por juego ───────────────
+        var planesDB = {
+            jenga: {
+                titulo: "Jenga: Equilibrio y Responsabilidad Colectiva",
+                objetivo: "Explorar cómo la interdependencia y el riesgo compartido generan dilemas éticos. Cada pieza que retiramos afecta a todos, igual que nuestras decisiones cotidianas impactan en la comunidad.",
+                actividad: "Antes de cada turno, el jugador debe responder una pregunta filosófica: '¿Qué pasa cuando priorizas tu ventaja individual sobre el bien colectivo?' o '¿Quién tiene la responsabilidad si la torre cae?' Si la torre se derrumba, el grupo discute: ¿Podemos reconstruir lo que rompemos? ¿La intención cambia la culpa? Al terminar, reflexionen: ¿en qué ámbitos de la vida real 'retiramos piezas' sin ver el efecto total?"
+            },
+            adivina: {
+                titulo: "¿Quién es Quién?: Identidad y Prejuicio",
+                objetivo: "Cuestionar cómo construimos categorías para identificar a los demás y reflexionar sobre los prejuicios que subyacen a esas clasificaciones. ¿Qué dice de nosotros la primera pregunta que elegimos hacer?",
+                actividad: "Jueguen una partida normal. Al terminar, cada jugador explica QUÉ preguntas eligió y POR QUÉ en ese orden. Discutan: ¿Preguntaron primero por el género, el color de pelo, la edad? ¿Qué nos revela eso sobre nuestras prioridades al categorizar? Desafío final: intenten describir a alguien sin usar ninguna característica visual. ¿Es posible la identidad sin el cuerpo?"
+            },
+            uno: {
+                titulo: "UNO: Justicia, Reglas y Arbitrariedad",
+                objetivo: "Analizar la tensión entre obedecer las reglas y cuestionar su legitimidad cuando parecen injustas o arbitrarias. ¿Las reglas valen por sí mismas o solo si son justas?",
+                actividad: "A mitad del juego, el docente propone cambiar una regla clave (ej: el +4 ahora beneficia a quien lo recibe en vez de perjudicarlo). El grupo vota si acepta el cambio. Discutan: ¿Es válido cambiar las reglas en medio del juego? ¿Quién tiene autoridad para hacerlo? ¿Obliga a todos seguirla? Al final: ¿cuántas reglas de la vida real son tan arbitrarias como las del UNO y sin embargo las obedecemos sin cuestionar?"
+            },
+            dixit: {
+                titulo: "Dixit: Hermenéutica y la Verdad del Otro",
+                objetivo: "Investigar por qué el mismo símbolo significa cosas distintas para personas distintas, y si existe una 'lectura correcta' de cualquier mensaje o imagen.",
+                actividad: "Jueguen una ronda normal. Luego, para cada carta mostrada, pidan a cada jugador que explique su interpretación en voz alta ANTES de votar. Anoten las diferencias. Discutan: ¿Por qué interpretamos distinto la misma imagen? ¿El autor tiene autoridad para definir el significado verdadero de su obra? ¿O el significado lo construye quien recibe el mensaje? Conecten con textos, leyes o noticias que cada uno entiende diferente."
+            }
+        };
 
-        let variablesGlobales = {
+        // ─── Variables para la herramienta Rizoma ───────────────────────────
+        const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQJ3AofQf3NgIwrESLVgUvwtk_4grsHsD1Zd3_zjxhW9HqYUP1s-9aDeDbDWz_NjhPsdTlmNa2Gld1z/pub?output=csv";
+
+        var variablesGlobales = {
             personas: [
                 "una madre o un padre", "un niño pequeño", "un adolescente", "un anciano",
                 "un docente", "un político", "un policía o un juez", "un médico",
@@ -514,7 +475,7 @@
             ]
         };
 
-        const temasData = [
+        var temasData = [
             {
                 id: "mentira", tema: "La Mentira y la Verdad", preguntaBase: "¿Está bien mentir?",
                 categorias: {
@@ -542,30 +503,28 @@
             }
         ];
 
-        let state = { selectedTopicId: null, activeCategory: null, plan: [] };
-        
-        // Elementos DOM (se asignarán en init)
-        let els = {};
+        var state = { selectedTopicId: null, activeCategory: null, plan: [] };
+        var els = {};
 
         async function cargarVariablesDesdeSheet() {
             return new Promise((resolve) => {
                 Papa.parse(GOOGLE_SHEET_CSV_URL, {
                     download: true, header: true,
                     complete: function(results) {
-                        let nuevasVariables = { personas: [], condiciones: [], motivaciones: [] };
-                        let huboDatos = false;
+                        var nuevas = { personas: [], condiciones: [], motivaciones: [] };
+                        var huboDatos = false;
                         results.data.forEach(fila => {
-                            const categoria = fila['Categoria'] ? fila['Categoria'].toLowerCase().trim() : '';
-                            const valor = fila['Valor'] ? fila['Valor'].trim() : '';
-                            if (categoria && valor && nuevasVariables[categoria] !== undefined) {
-                                nuevasVariables[categoria].push(valor);
+                            var cat = fila['Categoria'] ? fila['Categoria'].toLowerCase().trim() : '';
+                            var val = fila['Valor'] ? fila['Valor'].trim() : '';
+                            if (cat && val && nuevas[cat] !== undefined) {
+                                nuevas[cat].push(val);
                                 huboDatos = true;
                             }
                         });
-                        if (huboDatos) variablesGlobales = nuevasVariables;
+                        if (huboDatos) variablesGlobales = nuevas;
                         resolve();
                     },
-                    error: function(error) { console.error("Error Sheets:", error); resolve(); }
+                    error: function() { resolve(); }
                 });
             });
         }
@@ -592,8 +551,9 @@
             }
 
             temasData.forEach(tema => {
-                const option = document.createElement('option');
-                option.value = tema.id; option.textContent = tema.tema;
+                var option = document.createElement('option');
+                option.value = tema.id;
+                option.textContent = tema.tema;
                 els.topicSelect.appendChild(option);
             });
 
@@ -604,24 +564,24 @@
         }
 
         function handleTopicSelection(e) {
-            const topicData = temasData.find(t => t.id === e.target.value);
+            var topicData = temasData.find(t => t.id === e.target.value);
             if (!topicData) return;
             state.selectedTopicId = topicData.id;
-            
+
             els.baseQuestionText.textContent = topicData.preguntaBase;
             els.baseQuestionContainer.classList.remove('hidden');
             els.variantsSection.classList.remove('hidden');
 
             renderCategoryTabs(topicData);
-            const categories = Object.keys(topicData.categorias);
+            var categories = Object.keys(topicData.categorias);
             if (categories.length > 0) selectCategory(categories[0]);
         }
 
         function renderCategoryTabs(topicData) {
             els.categoryTabs.innerHTML = '';
             Object.entries(topicData.categorias).forEach(([key, catData]) => {
-                const btn = document.createElement('button');
-                btn.className = `category-tab px-3 py-2 border-[2px] border-xul_ink font-bold uppercase text-xs tracking-widest flex items-center gap-2 transition-colors ${state.activeCategory === key ? 'bg-xul_ink text-white' : 'bg-white text-xul_ink hover:bg-gray-100'}`;
+                var btn = document.createElement('button');
+                btn.className = 'category-tab px-3 py-2 border-[2px] border-xul_ink font-bold uppercase text-xs tracking-widest flex items-center gap-2 transition-colors bg-white text-xul_ink hover:bg-gray-100';
                 btn.dataset.category = key;
                 btn.innerHTML = `<i class="ph ${catData.icono} text-lg"></i> ${catData.titulo}`;
                 btn.addEventListener('click', () => selectCategory(key));
@@ -631,26 +591,27 @@
 
         function selectCategory(categoryId) {
             state.activeCategory = categoryId;
-            const topicData = temasData.find(t => t.id === state.selectedTopicId);
-            const catData = topicData.categorias[categoryId];
-            
+            var topicData = temasData.find(t => t.id === state.selectedTopicId);
+            var catData = topicData.categorias[categoryId];
+
             document.querySelectorAll('.category-tab').forEach(tab => {
-                if(tab.dataset.category === categoryId) tab.className = 'category-tab px-3 py-2 border-[2px] border-xul_ink font-bold uppercase text-xs tracking-widest flex items-center gap-2 transition-colors bg-xul_ink text-white shadow-[2px_2px_0px_#D1623A] translate-y-[-2px]';
-                else tab.className = 'category-tab px-3 py-2 border-[2px] border-xul_ink font-bold uppercase text-xs tracking-widest flex items-center gap-2 transition-colors bg-white text-xul_ink hover:bg-gray-100';
+                if (tab.dataset.category === categoryId) {
+                    tab.className = 'category-tab px-3 py-2 border-[2px] border-xul_ink font-bold uppercase text-xs tracking-widest flex items-center gap-2 transition-colors bg-xul_ink text-white shadow-[2px_2px_0px_#D1623A] translate-y-[-2px]';
+                } else {
+                    tab.className = 'category-tab px-3 py-2 border-[2px] border-xul_ink font-bold uppercase text-xs tracking-widest flex items-center gap-2 transition-colors bg-white text-xul_ink hover:bg-gray-100';
+                }
             });
 
-            const valoresBase = variablesGlobales[catData.fuente];
-            const preguntasGeneradas = valoresBase.map(valor => catData.plantilla.replace('{valor}', valor));
-            renderQuestionsList(preguntasGeneradas);
+            var preguntas = variablesGlobales[catData.fuente].map(valor => catData.plantilla.replace('{valor}', valor));
+            renderQuestionsList(preguntas);
         }
 
         function renderQuestionsList(preguntas) {
             els.questionsContainer.innerHTML = '';
             preguntas.forEach(pregunta => {
-                const div = document.createElement('div');
-                const isInPlan = state.plan.includes(pregunta);
-                div.className = `group p-3 border-[2px] border-xul_ink bg-white flex justify-between items-center gap-3 transition-all ${isInPlan ? 'opacity-50 bg-gray-100' : 'cursor-pointer hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#2A2A2A]'}`;
-                
+                var div = document.createElement('div');
+                var isInPlan = state.plan.includes(pregunta);
+                div.className = 'group p-3 border-[2px] border-xul_ink bg-white flex justify-between items-center gap-3 transition-all ' + (isInPlan ? 'opacity-50 bg-gray-100' : 'cursor-pointer hover:-translate-y-0.5 hover:shadow-[3px_3px_0px_#2A2A2A]');
                 div.innerHTML = `
                     <p class="font-serif text-xul_ink text-lg leading-snug flex-1">${pregunta}</p>
                     <button class="shrink-0 w-8 h-8 flex items-center justify-center border-2 border-xul_ink rounded-full ${isInPlan ? 'bg-xul_green text-white' : 'bg-white text-xul_ink group-hover:bg-xul_blue group-hover:text-white'} transition-colors" ${isInPlan ? 'disabled' : ''}>
@@ -676,17 +637,17 @@
         }
 
         function renderPlan() {
-            els.planCount.textContent = `${state.plan.length} preguntas`;
-            
+            els.planCount.textContent = state.plan.length + ' preguntas';
+
             if (state.plan.length === 0) {
                 els.emptyPlanState.style.display = 'flex';
                 els.selectedPlanContainer.querySelectorAll('.plan-item, #planBaseQuestion').forEach(el => el.remove());
             } else {
                 els.emptyPlanState.style.display = 'none';
-                els.selectedPlanContainer.innerHTML = ''; 
+                els.selectedPlanContainer.innerHTML = '';
 
-                const topicData = temasData.find(t => t.id === state.selectedTopicId);
-                const baseDiv = document.createElement('div');
+                var topicData = temasData.find(t => t.id === state.selectedTopicId);
+                var baseDiv = document.createElement('div');
                 baseDiv.id = 'planBaseQuestion';
                 baseDiv.className = 'p-3 mb-4 bg-xul_yellow border-[2px] border-xul_ink shadow-[2px_2px_0px_#2A2A2A] flex items-start gap-3';
                 baseDiv.innerHTML = `
@@ -699,7 +660,7 @@
                 els.selectedPlanContainer.appendChild(baseDiv);
 
                 state.plan.forEach((pregunta, index) => {
-                    const itemDiv = document.createElement('div');
+                    var itemDiv = document.createElement('div');
                     itemDiv.className = 'plan-item flex items-center justify-between gap-3 p-3 bg-xul_paper border-[2px] border-xul_ink mb-2 shadow-[2px_2px_0px_#2A2A2A] group fade-in-scale';
                     itemDiv.innerHTML = `
                         <div class="flex items-start gap-3 flex-1 min-w-0">
@@ -717,22 +678,25 @@
         }
 
         function updateActionButtons() {
-            const hasItems = state.plan.length > 0;
+            var hasItems = state.plan.length > 0;
             els.btnCopy.disabled = !hasItems;
             els.btnPrint.disabled = !hasItems;
         }
 
         function copyPlan() {
             if (state.plan.length === 0) return;
-            const topicData = temasData.find(t => t.id === state.selectedTopicId);
-            let text = `LUDOSOFÍA - RIZOMA®\nPlan de Diálogo: ${topicData.tema.toUpperCase()}\n==========================================\n\nPREGUNTA PRINCIPAL:\n> ${topicData.preguntaBase}\n\nVARIANTES PARA EXPLORAR:\n`;
-            state.plan.forEach((p, i) => { text += `${i + 1}. ${p}\n`; });
-            
+            var topicData = temasData.find(t => t.id === state.selectedTopicId);
+            var text = 'LUDOSOFÍA - RIZOMA®\nPlan de Diálogo: ' + topicData.tema.toUpperCase() + '\n==========================================\n\nPREGUNTA PRINCIPAL:\n> ' + topicData.preguntaBase + '\n\nVARIANTES PARA EXPLORAR:\n';
+            state.plan.forEach((p, i) => { text += (i + 1) + '. ' + p + '\n'; });
+
             navigator.clipboard.writeText(text).then(() => {
                 showToast("Plan copiado al portapapeles", "ph-check-circle");
             }).catch(() => {
-                const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
-                try { document.execCommand('copy'); showToast("Copiado al portapapeles", "ph-check-circle"); } 
+                var ta = document.createElement("textarea");
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                try { document.execCommand('copy'); showToast("Copiado al portapapeles", "ph-check-circle"); }
                 catch (ex) { showToast("Error al copiar", "ph-warning-circle", true); }
                 document.body.removeChild(ta);
             });
@@ -740,207 +704,63 @@
 
         function printPlan() {
             if (state.plan.length === 0) return;
-            const topicData = temasData.find(t => t.id === state.selectedTopicId);
-            const printWindow = window.open('', '_blank');
-            let html = `<html><head><title>Ludosofía - Rizoma</title>
-            <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
-            <style>
-                @media print {
-                    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-                }
-                body { 
-                    font-family: 'Outfit', sans-serif; 
-                    line-height: 1.6; 
-                    color: #2A2A2A; 
-                    max-width: 800px; 
-                    margin: 0 auto; 
-                    padding: 40px; 
-                    background-color: #FDF8ED;
-                } 
-                .header-brand { 
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    border-bottom: 4px solid #2A2A2A; 
-                    padding-bottom: 20px; 
-                    margin-bottom: 40px;
-                }
-                .brand-left h1 { 
-                    margin: 0; 
-                    text-transform: uppercase; 
-                    font-size: 2.5em; 
-                    letter-spacing: 2px; 
-                    font-family: 'Cormorant Garamond', serif;
-                    font-weight: 700;
-                    color: #2A2A2A;
-                }
-                .brand-left p { 
-                    margin: 5px 0 0; 
-                    font-weight: 900; 
-                    font-size: 1.2em; 
-                    text-transform: uppercase; 
-                    color: #6BA4C4; 
-                    letter-spacing: 2px;
-                }
-                .logo-svg { width: 60px; height: 60px; }
-                h2 { 
-                    text-transform: uppercase; 
-                    font-family: 'Cormorant Garamond', serif;
-                    font-size: 2.2em;
-                    margin-bottom: 20px;
-                    color: #D1623A;
-                } 
-                .base-q { 
-                    background: #EBB134; 
-                    padding: 25px; 
-                    border: 4px solid #2A2A2A; 
-                    font-size: 1.4em; 
-                    margin-bottom: 40px; 
-                    font-weight: 700;
-                    font-family: 'Cormorant Garamond', serif;
-                    box-shadow: 6px 6px 0px #2A2A2A;
-                } 
-                .base-q-label {
-                    font-family: 'Outfit', sans-serif;
-                    font-size: 0.6em;
-                    text-transform: uppercase;
-                    letter-spacing: 2px;
-                    font-weight: 900;
-                    display: block;
-                    margin-bottom: 10px;
-                    color: #2A2A2A;
-                }
-                h3 {
-                    font-size: 1.2em;
-                    text-transform: uppercase;
-                    letter-spacing: 1px;
-                    border-bottom: 2px dashed #2A2A2A;
-                    padding-bottom: 10px;
-                    margin-bottom: 20px;
-                }
-                ul { list-style-type: none; padding: 0; } 
-                li { 
-                    background: #fff;
-                    margin-bottom: 15px; 
-                    padding: 15px 20px;
-                    font-size: 1.2em; 
-                    font-family: 'Cormorant Garamond', serif;
-                    font-weight: 600;
-                    display:flex; 
-                    gap: 15px;
-                    border: 2px solid #2A2A2A;
-                    box-shadow: 3px 3px 0px #2A2A2A;
-                    align-items: flex-start;
-                } 
-                .num { 
-                    font-family: 'Outfit', sans-serif;
-                    font-weight: 900; 
-                    background: #2A2A2A;
-                    color: #fff;
-                    width: 28px;
-                    height: 28px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: 0.8em;
-                    flex-shrink: 0;
-                    margin-top: 2px;
-                    border-radius: 50%;
-                }
-                .footer { 
-                    margin-top: 60px; 
-                    font-size: 0.9em; 
-                    text-align: center; 
-                    border-top: 2px solid #2A2A2A; 
-                    padding-top: 20px; 
-                    font-weight: 700; 
-                    text-transform: uppercase; 
-                    letter-spacing: 1px;
-                    color: #6BA4C4;
-                }
-            </style></head>
-            <body>
-                <div class="header-brand">
-                    <div class="brand-left">
-                        <h1>LUDOSOFÍA</h1>
-                        <p>Rizoma®</p>
-                    </div>
-                    <svg viewBox="0 0 100 100" class="logo-svg">
-                        <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="4"/>
-                        <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="4"/>
-                        <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="4"/>
-                    </svg>
-                </div>
-                <h2>${topicData.tema}</h2>
-                <div class="base-q">
-                    <span class="base-q-label">Pregunta Base</span>
-                    ${topicData.preguntaBase}
-                </div>
-                <h3>Variantes de análisis:</h3><ul>`;
-            state.plan.forEach((p, i) => { html += `<li><span class="num">${i+1}</span> <span>${p}</span></li>`; });
-            html += `</ul><div class="footer">Generado con Rizoma® por Ludosofía. El juego infinito del pensamiento.</div></body></html>`;
-            printWindow.document.write(html); printWindow.document.close();
-            
-            // Retraso de 500ms para asegurar que las fuentes de Google carguen antes de abrir el diálogo de impresión
+            var topicData = temasData.find(t => t.id === state.selectedTopicId);
+            var printWindow = window.open('', '_blank');
+            var html = '<html><head><title>Ludosofía - Rizoma</title><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet"><style>@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}}body{font-family:"Outfit",sans-serif;line-height:1.6;color:#2A2A2A;max-width:800px;margin:0 auto;padding:40px;background-color:#FDF8ED;}.header-brand{display:flex;align-items:center;justify-content:space-between;border-bottom:4px solid #2A2A2A;padding-bottom:20px;margin-bottom:40px;}.brand-left h1{margin:0;text-transform:uppercase;font-size:2.5em;letter-spacing:2px;font-family:"Cormorant Garamond",serif;font-weight:700;color:#2A2A2A;}.brand-left p{margin:5px 0 0;font-weight:900;font-size:1.2em;text-transform:uppercase;color:#6BA4C4;letter-spacing:2px;}.logo-svg{width:60px;height:60px;}h2{text-transform:uppercase;font-family:"Cormorant Garamond",serif;font-size:2.2em;margin-bottom:20px;color:#D1623A;}.base-q{background:#EBB134;padding:25px;border:4px solid #2A2A2A;font-size:1.4em;margin-bottom:40px;font-weight:700;font-family:"Cormorant Garamond",serif;box-shadow:6px 6px 0px #2A2A2A;}.base-q-label{font-family:"Outfit",sans-serif;font-size:0.6em;text-transform:uppercase;letter-spacing:2px;font-weight:900;display:block;margin-bottom:10px;color:#2A2A2A;}h3{font-size:1.2em;text-transform:uppercase;letter-spacing:1px;border-bottom:2px dashed #2A2A2A;padding-bottom:10px;margin-bottom:20px;}ul{list-style-type:none;padding:0;}li{background:#fff;margin-bottom:15px;padding:15px 20px;font-size:1.2em;font-family:"Cormorant Garamond",serif;font-weight:600;display:flex;gap:15px;border:2px solid #2A2A2A;box-shadow:3px 3px 0px #2A2A2A;align-items:flex-start;}.num{font-family:"Outfit",sans-serif;font-weight:900;background:#2A2A2A;color:#fff;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:0.8em;flex-shrink:0;margin-top:2px;border-radius:50%;}.footer{margin-top:60px;font-size:0.9em;text-align:center;border-top:2px solid #2A2A2A;padding-top:20px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#6BA4C4;}</style></head><body><div class="header-brand"><div class="brand-left"><h1>LUDOSOFÍA</h1><p>Rizoma®</p></div><svg viewBox="0 0 100 100" class="logo-svg"><polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="4"/><polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="4"/><circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="4"/></svg></div><h2>' + topicData.tema + '</h2><div class="base-q"><span class="base-q-label">Pregunta Base</span>' + topicData.preguntaBase + '</div><h3>Variantes de análisis:</h3><ul>';
+            state.plan.forEach((p, i) => { html += '<li><span class="num">' + (i + 1) + '</span><span>' + p + '</span></li>'; });
+            html += '</ul><div class="footer">Generado con Rizoma® por Ludosofía. El juego infinito del pensamiento.</div></body></html>';
+            printWindow.document.write(html);
+            printWindow.document.close();
             setTimeout(() => { printWindow.print(); }, 500);
         }
 
-        function showToast(message, iconClass, isError = false) {
+        function showToast(message, iconClass, isError) {
             els.toastMessage.textContent = message;
-            els.toast.className = `fixed bottom-6 right-6 border-[3px] border-xul_ink text-white px-6 py-4 shadow-[6px_6px_0px_#2A2A2A] flex items-center gap-3 transform transition-all duration-300 z-[200] ${isError ? 'bg-xul_terra' : 'bg-xul_green'}`;
-            els.toast.querySelector('i').className = `ph ${iconClass} text-2xl`;
+            els.toast.className = 'fixed bottom-6 right-6 border-[3px] border-xul_ink text-white px-6 py-4 shadow-[6px_6px_0px_#2A2A2A] flex items-center gap-3 transform transition-all duration-300 z-[200] ' + (isError ? 'bg-xul_terra' : 'bg-xul_green');
+            els.toast.querySelector('i').className = 'ph ' + iconClass + ' text-2xl';
             els.toast.classList.remove('translate-y-32', 'opacity-0');
             setTimeout(() => { els.toast.classList.add('translate-y-32', 'opacity-0'); }, 3000);
         }
 
-        // Función para cambiar de pestaña/herramienta (Se mantiene la tuya original)
         function activarHerramienta(vista) {
-            const views = ['initial', 'planes', 'agendas', 'taller'];
-            views.forEach(v => {
-                const el = document.getElementById('view-' + v);
+            ['initial', 'planes', 'agendas', 'taller'].forEach(v => {
+                var el = document.getElementById('view-' + v);
                 if (el) el.classList.add('hidden');
             });
-
-            const vistaActiva = document.getElementById('view-' + vista);
+            var vistaActiva = document.getElementById('view-' + vista);
             if (vistaActiva) {
                 vistaActiva.classList.remove('hidden');
-                // Forzar reflow para reiniciar animación
-                void vistaActiva.offsetWidth; 
+                void vistaActiva.offsetWidth;
                 vistaActiva.classList.add('fade-in-scale');
             }
-            
             document.getElementById('workspace').scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
-        // Función para simular la generación del plan
         function generarPlan() {
-            const select = document.getElementById('game-select');
-            const output = document.getElementById('plan-output');
-            const loading = document.getElementById('plan-loading');
-            const data = planesDB[select.value];
+            var select = document.getElementById('game-select');
+            var output = document.getElementById('plan-output');
+            var loading = document.getElementById('plan-loading');
+            var data = planesDB[select.value];
+
+            if (!data) return;
 
             output.classList.add('hidden');
             loading.classList.remove('hidden');
 
-            // Simular tiempo de carga para efecto dramático
             setTimeout(() => {
                 loading.classList.add('hidden');
-                
                 output.innerHTML = `
-                    <div class="bg-xul_paper border-[4px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#6BA4C4] relative transform transition-all duration-500">
+                    <div class="bg-xul_paper border-[4px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#6BA4C4] relative">
                         <div class="absolute -top-4 -right-4 w-10 h-10 bg-xul_yellow border-[3px] border-xul_ink flex items-center justify-center shadow-[2px_2px_0px_#2A2A2A] transform rotate-12">
                             <i data-lucide="sparkles" class="w-5 h-5 text-xul_ink"></i>
                         </div>
-                        
                         <h4 class="font-sans font-black uppercase text-2xl md:text-3xl mb-6 text-xul_ink border-b-[3px] border-xul_ink pb-3 leading-tight">${data.titulo}</h4>
-                        
                         <div class="mb-6 bg-white p-5 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">
                             <strong class="flex items-center gap-2 font-sans font-black uppercase text-sm tracking-widest text-xul_blue mb-3">
                                 <i data-lucide="target" class="w-5 h-5"></i> Objetivo Filosófico
                             </strong>
                             <p class="font-serif text-xl text-gray-800 leading-relaxed">${data.objetivo}</p>
                         </div>
-                        
                         <div class="bg-white p-5 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">
                             <strong class="flex items-center gap-2 font-sans font-black uppercase text-sm tracking-widest text-xul_terra mb-3">
                                 <i data-lucide="users" class="w-5 h-5"></i> Dinámica de Clase (45 min)
@@ -948,14 +768,12 @@
                             <p class="font-serif text-xl text-gray-800 leading-relaxed">${data.actividad}</p>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                        <button class="bg-white border-[3px] border-xul_ink p-5 flex flex-col items-center justify-center text-center shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all group">
+                        <button onclick="generarPlan()" class="bg-white border-[3px] border-xul_ink p-5 flex flex-col items-center justify-center text-center shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all group">
                             <i data-lucide="refresh-cw" class="w-8 h-8 text-xul_blue mb-3 group-hover:rotate-180 transition-transform duration-700"></i>
-                            <span class="font-sans font-black text-sm uppercase tracking-widest text-xul_ink">Solicitar Variantes</span>
-                            <span class="font-serif text-sm text-gray-500 mt-1">Adapta el nivel o duración</span>
+                            <span class="font-sans font-black text-sm uppercase tracking-widest text-xul_ink">Regenerar Plan</span>
+                            <span class="font-serif text-sm text-gray-500 mt-1">Mismas ideas, otra perspectiva</span>
                         </button>
-
                         <button onclick="verificarAcceso('fundadores', 'taller')" class="bg-xul_ink border-[3px] border-xul_ink p-5 flex flex-col items-center justify-center text-center shadow-[4px_4px_0px_#D1623A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#D1623A] transition-all group relative overflow-hidden">
                             <div class="absolute inset-0 bg-xul_terra/10 group-hover:bg-xul_terra/20 transition-colors"></div>
                             <div class="relative z-10 flex flex-col items-center">
@@ -971,92 +789,75 @@
                 `;
                 output.classList.remove('hidden');
                 lucide.createIcons();
-                actualizarCandadosPorRol(); // Asegurar que los botones generados tengan el estado correcto
-
-            }, 800); // 800ms de "carga"
+                actualizarCandadosPorRol();
+            }, 800);
         }
 
-        // Lógica de Permisos
+        // ─── Lógica de permisos ──────────────────────────────────────────────
         function verificarAcceso(nivelRequerido, vista) {
-            const rolActual = (window._rolActual || 'PUBLICO').toUpperCase();
+            var rol = (window._rolActual || 'PUBLICO').toUpperCase();
+            var esSocio = rol.includes('SOCIO') || rol === 'FUNDADOR';
+            var esFundador = rol.includes('FUNDADOR');
 
-            let tieneAcceso = false;
+            var tieneAcceso = false;
+            if (nivelRequerido === 'socios' && esSocio) tieneAcceso = true;
+            if (nivelRequerido === 'fundadores' && esFundador) tieneAcceso = true;
 
-            if(nivelRequerido === 'socios' && (rolActual === 'SOCIO' || rolActual === 'FUNDADOR')) {
-                tieneAcceso = true;
-            } else if (nivelRequerido === 'fundadores' && rolActual === 'FUNDADOR') {
-                tieneAcceso = true;
-            }
-
-            if(tieneAcceso) {
+            if (tieneAcceso) {
                 activarHerramienta(vista);
             } else {
-                let mensaje = nivelRequerido === 'socios' 
-                    ? "Esta agenda didáctica es un beneficio exclusivo para los Socios del club." 
+                var msg = nivelRequerido === 'socios'
+                    ? "Esta agenda didáctica es un beneficio exclusivo para los Socios del club."
                     : "El laboratorio de diseño uno a uno es un beneficio reservado para Socios Fundadores.";
-                
-                document.getElementById('upgrade-message').innerText = mensaje;
+                document.getElementById('upgrade-message').innerText = msg;
                 document.getElementById('upgrade-modal').classList.remove('hidden');
             }
         }
 
-        // Menú móvil
-        const btnMenu = document.getElementById('mobile-menu-btn');
-        const menuMobile = document.getElementById('mobile-menu');
-        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
-
-        // Login y logout los maneja el módulo Firebase
-
+        // ─── UI: rol y candados ──────────────────────────────────────────────
         function actualizarUI(rol) {
             window._rolActual = (rol || 'PUBLICO').toUpperCase();
 
-            let iconHtml = '';
-            if (window._rolActual.includes('FUNDADOR')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
-            else if (window._rolActual.includes('SOCIO')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            var iconHtml = '';
+            if (window._rolActual.includes('FUNDADOR')) {
+                iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            } else if (window._rolActual.includes('SOCIO')) {
+                iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            }
 
-            const deskBadge = document.getElementById('badge-container-desktop');
-            const mobBadge = document.getElementById('badge-container-mobile');
+            var deskBadge = document.getElementById('badge-container-desktop');
+            var mobBadge = document.getElementById('badge-container-mobile');
 
             if (window._rolActual !== 'PUBLICO') {
-                if(deskBadge) { deskBadge.innerHTML = iconHtml; deskBadge.style.display = 'flex'; }
-                if(mobBadge) { mobBadge.innerHTML = iconHtml; mobBadge.style.display = 'flex'; }
+                if (deskBadge) { deskBadge.innerHTML = iconHtml; deskBadge.style.display = 'flex'; }
+                if (mobBadge) { mobBadge.innerHTML = iconHtml; mobBadge.style.display = 'flex'; }
             } else {
-                if(deskBadge) deskBadge.style.display = 'none';
-                if(mobBadge) mobBadge.style.display = 'none';
+                if (deskBadge) deskBadge.style.display = 'none';
+                if (mobBadge) mobBadge.style.display = 'none';
             }
 
             actualizarCandadosPorRol();
         }
 
         function actualizarCandadosPorRol() {
-            let rol = window._rolActual || 'PUBLICO';
-            
-            const lockSocios = document.querySelectorAll('.icon-lock-socios');
-            const textSocios = document.querySelectorAll('.btn-text-socios');
-            const lockFundadores = document.querySelectorAll('.icon-lock-fundadores');
-            const textFundadores = document.querySelectorAll('.btn-text-fundadores');
+            var rol = window._rolActual || 'PUBLICO';
+            var esSocio = rol.includes('SOCIO') || rol === 'FUNDADOR';
+            var esFundador = rol.includes('FUNDADOR');
 
-            // Reset a estado cerrado
-            lockSocios.forEach(el => el.setAttribute('data-lucide', 'lock'));
-            textSocios.forEach(el => el.innerText = 'Desbloquear');
-            lockFundadores.forEach(el => el.setAttribute('data-lucide', 'lock'));
-            textFundadores.forEach(el => el.innerText = 'Solicitar Mentoría');
+            document.querySelectorAll('.icon-lock-socios').forEach(el => el.setAttribute('data-lucide', esSocio ? 'unlock' : 'lock'));
+            document.querySelectorAll('.btn-text-socios').forEach(el => el.innerText = esSocio ? 'Abrir Agenda' : 'Desbloquear');
+            document.querySelectorAll('.icon-lock-fundadores').forEach(el => el.setAttribute('data-lucide', esFundador ? 'unlock' : 'lock'));
+            document.querySelectorAll('.btn-text-fundadores').forEach(el => el.innerText = esFundador ? 'Ir al Laboratorio' : 'Solicitar Mentoría');
 
-            // Abrir según rol
-            if(rol === 'SOCIO' || rol === 'FUNDADOR') {
-                lockSocios.forEach(el => el.setAttribute('data-lucide', 'unlock'));
-                textSocios.forEach(el => el.innerText = 'Abrir Agenda');
-            }
-            if(rol === 'FUNDADOR') {
-                lockFundadores.forEach(el => el.setAttribute('data-lucide', 'unlock'));
-                textFundadores.forEach(el => el.innerText = 'Ir al Laboratorio');
-            }
-            lucide.createIcons(); // Refrescar DOM
+            lucide.createIcons();
         }
 
-        window.onload = () => {
-            initPlanesApp();
-        };
+        // ─── Menú móvil ──────────────────────────────────────────────────────
+        var btnMenu = document.getElementById('mobile-menu-btn');
+        var menuMobile = document.getElementById('mobile-menu');
+        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+
+        window.onload = function() { initPlanesApp(); };
     </script>
 
     <script type="module">
@@ -1077,9 +878,9 @@
             }
 
             const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
-            document.getElementById('login-text-desktop').innerText = `HOLA, ${nombre.toUpperCase()}`;
+            document.getElementById('login-text-desktop').innerText = 'HOLA, ' + nombre.toUpperCase();
             const loginTextMobile = document.getElementById('login-text-mobile');
-            if (loginTextMobile) loginTextMobile.innerText = `HOLA, ${nombre.toUpperCase()}`;
+            if (loginTextMobile) loginTextMobile.innerText = 'HOLA, ' + nombre.toUpperCase();
 
             document.getElementById('profile-email').innerText = user.email || '';
 
@@ -1089,7 +890,7 @@
 
             try {
                 const docSnap = await getDoc(doc(db, "usuarios", user.uid));
-                const rol = docSnap.exists() ? (docSnap.data().rol || 'SOCIO').toUpperCase() : 'SOCIO';
+                const rol = docSnap.exists() ? (docSnap.data().rol || 'socio').toUpperCase() : 'SOCIO';
                 const profileRoleEl = document.getElementById('profile-role');
                 if (profileRoleEl) profileRoleEl.innerText = rol;
                 actualizarUI(rol);
