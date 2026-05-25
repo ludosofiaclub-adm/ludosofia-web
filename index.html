@@ -291,7 +291,7 @@
         </div>
     </section>
 
-    <!-- CALL TO ACTION: MEMBRESÍAS (AQUÍ PONGA SUS LINKS DE MERCADOPAGO) -->
+    <!-- CALL TO ACTION: MEMBRESÍAS -->
     <section id="unirse" class="py-24 px-6 border-y-[3px] border-xul_ink bg-[#EBB134] relative overflow-hidden">
         <div class="absolute inset-0 opacity-10">
             <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
@@ -311,33 +311,35 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                 <!-- MEMBRESÍA 1: PÚBLICO -->
                 <div class="bg-white border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
-                    <div class="mb-6 border-b-2 border-xul_ink pb-6 flex items-center justify-between">
+                    <div class="mb-4 border-b-2 border-xul_ink pb-4 flex items-center justify-between">
                         <div>
-                            <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Público</h3>
+                            <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-1">Público</h3>
                             <p class="font-serif text-gray-700">Para los curiosos que recién llegan.</p>
                         </div>
                         <i data-lucide="user" class="w-10 h-10 text-xul_blue"></i>
                     </div>
+                    <p class="font-sans font-black text-2xl text-xul_ink mb-6">Gratis</p>
                     <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow text-sm">
                         <li class="flex items-start gap-3">
                             <i data-lucide="check-square" class="w-5 h-5 text-xul_blue mt-0.5 flex-shrink-0"></i>
                             <span>Newsletter semanal.</span>
                         </li>
                     </ul>
-                    <button onclick="window.location.href='login.html'" class="w-full bg-white border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-xul_blue hover:text-white transition-colors mt-auto">
-                        Sumarse
-                    </button>
+                    <a href="suscripcion.html?plan=publico" class="w-full block text-center bg-white border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-xul_blue hover:text-white transition-colors mt-auto">
+                        Crear cuenta
+                    </a>
                 </div>
 
                 <!-- MEMBRESÍA 2: SOCIO -->
                 <div class="bg-[#FDE4D0] border-[3px] border-xul_ink p-8 flex flex-col shadow-[8px_8px_0px_#2A2A2A] hover:-translate-y-2 transition-transform">
-                    <div class="mb-6 border-b-2 border-xul_ink pb-6 flex items-center justify-between">
+                    <div class="mb-4 border-b-2 border-xul_ink pb-4 flex items-center justify-between">
                         <div>
-                            <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-2">Socio</h3>
+                            <h3 class="font-sans font-black text-3xl text-xul_ink tracking-tight uppercase mb-1">Socio</h3>
                             <p class="font-serif text-gray-700">Para sumarse a la mesa de juego.</p>
                         </div>
                         <i data-lucide="award" class="w-10 h-10 text-xul_orange"></i>
                     </div>
+                    <p class="font-sans font-black text-2xl text-xul_ink mb-6">USD 5 <span class="text-sm font-bold text-gray-500">/ mes</span></p>
                     <ul class="font-sans text-xul_ink space-y-4 mb-8 flex-grow text-sm">
                         <li class="flex items-start gap-3">
                             <i data-lucide="check-square" class="w-5 h-5 text-xul_orange mt-0.5 flex-shrink-0"></i>
@@ -356,7 +358,7 @@
                             <span>Participación en atelier de juegos.</span>
                         </li>
                     </ul>
-                    <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
+                    <a href="suscripcion.html?plan=socio" class="w-full block text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black text-lg py-3 uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors mt-auto">
                         Ser Socio
                     </a>
                 </div>
@@ -366,13 +368,14 @@
                     <div class="absolute -top-4 -right-4 bg-xul_terra border-[3px] border-xul_ink px-4 py-1 font-black text-white uppercase text-xs tracking-widest shadow-[4px_4px_0px_#2A2A2A] rotate-3">
                         Cupos Limitados
                     </div>
-                    <div class="mb-6 border-b-2 border-gray-600 pb-6 flex items-center justify-between">
+                    <div class="mb-4 border-b-2 border-gray-600 pb-4 flex items-center justify-between">
                         <div>
-                            <h3 class="font-sans font-black text-3xl text-[#FDF8ED] tracking-tight uppercase mb-2">Fundador</h3>
+                            <h3 class="font-sans font-black text-3xl text-[#FDF8ED] tracking-tight uppercase mb-1">Fundador</h3>
                             <p class="font-serif text-gray-400">Para impulsar el pensamiento.</p>
                         </div>
                         <i data-lucide="crown" class="w-10 h-10 text-xul_yellow"></i>
                     </div>
+                    <p class="font-sans font-black text-2xl text-xul_yellow mb-6">USD 50 <span class="text-sm font-bold text-gray-400">/ año</span></p>
                     <ul class="font-sans text-[#FDF8ED] space-y-4 mb-8 flex-grow text-sm">
                         <li class="flex items-start gap-3">
                             <i data-lucide="star" class="w-5 h-5 text-xul_yellow mt-0.5 flex-shrink-0"></i>
@@ -399,7 +402,7 @@
                             <span>Consultoría mensual incluida.</span>
                         </li>
                     </ul>
-                    <a href="URL_DE_MERCADOPAGO_AQUI" target="_blank" class="w-full block text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
+                    <a href="suscripcion.html?plan=fundador" class="w-full block text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black text-lg py-3 uppercase tracking-widest hover:bg-white transition-colors mt-auto">
                         Ser Socio Fundador
                     </a>
                 </div>
