@@ -8,15 +8,14 @@
     <!-- ========================================== -->
     <!-- CONFIGURACIÓN DE ACCESO PARA ESTA PÁGINA   -->
     <!-- ========================================== -->
-    <script>
-        const CONFIG_ACCESO = {
-            PUBLICO: true,         // 'true' = acceso libre
-            SOCIO: false,          // 'true' = acceso para Socios
-            FUNDADOR: false        // 'true' = acceso para Fundadores
+        <script>
+        window.CONFIG_ACCESO = {
+            PUBLICO: true,
+            SOCIO: true,
+            SOCIO_FUNDADOR: true
         };
     </script>
-    <!-- Ejecución del validador de seguridad -->
-    <script src="seguridad.js"></script>
+    <script type="module" src="seguridad.js"></script>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
