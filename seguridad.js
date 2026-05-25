@@ -12,7 +12,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Ocultar la página de inmediato para evitar que usuarios sin permiso vean el contenido
 document.documentElement.style.display = 'none';
 
 onAuthStateChanged(auth, async (user) => {
@@ -20,7 +19,6 @@ onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
         if (config && config.PUBLICO === false) {
-            // Guardar destino para redirigir tras el login
             localStorage.setItem('destino_post_login', window.location.pathname.split('/').pop());
             window.location.replace("login.html");
         } else {
@@ -50,7 +48,6 @@ onAuthStateChanged(auth, async (user) => {
                     window.location.replace("suscripcion.html");
                 }
             } else {
-                // Usuario en Auth pero sin perfil en Firestore
                 window.location.replace("suscripcion.html");
             }
         } catch (error) {
