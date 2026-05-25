@@ -1,4 +1,4 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
@@ -8,7 +8,7 @@ const firebaseConfig = {
     projectId: "ludosofia-1cdc7"
 };
 
-const app = initializeApp(firebaseConfig);
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
@@ -24,35 +24,42 @@ onAuthStateChanged(auth, async (user) => {
         } else {
             document.documentElement.style.display = '';
         }
-    } else {
-        try {
-            const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+        return;
+    }
 
-            if (docSnap.exists()) {
-                const datos = docSnap.data();
-                const rolUsuario = (datos.rol || '').toUpperCase();
+    try {
+        const docSnap = await getDoc(doc(db, "usuarios", user.uid));
 
-                let tieneAcceso = false;
+        if (docSnap.exists()) {
+            const rol = (docSnap.data().rol || '').toUpperCase();
 
-                if (!config || config.PUBLICO) {
-                    tieneAcceso = true;
-                } else if (config.SOCIO && rolUsuario.includes('SOCIO')) {
-                    tieneAcceso = true;
-                } else if (config.SOCIO_FUNDADOR && (rolUsuario.includes('FUNDADOR') || rolUsuario.includes('SOCIO_FUNDADOR'))) {
-                    tieneAcceso = true;
-                }
+            const esSocio = rol.includes('SOCIO') || rol === 'FUNDADOR';
+            const esFundador = rol.includes('FUNDADOR');
 
-                if (tieneAcceso) {
-                    document.documentElement.style.display = '';
-                } else {
-                    window.location.replace("suscripcion.html");
-                }
+            let tieneAcceso = false;
+
+            if (!config || config.PUBLICO) {
+                tieneAcceso = true;
+            } else if (config.SOCIO && esSocio) {
+                tieneAcceso = true;
+            } else if (config.SOCIO_FUNDADOR && esFundador) {
+                tieneAcceso = true;
+            }
+
+            if (tieneAcceso) {
+                document.documentElement.style.display = '';
             } else {
                 window.location.replace("suscripcion.html");
             }
-        } catch (error) {
-            console.error("Error al verificar la membresía:", error);
-            window.location.replace("login.html");
+        } else {
+            window.location.replace("suscripcion.html");
+        }
+    } catch (error) {
+        console.error("Error al verificar membresía:", error);
+        if (!config || config.PUBLICO !== false) {
+            document.documentElement.style.display = '';
+        } else {
+            window.location.replace("suscripcion.html");
         }
     }
 });
