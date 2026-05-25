@@ -255,10 +255,11 @@
         // LÓGICA DE REDIRECCIÓN CORREGIDA
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                let esNuevoUsuario = false;
                 try {
                     let docRef;
                     if (typeof __app_id !== 'undefined') {
-                        docRef = doc(db, 'artifacts', __app_id, 'users', user.uid, 'usuarios', 'perfil'); 
+                        docRef = doc(db, 'artifacts', __app_id, 'users', user.uid, 'usuarios', 'perfil');
                     } else {
                         docRef = doc(db, "usuarios", user.uid);
                     }
@@ -266,7 +267,8 @@
                     const docSnap = await getDoc(docRef);
                     if (docSnap.exists()) {
                         localStorage.setItem('rol_usuario', docSnap.data().rol || 'socio');
-                                        } else {
+                    } else {
+                        esNuevoUsuario = true;
                         // Primer login social (Google, Microsoft, etc.) — crear perfil en Firestore
                         await setDoc(docRef, {
                             nombre: user.displayName || (user.email ? user.email.split('@')[0] : 'Usuario'),
@@ -276,10 +278,16 @@
                         }, { merge: true });
                         localStorage.setItem('rol_usuario', 'socio');
                     }
-                } catch (error) { 
-                    console.error("Error al obtener rol:", error); 
+                } catch (error) {
+                    console.error("Error al obtener rol:", error);
                 }
-                
+
+                // Nuevo registro → ir a página de suscripción
+                if (esNuevoUsuario) {
+                    window.location.replace('suscripcion.html');
+                    return;
+                }
+
                 // Redirección inteligente buscando en LocalStorage o en la URL
                 const rutaPreviaLocal = localStorage.getItem('destino_post_login');
                 const parametros = new URLSearchParams(window.location.search);
@@ -287,14 +295,14 @@
 
                 // Calculamos destino
                 let destinoFinal = 'index.html';
-                
+
                 if (rutaPreviaLocal) {
                     destinoFinal = rutaPreviaLocal;
                     localStorage.removeItem('destino_post_login'); // Lo borramos tras usarlo
                 } else if (rutaPreviaURL) {
                     destinoFinal = decodeURIComponent(rutaPreviaURL);
                 }
-                
+
                 // Ejecutamos la redirección
                 window.location.replace(destinoFinal);
             }
