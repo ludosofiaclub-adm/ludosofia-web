@@ -45,19 +45,12 @@ module.exports = async function handler(req, res) {
 
     if (status === "authorized") {
       await docRef.set(
-        {
-          rol,
-          mpSubscriptionId: data.id,
-          mpActivacion: new Date().toISOString(),
-        },
+        { rol, mpSubscriptionId: data.id, mpActivacion: new Date().toISOString() },
         { merge: true }
       );
     } else if (status === "cancelled" || status === "paused") {
       await docRef.set(
-        {
-          rol: `${rol}_cancelado`,
-          mpCancelacion: new Date().toISOString(),
-        },
+        { rol: `${rol}_cancelado`, mpCancelacion: new Date().toISOString() },
         { merge: true }
       );
     }
