@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AYtiQTIeAGQ0LBuwm6uw8rYnIVwUpwFyeDkXxAZ9aqqBjl-XHb8wJ2O54jeV0oAlh_ayvQofC_jGExrZ&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -31,9 +32,9 @@
         }
     </script>
     <style>
-        body { 
-            font-family: 'Outfit', sans-serif; 
-            background-color: #FDF8ED; 
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDF8ED;
             color: #2A2A2A;
             background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
         }
@@ -52,11 +53,18 @@
         .text-shadow-xul {
             text-shadow: 4px 4px 0px #2A2A2A;
         }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate {
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-xul_terra selection:text-white">
 
-    <!-- Navbar Minimalista -->
+    <!-- Navbar -->
     <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
         <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
             <a href="index_hack.html" class="flex items-center space-x-3 cursor-pointer group hover:text-xul_terra transition-colors">
@@ -66,7 +74,6 @@
                     <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Volver al Catálogo</span>
                 </div>
             </a>
-            
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
                 <span class="text-xul_terra border-b-2 border-xul_terra">Suscripción</span>
             </div>
@@ -76,17 +83,13 @@
     <!-- HEADER / HERO -->
     <header class="pt-32 pb-16 px-6 relative border-b-[3px] border-xul_ink bg-white overflow-hidden">
         <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#2A2A2A 2px, transparent 2px), linear-gradient(90deg, #2A2A2A 2px, transparent 2px); background-size: 50px 50px;"></div>
-        
         <div class="max-w-4xl mx-auto relative z-10 text-center">
-            
             <div class="inline-block bg-xul_terra border-[3px] border-xul_ink px-4 py-1 mb-6 shadow-[4px_4px_0px_#2A2A2A] rotate-[-2deg]">
                 <span class="font-sans font-black text-xs md:text-sm uppercase tracking-widest text-white">Acceso Restringido</span>
             </div>
-            
             <h1 class="xul-title text-5xl md:text-7xl lg:text-8xl font-black text-xul_ink tracking-tighter mb-6">
                 EL ÁGORA TE ESPERA
             </h1>
-            
             <p class="font-serif text-xl md:text-2xl text-gray-700 max-w-2xl mx-auto leading-relaxed mb-8">
                 Has tropezado con los muros de la caverna. Para acceder a los manuales avanzados, las herramientas del laboratorio y participar en los debates socráticos, debes cruzar el umbral.
             </p>
@@ -95,22 +98,16 @@
 
     <!-- PLANES DE PRECIOS -->
     <main class="max-w-7xl mx-auto px-6 py-20 relative">
-        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
-            
+
             <!-- PLAN PÚBLICO (GRATIS) -->
             <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#6BA4C4] relative hover:-translate-y-2 transition-transform duration-300">
                 <div class="absolute -right-6 -top-6 w-16 h-16 bg-xul_blue border-[3px] border-xul_ink rounded-full flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
-                
                 <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-2">Público</h3>
                 <p class="font-serif text-gray-500 mb-6 italic">"Solo sé que no sé nada"</p>
-                
-                <div class="text-5xl font-black text-xul_ink mb-8 xul-title">
-                    Gratis
-                </div>
-                
+                <div class="text-5xl font-black text-xul_ink mb-8 xul-title">Gratis</div>
                 <ul class="space-y-4 mb-8 font-sans text-sm font-medium text-gray-700">
                     <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_blue"></i> Leer el Manifiesto</li>
                     <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_blue"></i> Acceso a introducciones de juegos</li>
@@ -118,10 +115,9 @@
                     <li class="flex items-center gap-3 opacity-50"><i data-lucide="x" class="w-5 h-5"></i> Descarga de PDF's</li>
                     <li class="flex items-center gap-3 opacity-50"><i data-lucide="x" class="w-5 h-5"></i> Acceso a foros</li>
                 </ul>
-                
-                <a href="#" class="block w-full text-center bg-transparent border-[3px] border-xul_blue text-xul_blue font-black uppercase tracking-widest py-3 hover:bg-xul_blue hover:text-white transition-colors">
+                <button onclick="openModal('publico')" class="block w-full text-center bg-transparent border-[3px] border-xul_blue text-xul_blue font-black uppercase tracking-widest py-3 hover:bg-xul_blue hover:text-white transition-colors cursor-pointer">
                     Crear Cuenta Base
-                </a>
+                </button>
             </div>
 
             <!-- PLAN SOCIO ACTIVO -->
@@ -132,15 +128,10 @@
                 <div class="absolute -right-6 -top-6 w-16 h-16 bg-xul_orange border-[3px] border-xul_ink rounded-full flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-white"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>
                 </div>
-                
                 <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-white mb-2">Socio Activo</h3>
                 <p class="font-serif text-gray-400 mb-6 italic">"Atrévete a saber"</p>
-                
-                <div class="text-5xl font-black text-white mb-2 xul-title">
-                    $5<span class="text-2xl text-gray-400">/mes</span>
-                </div>
+                <div class="text-5xl font-black text-white mb-2 xul-title">$5<span class="text-2xl text-gray-400">/mes</span></div>
                 <p class="text-xs text-xul_orange uppercase font-bold tracking-widest mb-8">Cancela cuando quieras</p>
-                
                 <ul class="space-y-4 mb-8 font-sans text-sm font-medium text-gray-300">
                     <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_orange"></i> Todo lo del plan Público</li>
                     <li class="flex items-center gap-3 text-white"><i data-lucide="check" class="w-5 h-5 text-xul_orange"></i> Acceso total a manuales completos</li>
@@ -148,10 +139,9 @@
                     <li class="flex items-center gap-3 text-white"><i data-lucide="check" class="w-5 h-5 text-xul_orange"></i> Pase libre a los foros de debate</li>
                     <li class="flex items-center gap-3 opacity-50"><i data-lucide="x" class="w-5 h-5"></i> Insignia Exclusiva</li>
                 </ul>
-                
-                <a href="#" class="block w-full text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black uppercase tracking-widest py-4 hover:bg-white hover:text-xul_ink transition-colors shadow-[4px_4px_0px_#FDF8ED]">
+                <button onclick="openModal('socio')" class="block w-full text-center bg-xul_orange border-[3px] border-xul_ink text-white font-black uppercase tracking-widest py-4 hover:bg-white hover:text-xul_ink transition-colors shadow-[4px_4px_0px_#FDF8ED] cursor-pointer">
                     Convertirse en Socio
-                </a>
+                </button>
             </div>
 
             <!-- PLAN FUNDADOR -->
@@ -159,25 +149,19 @@
                 <div class="absolute -right-6 -top-6 w-16 h-16 bg-xul_yellow border-[3px] border-xul_ink rounded-full flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8 text-xul_ink"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>
                 </div>
-                
                 <h3 class="font-sans font-black text-2xl uppercase tracking-widest text-xul_ink mb-2">Fundador</h3>
                 <p class="font-serif text-gray-500 mb-6 italic">"Amor al destino (Amor Fati)"</p>
-                
-                <div class="text-5xl font-black text-xul_ink mb-2 xul-title">
-                    $50<span class="text-2xl text-gray-500">/año</span>
-                </div>
+                <div class="text-5xl font-black text-xul_ink mb-2 xul-title">$50<span class="text-2xl text-gray-500">/año</span></div>
                 <p class="text-xs text-gray-500 uppercase font-bold tracking-widest mb-8">Pago Anual (-15%)</p>
-                
                 <ul class="space-y-4 mb-8 font-sans text-sm font-medium text-gray-700">
                     <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_yellow"></i> Todo lo del plan Socio</li>
                     <li class="flex items-center gap-3 font-bold"><i data-lucide="check" class="w-5 h-5 text-xul_yellow"></i> Insignia dorada permanente</li>
                     <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_yellow"></i> Vota por los próximos juegos a hackear</li>
                     <li class="flex items-center gap-3"><i data-lucide="check" class="w-5 h-5 text-xul_yellow"></i> Mención especial en el Manifiesto</li>
                 </ul>
-                
-                <a href="#" class="block w-full text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black uppercase tracking-widest py-3 hover:bg-xul_ink hover:text-white transition-colors">
+                <button onclick="openModal('fundador')" class="block w-full text-center bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black uppercase tracking-widest py-3 hover:bg-xul_ink hover:text-white transition-colors cursor-pointer">
                     Ser Fundador
-                </a>
+                </button>
             </div>
 
         </div>
@@ -196,8 +180,486 @@
         </div>
     </footer>
 
+    <!-- ═══════════════════════════════════════════════
+         MODAL DE REGISTRO / PAGO
+    ═══════════════════════════════════════════════ -->
+    <div id="reg-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm" id="modal-backdrop"></div>
+
+        <div id="modal-box" class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-md w-full shadow-[12px_12px_0px_#EBB134] overflow-y-auto max-h-[90vh] z-10">
+
+            <div class="absolute -top-4 -right-4 w-10 h-10 bg-xul_blue border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] transform rotate-12 z-20"></div>
+
+            <button id="modal-close" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none z-20">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+
+            <!-- ── PASO 1: REGISTRO ── -->
+            <div id="step-register">
+                <div class="text-center mb-6">
+                    <h2 id="modal-title" class="xul-title text-3xl font-black text-xul_ink uppercase tracking-tight">Crear Cuenta</h2>
+                    <p id="modal-subtitle" class="text-sm text-gray-600 font-medium mt-1">Completá tus datos para unirte.</p>
+                </div>
+
+                <form id="reg-form" class="mb-4">
+                    <div class="mb-4">
+                        <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Nombre o Alias</label>
+                        <input type="text" id="reg-name" required placeholder="Ej: Platón" class="w-full border-[3px] border-xul_ink bg-white p-3 font-sans text-base focus:outline-none focus:border-xul_terra focus:shadow-[4px_4px_0px_#D1623A] transition-all">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Correo Electrónico</label>
+                        <input type="email" id="reg-email" required placeholder="Ej: socrates@mail.com" class="w-full border-[3px] border-xul_ink bg-white p-3 font-sans text-base focus:outline-none focus:border-xul_terra focus:shadow-[4px_4px_0px_#D1623A] transition-all">
+                    </div>
+                    <div class="mb-6">
+                        <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Clave Secreta</label>
+                        <div class="relative">
+                            <input type="password" id="reg-password" required minlength="6" placeholder="••••••••" class="w-full border-[3px] border-xul_ink bg-white p-3 pr-12 font-sans text-base focus:outline-none focus:border-xul_terra focus:shadow-[4px_4px_0px_#D1623A] transition-all">
+                            <button type="button" id="reg-toggle-pwd" class="absolute right-3 top-1/2 -translate-y-1/2 text-xul_ink hover:text-xul_terra transition-colors focus:outline-none">
+                                <i data-lucide="eye" id="reg-icon-eye" class="w-5 h-5"></i>
+                                <i data-lucide="eye-off" id="reg-icon-eye-off" class="w-5 h-5 hidden"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <button id="reg-submit" type="submit" class="w-full bg-xul_yellow border-[3px] border-xul_ink py-3 font-black text-base uppercase tracking-widest text-xul_ink shadow-[6px_6px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#2A2A2A] transition-all">
+                        Unirme al Club
+                    </button>
+                </form>
+
+                <div class="flex items-center my-4">
+                    <div class="flex-grow border-t-[3px] border-gray-300"></div>
+                    <span class="px-3 font-black text-xs uppercase tracking-widest text-gray-500">O usá tus redes</span>
+                    <div class="flex-grow border-t-[3px] border-gray-300"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mb-5">
+                    <button id="reg-google" type="button" class="flex items-center justify-center gap-2 bg-white border-[3px] border-xul_ink p-2.5 font-black text-xs uppercase tracking-wider hover:bg-gray-50 shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/><path d="M1 1h22v22H1z" fill="none"/></svg>
+                        Google
+                    </button>
+                    <button id="reg-microsoft" type="button" class="flex items-center justify-center gap-2 bg-white border-[3px] border-xul_ink p-2.5 font-black text-xs uppercase tracking-wider hover:bg-gray-50 shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all">
+                        <svg viewBox="0 0 21 21" class="w-4 h-4"><path fill="#f35325" d="M1 1h9v9H1z"/><path fill="#81bc06" d="M11 1h9v9h-9z"/><path fill="#05a6f0" d="M1 11h9v9H1z"/><path fill="#ffba08" d="M11 11h9v9h-9z"/></svg>
+                        Microsoft
+                    </button>
+                    <button id="reg-facebook" type="button" class="flex items-center justify-center gap-2 bg-white border-[3px] border-xul_ink p-2.5 font-black text-xs uppercase tracking-wider hover:bg-gray-50 shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Facebook
+                    </button>
+                    <button id="reg-apple" type="button" class="flex items-center justify-center gap-2 bg-white border-[3px] border-xul_ink p-2.5 font-black text-xs uppercase tracking-wider hover:bg-gray-50 shadow-[4px_4px_0px_#2A2A2A] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all">
+                        <svg viewBox="0 0 384 512" class="w-4 h-4" fill="#000000"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 22 184.9 22 261.8c0 86.8 56.6 174.2 122.5 174.2 29.3 0 45-18.2 78.4-18.2 33.2 0 49 18.2 78.4 18.2 59.9 0 109.2-92.4 109.2-132.8-31.5-16-46.3-43-46.3-77.9-10.8-3.6-26.9-6.3-45.5-6.6zM240.6 83.2c19.1-23.7 33.5-56.1 29.9-88.6-27.4 1.1-62 18.1-81.5 41.5-16.7 20-33.5 54-28.7 85.8 30.6 2.3 62-15 80.3-38.7z"/></svg>
+                        Apple
+                    </button>
+                </div>
+
+                <p class="text-center text-xs text-gray-500 font-medium">
+                    ¿Ya tenés cuenta? <a href="login.html" class="font-bold text-xul_terra hover:text-xul_blue transition-colors">Ingresá aquí</a>
+                </p>
+            </div>
+
+            <!-- ── PASO 2: PAGO (solo planes pagos) ── -->
+            <div id="step-payment" class="hidden text-center">
+                <div id="payment-badge" class="w-16 h-16 rounded-full border-[3px] border-xul_ink mx-auto mb-3 flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] bg-xul_green">
+                    <i data-lucide="check" class="w-8 h-8 text-white"></i>
+                </div>
+                <h2 class="xul-title text-3xl font-black text-xul_ink uppercase tracking-tight mb-1">¡Cuenta creada!</h2>
+                <p class="text-sm text-gray-600 font-medium mb-4">Ahora activá tu plan para acceder a todo el contenido.</p>
+
+                <div id="payment-summary" class="bg-white border-[3px] border-xul_ink p-4 mb-4 text-left shadow-[4px_4px_0px_#EBB134]">
+                    <!-- dinámico -->
+                </div>
+
+                <!-- Botón MercadoPago (Argentina) -->
+                <a id="payment-mp-btn" href="#" target="_blank" class="hidden flex items-center justify-center gap-3 w-full bg-xul_ink border-[3px] border-xul_ink py-4 font-black text-base uppercase tracking-widest text-xul_paper shadow-[6px_6px_0px_#009ee3] hover:-translate-y-0.5 hover:shadow-[8px_8px_0px_#009ee3] transition-all mb-3">
+                    <svg viewBox="0 0 48 48" class="w-5 h-5 shrink-0" fill="#009ee3"><path d="M44.3 11.5c-2.3-2.6-6.4-3.9-12-3.9H16.9c-1.2 0-2.3.9-2.5 2.1L10 38.4c-.1.9.5 1.7 1.4 1.7h8.2l2.1-13 .1-.5c.2-1.2 1.2-2.1 2.5-2.1h5.2c10.1 0 18-4.1 20.3-16 .1-.3.1-.6.1-.9-.6-.1-1.1-.2-1.6-.1z"/></svg>
+                    Pagar con MercadoPago
+                </a>
+
+                <!-- Contenedor PayPal — el SDK renderiza aquí, el wrapper da el estilo brutalist -->
+                <div id="paypal-btn-wrap" class="hidden border-[3px] border-xul_ink shadow-[6px_6px_0px_#EBB134] overflow-hidden mb-3">
+                    <div id="paypal-btn-container"></div>
+                </div>
+
+                <!-- Toggle para ver método alternativo (discreto) -->
+                <button id="btn-toggle-alt" type="button" class="text-[11px] text-gray-400 font-bold uppercase tracking-widest hover:text-xul_terra transition-colors focus:outline-none block w-full mb-3 underline underline-offset-2">
+                </button>
+
+                <p class="text-xs text-gray-500 font-medium">
+                    Tu acceso se activa automáticamente tras confirmar el pago.<br>
+                    Podés cerrar esta ventana y volver luego.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ALERT MODAL -->
+    <div id="alert-modal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('alert-modal').classList.add('hidden')"></div>
+        <div id="alert-box" class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full text-center z-10 shadow-[12px_12px_0px_#D1623A]">
+            <h3 id="alert-title" class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-2">Aviso</h3>
+            <p id="alert-message" class="font-sans text-gray-700 mb-6 font-medium">Mensaje de alerta.</p>
+            <button onclick="document.getElementById('alert-modal').classList.add('hidden')" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">Entendido</button>
+        </div>
+    </div>
+
     <script>
         lucide.createIcons();
+
+        // ════════════════════════════════════════════════════
+        // CONFIGURACIÓN DE PAGOS
+        // ─ MercadoPago: mercadopago.com.ar → Suscripciones → Crear plan → copiar link
+        // ─ PayPal: paypal.com → Pay & Get Paid → Payment Buttons → Subscription
+        // Ambos links aceptan ?external_reference=UID para que el webhook identifique al usuario
+        // ════════════════════════════════════════════════════
+        const MP_LINKS = {
+            socio:    'https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=de1ab5218f6346b492ce47cc6be53385',
+            fundador: 'https://www.mercadopago.com.ar/subscriptions/checkout?preapproval_plan_id=a83d97070a10460391a08efd923cd0bd'
+        };
+
+        // Plan IDs de PayPal Subscriptions
+        const PAYPAL_PLAN_IDS = {
+            socio:    'P-25F417313S297331VNIKEUVI',
+            fundador: 'P-96X51494K0392870MNIKEVUI'
+        };
+
+        // ─── DETECCIÓN DE REGIÓN POR IP ───────────────────
+        // Usa ipapi.co (1000 req/día gratis). Resultado cacheado 24h en localStorage.
+        let regionDetectada = null; // 'AR' | 'INT' | null
+
+        async function detectarRegion() {
+            const cached = localStorage.getItem('ludo_region');
+            const ts = Number(localStorage.getItem('ludo_region_ts') || 0);
+            if (cached && Date.now() - ts < 86400000) {
+                regionDetectada = cached;
+                return;
+            }
+            try {
+                const r = await fetch('https://ipapi.co/json/');
+                const d = await r.json();
+                regionDetectada = d.country_code === 'AR' ? 'AR' : 'INT';
+            } catch {
+                regionDetectada = null;
+            }
+            if (regionDetectada) {
+                localStorage.setItem('ludo_region', regionDetectada);
+                localStorage.setItem('ludo_region_ts', Date.now().toString());
+            }
+        }
+
+        detectarRegion(); // precarga en background al abrir la página
+
+        const PLAN_INFO = {
+            publico: {
+                titulo: 'Crear Cuenta Base',
+                subtitulo: 'Acceso gratuito al club.',
+                btnText: 'Unirme al Club',
+                btnClass: 'bg-xul_blue text-white border-[3px] border-xul_ink py-3 font-black text-base uppercase tracking-widest shadow-[6px_6px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#2A2A2A] transition-all w-full'
+            },
+            socio: {
+                titulo: 'Socio Activo',
+                subtitulo: 'Registrate y luego activá tu plan.',
+                btnText: 'Crear Cuenta → Ir al Pago',
+                btnClass: 'bg-xul_orange text-white border-[3px] border-xul_ink py-3 font-black text-base uppercase tracking-widest shadow-[6px_6px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#2A2A2A] transition-all w-full',
+                badgeColor: 'bg-xul_orange',
+                precio: '$5 USD / mes',
+                descripcion: 'Acceso total a manuales completos, descarga ilimitada de PDFs y pase libre a los foros de debate.'
+            },
+            fundador: {
+                titulo: 'Socio Fundador',
+                subtitulo: 'Registrate y luego activá tu plan.',
+                btnText: 'Crear Cuenta → Ir al Pago',
+                btnClass: 'bg-xul_yellow text-xul_ink border-[3px] border-xul_ink py-3 font-black text-base uppercase tracking-widest shadow-[6px_6px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#2A2A2A] transition-all w-full',
+                badgeColor: 'bg-xul_yellow',
+                precio: '$50 USD / año',
+                descripcion: 'Todo lo del plan Socio + insignia dorada permanente, voto en futuros juegos y mención en el Manifiesto.'
+            }
+        };
+
+        let planActual = 'publico';
+
+        function openModal(plan) {
+            planActual = plan;
+            const info = PLAN_INFO[plan];
+
+            document.getElementById('step-register').classList.remove('hidden');
+            document.getElementById('step-payment').classList.add('hidden');
+            document.getElementById('reg-form').reset();
+
+            document.getElementById('modal-title').textContent = info.titulo;
+            document.getElementById('modal-subtitle').textContent = info.subtitulo;
+
+            const btn = document.getElementById('reg-submit');
+            btn.className = info.btnClass;
+            btn.textContent = info.btnText;
+            btn.disabled = false;
+
+            document.getElementById('reg-modal').classList.remove('hidden');
+            const box = document.getElementById('modal-box');
+            box.classList.remove('modal-animate');
+            void box.offsetWidth;
+            box.classList.add('modal-animate');
+        }
+
+        function buildMpLink(base, uid) {
+            if (!base || base === '#') return '#';
+            const sep = base.includes('?') ? '&' : '?';
+            return `${base}${sep}external_reference=${uid}`;
+        }
+
+        function renderPaypalButton(planId) {
+            if (!planId) return;
+            if (typeof paypal === 'undefined') {
+                mostrarAlerta('Error', 'No se pudo cargar PayPal. Recargá la página e intentá de nuevo.', '#D1623A');
+                return;
+            }
+            const container = document.getElementById('paypal-btn-container');
+            container.innerHTML = ''; // limpiar render previo si el modal se abrió antes
+            paypal.Buttons({
+                style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'subscribe' },
+                createSubscription: function(data, actions) {
+                    return actions.subscription.create({ plan_id: planId });
+                },
+                onApprove: function(data) {
+                    window.handlePaypalSuccess(data.subscriptionID);
+                },
+                onError: function() {
+                    mostrarAlerta('Error de pago', 'Hubo un problema al procesar el pago con PayPal. Por favor intentá de nuevo.', '#D1623A');
+                }
+            }).render('#paypal-btn-container');
+        }
+
+        function showPaymentStep(uid) {
+            const info = PLAN_INFO[planActual];
+            document.getElementById('step-register').classList.add('hidden');
+            document.getElementById('step-payment').classList.remove('hidden');
+
+            // Badge del plan
+            const badge = document.getElementById('payment-badge');
+            badge.className = `w-16 h-16 rounded-full border-[3px] border-xul_ink mx-auto mb-3 flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] ${info.badgeColor}`;
+            badge.innerHTML = `<i data-lucide="check" class="w-8 h-8 ${planActual === 'fundador' ? 'text-xul_ink' : 'text-white'}"></i>`;
+
+            // Resumen del plan
+            document.getElementById('payment-summary').innerHTML = `
+                <p class="font-black text-xs uppercase tracking-widest text-gray-400 mb-1">Tu plan elegido</p>
+                <p class="font-black text-xl text-xul_ink uppercase tracking-tight">${info.titulo}</p>
+                <p class="xul-title text-3xl font-black text-xul_ink my-1">${info.precio}</p>
+                <p class="font-sans text-sm text-gray-600 mt-2">${info.descripcion}</p>
+            `;
+
+            const mpBtn      = document.getElementById('payment-mp-btn');
+            const paypalWrap = document.getElementById('paypal-btn-wrap');
+            const toggleBtn  = document.getElementById('btn-toggle-alt');
+
+            // Setear link de MercadoPago con UID
+            mpBtn.href = buildMpLink(MP_LINKS[planActual], uid);
+
+            // Reset visibilidad
+            mpBtn.classList.add('hidden');
+            paypalWrap.classList.add('hidden');
+            toggleBtn.textContent = '';
+            toggleBtn.onclick = null;
+
+            if (regionDetectada === 'AR') {
+                // ── Argentina: MercadoPago primario, PayPal oculto como alternativo ──
+                mpBtn.classList.remove('hidden');
+                toggleBtn.textContent = '¿Estás en el exterior? Preferís pagar con PayPal';
+                let ppMounted = false;
+                toggleBtn.onclick = () => {
+                    if (!ppMounted) { renderPaypalButton(PAYPAL_PLAN_IDS[planActual]); ppMounted = true; }
+                    paypalWrap.classList.toggle('hidden');
+                    toggleBtn.textContent = paypalWrap.classList.contains('hidden')
+                        ? '¿Estás en el exterior? Preferís pagar con PayPal'
+                        : 'Ocultar opción PayPal';
+                };
+
+            } else if (regionDetectada === 'INT') {
+                // ── Internacional: PayPal primario, MercadoPago oculto como alternativo ──
+                paypalWrap.classList.remove('hidden');
+                renderPaypalButton(PAYPAL_PLAN_IDS[planActual]);
+                toggleBtn.textContent = '¿Estás en Argentina? Preferís pagar con MercadoPago';
+                toggleBtn.onclick = () => {
+                    mpBtn.classList.toggle('hidden');
+                    toggleBtn.textContent = mpBtn.classList.contains('hidden')
+                        ? '¿Estás en Argentina? Preferís pagar con MercadoPago'
+                        : 'Ocultar opción MercadoPago';
+                };
+
+            } else {
+                // ── Sin detección: mostrar los dos directamente ──
+                mpBtn.classList.remove('hidden');
+                paypalWrap.classList.remove('hidden');
+                renderPaypalButton(PAYPAL_PLAN_IDS[planActual]);
+            }
+
+            lucide.createIcons();
+        }
+
+        document.getElementById('modal-close').addEventListener('click', () => {
+            document.getElementById('reg-modal').classList.add('hidden');
+        });
+        document.getElementById('modal-backdrop').addEventListener('click', () => {
+            document.getElementById('reg-modal').classList.add('hidden');
+        });
+
+        document.getElementById('reg-toggle-pwd').addEventListener('click', () => {
+            const pwd = document.getElementById('reg-password');
+            const eyeOn = document.getElementById('reg-icon-eye');
+            const eyeOff = document.getElementById('reg-icon-eye-off');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                eyeOn.classList.add('hidden');
+                eyeOff.classList.remove('hidden');
+            } else {
+                pwd.type = 'password';
+                eyeOn.classList.remove('hidden');
+                eyeOff.classList.add('hidden');
+            }
+        });
+
+        function mostrarAlerta(titulo, mensaje, color = '#D1623A') {
+            document.getElementById('alert-title').innerText = titulo;
+            document.getElementById('alert-message').innerText = mensaje;
+            document.getElementById('alert-box').style.boxShadow = `12px 12px 0px ${color}`;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        }
+
+        // Detectar retorno desde MercadoPago con pago exitoso
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('pago') === 'exitoso') {
+            mostrarAlerta('¡Pago Recibido!', 'Tu membresía se está activando. En unos minutos tendrás acceso completo al club.', '#75B07E');
+        }
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, OAuthProvider, FacebookAuthProvider, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        let firebaseConfig;
+        if (typeof __firebase_config !== 'undefined') {
+            firebaseConfig = JSON.parse(__firebase_config);
+        } else {
+            firebaseConfig = {
+                apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+                authDomain: "ludosofia-1cdc7.firebaseapp.com",
+                projectId: "ludosofia-1cdc7"
+            };
+        }
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const providerGoogle = new GoogleAuthProvider();
+        const providerMicrosoft = new OAuthProvider('microsoft.com');
+        const providerFacebook = new FacebookAuthProvider();
+        const providerApple = new OAuthProvider('apple.com');
+
+        // Callback global — lo llama paypal.Buttons onApprove (script no-module)
+        window.handlePaypalSuccess = async function(subscriptionID) {
+            const user = auth.currentUser;
+            if (user) {
+                try {
+                    const docRef = getDocRef(user.uid);
+                    await setDoc(docRef, {
+                        paypalSubscriptionId: subscriptionID,
+                        paypalFecha: new Date().toISOString()
+                    }, { merge: true });
+                } catch(e) {
+                    console.error('Error guardando subscription ID:', e);
+                }
+            }
+            document.getElementById('reg-modal').classList.add('hidden');
+            mostrarAlerta(
+                '¡Suscripción Activada!',
+                'Tu pago fue confirmado por PayPal. En minutos tendrás acceso completo al club.',
+                '#75B07E'
+            );
+        };
+
+        function getDocRef(uid) {
+            return typeof __app_id !== 'undefined'
+                ? doc(db, 'artifacts', __app_id, 'users', uid, 'usuarios', 'perfil')
+                : doc(db, "usuarios", uid);
+        }
+
+        // Guarda perfil solo si es cuenta nueva; no sobreescribe rol de usuarios existentes
+        async function guardarPerfil(user, nombre) {
+            const docRef = getDocRef(user.uid);
+            const snap = await getDoc(docRef);
+
+            if (snap.exists()) {
+                localStorage.setItem('rol_usuario', snap.data().rol || 'publico');
+                return { esNuevo: false };
+            }
+
+            const rol = planActual === 'publico' ? 'publico' : `${planActual}_pendiente`;
+            await setDoc(docRef, {
+                nombre: nombre || user.displayName || (user.email ? user.email.split('@')[0] : 'Usuario'),
+                email: user.email || '',
+                rol,
+                fechaRegistro: new Date().toISOString()
+            }, { merge: true });
+            localStorage.setItem('rol_usuario', rol);
+            return { esNuevo: true, uid: user.uid };
+        }
+
+        async function manejarRegistro(userCredential, nombre) {
+            const { esNuevo, uid } = await guardarPerfil(userCredential.user, nombre);
+
+            if (!esNuevo) {
+                mostrarAlerta('¡Ya sos miembro!', 'Ya tenés una cuenta activa. Te redirigimos al club.', '#75B07E');
+                setTimeout(() => window.location.replace('index.html'), 2000);
+                return;
+            }
+
+            if (planActual === 'publico') {
+                window.location.replace('index.html');
+            } else {
+                showPaymentStep(uid);
+            }
+        }
+
+        // Registro con email/contraseña
+        document.getElementById('reg-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('reg-name').value.trim();
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const btn = document.getElementById('reg-submit');
+
+            btn.disabled = true;
+            btn.textContent = 'Creando cuenta...';
+
+            try {
+                const cred = await createUserWithEmailAndPassword(auth, email, password);
+                await updateProfile(cred.user, { displayName: nombre });
+                await manejarRegistro(cred, nombre);
+            } catch (err) {
+                let msg = err.message;
+                if (err.code === 'auth/email-already-in-use') msg = 'Este correo ya está registrado. ¿Querés ingresar en lugar de registrarte?';
+                if (err.code === 'auth/weak-password') msg = 'La clave debe tener al menos 6 caracteres.';
+                mostrarAlerta('Error', msg);
+                btn.disabled = false;
+                btn.textContent = PLAN_INFO[planActual]?.btnText || 'Crear mi Cuenta';
+            }
+        });
+
+        // Registro con redes sociales
+        async function manejarSocial(promesa) {
+            try {
+                const cred = await promesa;
+                await manejarRegistro(cred, cred.user.displayName);
+            } catch (err) {
+                if (err.code !== 'auth/popup-closed-by-user') {
+                    mostrarAlerta('Error', err.message);
+                }
+            }
+        }
+
+        document.getElementById('reg-google').addEventListener('click', () => manejarSocial(signInWithPopup(auth, providerGoogle)));
+        document.getElementById('reg-microsoft').addEventListener('click', () => manejarSocial(signInWithPopup(auth, providerMicrosoft)));
+        document.getElementById('reg-facebook').addEventListener('click', () => manejarSocial(signInWithPopup(auth, providerFacebook)));
+        document.getElementById('reg-apple').addEventListener('click', () => manejarSocial(signInWithPopup(auth, providerApple)));
     </script>
 </body>
 </html>
