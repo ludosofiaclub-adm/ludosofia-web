@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dixit: El Oráculo Socrático | LUDOSOFÍA</title>
+    <title>Dixit: Los Laberintos del Sentido | LUDOSOFÍA</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
@@ -37,18 +37,18 @@
         const CONFIG_ACCESO = {
             PUBLICO: false,           // Bloqueado para visitantes sin cuenta
             SOCIO: true,              // Acceso permitido
-            SOCIO_FUNDADOR: true      // Acceso permitido
+            FUNDADOR: true            // Acceso permitido
         };
     </script>
     
     <!-- ========================================== -->
-    <!-- GUARDIÁN DE ACCESO CON MEMORIA LOCAL -->
+    <!-- GUARDIÁN DE ACCESO: AUTENTICACIÓN + ROL  -->
     <!-- ========================================== -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // NOTA: Usa tu propia configuración aquí
         const firebaseConfig = {
             apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
             authDomain: "ludosofia-1cdc7.firebaseapp.com",
@@ -57,20 +57,75 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        // Extraemos solo el nombre del archivo actual (ej: "mis-juegos.html")
         const rutaActual = window.location.pathname.split('/').pop() || 'index.html';
 
-        onAuthStateChanged(auth, (user) => {
+        function getIconByRole(rol) {
+            const r = (rol || '').toUpperCase().trim();
+            if (r.includes('FUNDADOR')) {
+                return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            }
+            if (r.includes('SOCIO')) {
+                return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            }
+            return '';
+        }
+
+        function actualizarNavbar(user, rol) {
+            const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+            const loginBtn = document.getElementById('login-btn-desktop');
+            const loginText = document.getElementById('login-text-desktop');
+            const badge = document.getElementById('badge-container-desktop');
+            const profileModal = document.getElementById('profile-modal');
+
+            if (loginText) loginText.innerText = `HOLA, ${nombre.toUpperCase()}`;
+            if (loginBtn && profileModal) loginBtn.onclick = () => profileModal.classList.toggle('hidden');
+
+            const iconHtml = getIconByRole(rol);
+            if (badge && iconHtml) { badge.innerHTML = iconHtml; badge.style.display = 'flex'; }
+
+            const profileEmail = document.getElementById('profile-email');
+            const profileRole = document.getElementById('profile-role');
+            if (profileEmail) profileEmail.innerText = user.email;
+            if (profileRole) profileRole.innerText = rol;
+
+            const btnLogout = document.getElementById('btn-logout');
+            if (btnLogout) {
+                btnLogout.onclick = () => {
+                    signOut(auth).then(() => {
+                        if (profileModal) profileModal.classList.add('hidden');
+                        window.location.reload();
+                    });
+                };
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
             if (!user) {
-                // 1. Guardamos la página en la memoria secreta del navegador
                 localStorage.setItem('destino_post_login', rutaActual);
-                
-                // 2. Lo mandamos al login normal
-                window.location.replace('login.html'); 
-            } else {
-                // El usuario sí está logueado. Puede ver el contenido.
-                console.log("Acceso concedido");
+                window.location.replace('login.html');
+                return;
+            }
+            try {
+                const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                if (docSnap.exists()) {
+                    const datos = docSnap.data();
+                    const rol = (datos.rol || '').toUpperCase().trim();
+                    const tieneAcceso = rol.includes('SOCIO') || rol.includes('FUNDADOR');
+                    if (!tieneAcceso) {
+                        localStorage.setItem('destino_post_login', rutaActual);
+                        window.location.replace('login.html');
+                        return;
+                    }
+                    localStorage.setItem('rol_usuario', datos.rol);
+                    actualizarNavbar(user, datos.rol);
+                } else {
+                    localStorage.setItem('destino_post_login', rutaActual);
+                    window.location.replace('login.html');
+                }
+            } catch (error) {
+                console.error("Error verificando acceso:", error);
             }
         });
     </script>
@@ -98,6 +153,13 @@
         .text-shadow-xul {
             text-shadow: 3px 3px 0px #6BA4C4;
         }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate {
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-xul_yellow selection:text-xul_ink relative">
@@ -115,6 +177,13 @@
             <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
                 <span class="text-xul_ink/50">Colección:</span>
                 <span class="text-xul_terra border-b-2 border-xul_terra">Juegos Hackeados</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A]" title="Tu Membresía"></div>
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-4 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase text-sm font-bold flex items-center gap-2">
+                    <span id="login-text-desktop">···</span>
+                </button>
             </div>
         </div>
     </nav>
@@ -134,7 +203,7 @@
                     <rect x="42" y="80" width="16" height="20" fill="#EBB134" stroke="#2A2A2A" stroke-width="3"/>
                 </svg>
                 <div class="absolute top-4 left-0 bg-xul_ink text-white text-[10px] uppercase font-black tracking-widest py-1 px-4 border-y-[3px] border-r-[3px] border-xul_ink">
-                    VARIANTE FILOSÓFICA
+                    Manual de Hackeo
                 </div>
             </div>
 
@@ -160,7 +229,7 @@
                     if (typeof CONFIG_ACCESO !== 'undefined') {
                         if (CONFIG_ACCESO.PUBLICO) document.getElementById('insignia-publico').classList.remove('hidden');
                         if (CONFIG_ACCESO.SOCIO) document.getElementById('insignia-socio').classList.remove('hidden');
-                        if (CONFIG_ACCESO.SOCIO_FUNDADOR) document.getElementById('insignia-fundador').classList.remove('hidden');
+                        if (CONFIG_ACCESO.FUNDADOR) document.getElementById('insignia-fundador').classList.remove('hidden');
                     }
                 </script>
 
@@ -168,12 +237,12 @@
                     DIXIT:
                 </h1>
                 <h2 class="xul-title text-4xl md:text-5xl font-bold text-xul_terra leading-none mb-6">
-                    El Oráculo Socrático
+                    Los Laberintos del Sentido
                 </h2>
                 
-                <blockquote class="border-l-4 border-xul_blue pl-4 mb-6 italic text-gray-600 font-serif text-2xl">
-                    "Habla para que yo te conozca." <br>
-                    <span class="text-sm font-sans font-bold text-xul_ink not-italic uppercase tracking-widest">— Sócrates</span>
+                <blockquote class="border-l-4 border-xul_blue pl-4 mb-6 italic text-gray-600 font-serif text-xl md:text-2xl">
+                    "No leemos una imagen desde el vacío, sino desde nuestra propia historia, miedos y vivencias." <br>
+                    <span class="text-sm font-sans font-bold text-xul_ink not-italic uppercase tracking-widest">— Hans-Georg Gadamer (Adaptado)</span>
                 </blockquote>
             </div>
         </div>
@@ -181,84 +250,250 @@
 
     <main class="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-4 gap-12 relative">
         
+        <!-- COLUMNA PRINCIPAL DE CONTENIDO -->
         <div class="lg:col-span-3 space-y-16">
             
-            <section id="introduccion" class="scroll-mt-32">
+            <!-- 1. MARCO FILOSÓFICO -->
+            <section id="marco-filosofico" class="scroll-mt-32">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#D1623A]">
                         <span class="text-white font-black text-xl font-sans">1</span>
                     </div>
-                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Introducción</h3>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Marco Filosófico</h3>
                 </div>
                 <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#2A2A2A]">
-                    <p class="font-serif text-xl leading-relaxed text-gray-700 first-letter:text-5xl first-letter:font-black first-letter:text-xul_terra first-letter:mr-1">
-                        Este documento contiene la variante "El Oráculo Socrático", un hack filosófico del aclamado juego de mesa Dixit. El objetivo de esta variante es transformar la mecánica de asociación libre de imágenes en un divertido ejercicio de mayéutica y argumentación.
+                    <p class="font-serif text-xl leading-relaxed text-gray-700 first-letter:text-5xl first-letter:font-black first-letter:text-xul_terra first-letter:mr-1 mb-6">
+                        El juego original es un laboratorio perfecto para explorar cómo construimos el significado. Esta recopilación de "reglas hackeadas" transforma la mecánica recreativa de Dixit en un dispositivo de experimentación e indagación filosófica para dinamizar debates teóricos.
+                    </p>
+                    <p class="font-sans text-lg text-gray-700 leading-relaxed border-t-2 border-dashed border-gray-300 pt-6">
+                        El dispositivo utiliza el soporte visual de Dixit para encarnar conceptos clave de la <strong>Hermenéutica, la Estética y la Fenomenología</strong>. El juego nos obliga a caminar por la delgada línea entre lo evidente y lo incomprensible. No leemos una imagen desde el vacío, sino desde nuestra propia historia, miedos y vivencias (lo que Hans-Georg Gadamer denominaba la <em>"fusión de horizontes"</em>). Lo que para un jugador es un símbolo de libertad, para otro puede serlo de abandono.
                     </p>
                 </div>
             </section>
 
-            <section id="componentes" class="scroll-mt-32">
+            <!-- VARIANTES DE HACKEO -->
+            <div class="space-y-12">
+                <h3 class="xul-title text-4xl font-bold text-xul_ink border-b-[3px] border-xul_ink pb-4">Módulos de Hackeo</h3>
+
+                <!-- 2. VARIANTE 1: La Vía Negativa -->
+                <section id="via-negativa" class="scroll-mt-32 bg-white border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#2A2A2A] relative">
+                    <div class="absolute -left-4 -top-4 bg-xul_blue border-[3px] border-xul_ink text-white w-12 h-12 flex items-center justify-center font-black text-xl shadow-[4px_4px_0px_#2A2A2A]">
+                        <i data-lucide="eye-off" class="w-6 h-6"></i>
+                    </div>
+                    <div class="mb-6">
+                        <span class="font-sans font-bold text-xul_blue uppercase tracking-widest text-sm">Variante 1</span>
+                        <h4 class="font-sans font-black text-3xl uppercase text-xul_ink">La Vía Negativa</h4>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Rama Filosófica</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">Epistemología y Hermenéutica Apofática.</p>
+                        </div>
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Concepto Central</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">La definición por ausencia y los límites del concepto.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 font-sans text-gray-700 text-lg">
+                        <p>
+                            <strong class="text-xul_ink">La Mecánica Hackeada:</strong> El narrador elige una carta de su mano y enuncia una pista conceptual de forma habitual (ej: <em>"Justicia", "El tiempo" o "Angustia"</em>). Sin embargo, el resto de los jugadores no deben buscar en sus manos la carta que mejor represente o ilustre dicha pista, sino <strong>la carta que simbolice la antítesis, lo contrario o la ausencia absoluta</strong> de esa idea.
+                        </p>
+                        <div class="border-l-4 border-xul_blue pl-4 bg-gray-50 p-4">
+                            <strong class="text-xul_blue block mb-2 uppercase text-sm tracking-wider">Dinámica de Mesa y Debate:</strong>
+                            <p class="text-base">Al revelarse todas las cartas de la ronda, el desafío hermenéutico se duplica. Las justificaciones teóricas sobre por qué una imagen surrealista representa con precisión lo opuesto o la carencia del concepto original abren discusiones ontológicas profundas sobre la naturaleza y los bordes de los valores universales.</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. VARIANTE 2: La Ontología del Azar -->
+                <section id="ontologia-azar" class="scroll-mt-32 bg-white border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#2A2A2A] relative">
+                    <div class="absolute -left-4 -top-4 bg-xul_terra border-[3px] border-xul_ink text-white w-12 h-12 flex items-center justify-center font-black text-xl shadow-[4px_4px_0px_#2A2A2A]">
+                        <i data-lucide="dices" class="w-6 h-6"></i>
+                    </div>
+                    <div class="mb-6">
+                        <span class="font-sans font-bold text-xul_terra uppercase tracking-widest text-sm">Variante 2</span>
+                        <h4 class="font-sans font-black text-3xl uppercase text-xul_ink">La Ontología del Azar</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Rama Filosófica</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">Existencialismo y Filosofía del Lenguaje.</p>
+                        </div>
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Concepto Central</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">La contingencia, la facticidad y el peso de las circunstancias.</p>
+                        </div>
+                    </div>
+
+                    <div class="font-sans text-gray-700 text-lg mb-6">
+                        <p>
+                            <strong class="text-xul_ink">La Mecánica Hackeada:</strong> Introducción de la restricción formal obligatoria. Antes de que el narrador proponga su pista, <strong>debe lanzar un dado de 6 caras</strong> (o extraer una tarjeta al azar) para determinar la estructura formal e inamovible de su comunicación:
+                        </p>
+                    </div>
+
+                    <ul class="grid grid-cols-1 md:grid-cols-2 gap-4 font-sans text-sm mb-6">
+                        <li class="border-2 border-gray-200 p-3 flex gap-3 hover:border-xul_terra transition-colors bg-white">
+                            <span class="font-black text-xul_terra text-xl leading-none">1</span>
+                            <span><strong>El Concepto Puro:</strong> Obligatorio utilizar un único sustantivo abstracto (ej: Ser, Devenir, Nada, Libertad).</span>
+                        </li>
+                        <li class="border-2 border-gray-200 p-3 flex gap-3 hover:border-xul_terra transition-colors bg-white">
+                            <span class="font-black text-xul_terra text-xl leading-none">2</span>
+                            <span><strong>El Silencio Estético:</strong> Prohibido usar palabras. La pista debe ser un sonido físico, un golpe o tararear una breve melodía.</span>
+                        </li>
+                        <li class="border-2 border-gray-200 p-3 flex gap-3 hover:border-xul_terra transition-colors bg-white">
+                            <span class="font-black text-xul_terra text-xl leading-none">3</span>
+                            <span><strong>La Paradoja:</strong> La pista debe estar construida mediante un oxímoron o dos términos contradictorios (ej: "Luz oscura").</span>
+                        </li>
+                        <li class="border-2 border-gray-200 p-3 flex gap-3 hover:border-xul_terra transition-colors bg-white">
+                            <span class="font-black text-xul_terra text-xl leading-none">4</span>
+                            <span><strong>La Pregunta:</strong> La pista debe ser obligatoriamente una formulación interrogativa ética o existencial.</span>
+                        </li>
+                        <li class="border-2 border-gray-200 p-3 flex gap-3 hover:border-xul_terra transition-colors bg-white">
+                            <span class="font-black text-xul_terra text-xl leading-none">5</span>
+                            <span><strong>El Determinismo:</strong> El jugador a la derecha del narrador elige el concepto clave por él (imposición externa).</span>
+                        </li>
+                        <li class="border-2 border-gray-200 p-3 flex gap-3 hover:border-xul_terra transition-colors bg-white">
+                            <span class="font-black text-xul_terra text-xl leading-none">6</span>
+                            <span><strong>Libre Albedrío:</strong> El narrador está exento de restricciones y elige la forma que prefiera.</span>
+                        </li>
+                    </ul>
+
+                    <div class="border-l-4 border-xul_terra pl-4 bg-gray-50 p-4 font-sans text-gray-700">
+                        <strong class="text-xul_terra block mb-2 uppercase text-sm tracking-wider">Dinámica de Mesa y Debate:</strong>
+                        <p class="text-base">Explora cómo nuestra capacidad de construir y transmitir sentido se ve alterada cuando la estructura lingüística nos viene dada de antemano de manera azarosa o fatalista.</p>
+                    </div>
+                </section>
+
+                <!-- 4. VARIANTE 3: El Ágora -->
+                <section id="agora" class="scroll-mt-32 bg-white border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#2A2A2A] relative">
+                    <div class="absolute -left-4 -top-4 bg-xul_yellow border-[3px] border-xul_ink text-xul_ink w-12 h-12 flex items-center justify-center font-black text-xl shadow-[4px_4px_0px_#2A2A2A]">
+                        <i data-lucide="message-square-quote" class="w-6 h-6"></i>
+                    </div>
+                    <div class="mb-6">
+                        <span class="font-sans font-bold text-xul_ink uppercase tracking-widest text-sm">Variante 3</span>
+                        <h4 class="font-sans font-black text-3xl uppercase text-xul_ink">El Ágora</h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Rama Filosófica</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">Sofística, Retórica y Teoría de la Argumentación.</p>
+                        </div>
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Concepto Central</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">La persuasión, la postverdad y la construcción social de la certeza.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 font-sans text-gray-700 text-lg">
+                        <p>
+                            <strong class="text-xul_ink">La Mecánica Hackeada:</strong> El turno transcurre de forma normal (pista, colocación de cartas en secreto y revelación). No obstante, antes de proceder a la votación oculta, se abre la fase obligatoria del Ágora. <strong>Cada jugador dispone de exactamente 30 segundos cronometrados para señalar una carta de la mesa (que no sea la propia)</strong> y construir un argumento racional o persuasivo que convenza al resto de que esa es, indiscutiblemente, la carta original del narrador.
+                        </p>
+                        <div class="border-l-4 border-xul_yellow pl-4 bg-gray-50 p-4">
+                            <strong class="text-xul_ink block mb-2 uppercase text-sm tracking-wider">Dinámica de Mesa y Debate:</strong>
+                            <p class="text-base">La retórica toma el control absoluto del sistema de puntuación. Un jugador elocuente puede distorsionar por completo la verdad empírica de la ronda valiéndose de un discurso brillante, evidenciando cómo el lenguaje y la argumentación pública modelan lo que colectivamente aceptamos como "verdadero".</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 5. GUÍA DE DEBRIEFING -->
+            <section id="debriefing" class="scroll-mt-32">
                 <div class="flex items-center gap-4 mb-6">
                     <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#D1623A]">
-                        <span class="text-white font-black text-xl font-sans">2</span>
+                        <span class="text-white font-black text-xl font-sans">5</span>
                     </div>
-                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Componentes Necesarios</h3>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Guía de Debriefing</h3>
                 </div>
-                <div class="bg-xul_paper border-[3px] border-xul_ink p-6 border-dashed">
-                    <ul class="space-y-4 font-sans text-lg text-gray-700 leading-relaxed">
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-6 h-6 flex-shrink-0 text-xul_green mt-0.5"></i>
-                            <span><strong>1 copia del juego base Dixit</strong>.</span>
+                <div class="bg-xul_ink text-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#6BA4C4]">
+                    <p class="font-sans text-lg mb-6 text-gray-300">
+                        Al concluir las partidas con estas modificaciones, se sugiere abrir un plenario de discusión utilizando los siguientes disparadores pedagógicos para moderar el cierre:
+                    </p>
+                    <ul class="space-y-6 font-serif text-xl">
+                        <li class="flex gap-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-xul_yellow flex-shrink-0 mt-1"></i>
+                            <p>¿Existe realmente un "significado auténtico" dentro de una obra o una imagen, o el sentido es creado enteramente por la mirada de quien la interpreta?</p>
                         </li>
-                        <li class="flex items-start gap-3">
-                            <i data-lucide="check-square" class="w-6 h-6 flex-shrink-0 text-xul_green mt-0.5"></i>
-                            <span>De <strong>3 a 6 jugadores</strong> dispuestos a debatir.</span>
+                        <li class="flex gap-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-xul_yellow flex-shrink-0 mt-1"></i>
+                            <p>Cuando una pista es malinterpretada de manera unánime por toda la mesa: ¿dónde reside el fallo, en el emisor, en el código lingüístico o en los marcos preexistentes de los receptores?</p>
+                        </li>
+                        <li class="flex gap-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-xul_yellow flex-shrink-0 mt-1"></i>
+                            <p>¿Qué tanto condiciona nuestro trasfondo cultural, histórico y vivencial particular la forma en que dotamos de sentido a una representación simbólica ambigua?</p>
+                        </li>
+                        <li class="flex gap-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-xul_yellow flex-shrink-0 mt-1"></i>
+                            <p>En la variante del Ágora, ¿encontramos una vía para descubrir conexiones profundas e invisibles o, por el contrario, confirmamos que una argumentación seductora puede disfrazar y manipular la verdad?</p>
                         </li>
                     </ul>
                 </div>
             </section>
 
-            <section id="reglas" class="scroll-mt-32">
-                <div class="flex items-center gap-4 mb-6">
-                    <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#D1623A]">
-                        <span class="text-white font-black text-xl font-sans">3</span>
-                    </div>
-                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Las Nuevas Reglas</h3>
-                </div>
-                
-                <div class="space-y-12">
-                    <div id="regla-a" class="bg-white border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#2A2A2A] relative">
-                        <div class="absolute -left-4 -top-4 bg-xul_blue border-[3px] border-xul_ink text-white w-10 h-10 flex items-center justify-center font-black text-xl shadow-[4px_4px_0px_#2A2A2A]">A</div>
-                        <h4 class="font-sans font-black text-2xl uppercase text-xul_ink mb-4">La Premisa del Narrador</h4>
-                        <p class="font-sans text-gray-700 text-lg">
-                            El narrador <strong>debe usar exclusivamente un concepto filosófico</strong> para describir su carta secreta.
-                        </p>
-                    </div>
-
-                    <div id="regla-b" class="bg-white border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#2A2A2A] relative">
-                        <div class="absolute -left-4 -top-4 bg-xul_terra border-[3px] border-xul_ink text-white w-10 h-10 flex items-center justify-center font-black text-xl shadow-[4px_4px_0px_#2A2A2A]">B</div>
-                        <h4 class="font-sans font-black text-2xl uppercase text-xul_ink mb-4">El Juicio Socrático</h4>
-                        <p class="font-sans text-gray-700 text-lg">
-                            Si no acertaste, puedes apelar argumentando por qué tu carta era superior lógicamente a la del narrador.
-                        </p>
-                    </div>
-                </div>
-            </section>
         </div>
 
+        <!-- COLUMNA LATERAL (ÍNDICE FIJO) -->
         <div class="lg:col-span-1 hidden lg:block">
             <div class="sticky top-28 flex flex-col gap-6">
                 <div class="bg-white border-[3px] border-xul_ink shadow-[8px_8px_0px_#6BA4C4] p-6">
                     <h4 class="font-sans font-black text-xl uppercase tracking-widest text-xul_ink border-b-2 border-xul_ink pb-3 mb-4">Índice</h4>
-                    <nav class="space-y-3 font-sans font-bold text-gray-600 text-sm">
-                        <a href="#introduccion" class="block hover:text-xul_terra">1. Introducción</a>
-                        <a href="#componentes" class="block hover:text-xul_terra">2. Componentes</a>
-                        <a href="#reglas" class="block hover:text-xul_terra">3. Las Nuevas Reglas</a>
+                    <nav class="space-y-4 font-sans font-bold text-gray-600 text-sm">
+                        <a href="#marco-filosofico" class="block hover:text-xul_terra transition-colors">1. Marco Filosófico</a>
+                        
+                        <div>
+                            <span class="block text-xul_ink mb-2">2. Módulos de Hackeo</span>
+                            <div class="pl-4 border-l-2 border-gray-200 space-y-2 font-normal text-xs uppercase tracking-wider">
+                                <a href="#via-negativa" class="block hover:text-xul_blue transition-colors">• La Vía Negativa</a>
+                                <a href="#ontologia-azar" class="block hover:text-xul_terra transition-colors">• La Ontología del Azar</a>
+                                <a href="#agora" class="block hover:text-xul_yellow transition-colors">• El Ágora</a>
+                            </div>
+                        </div>
+
+                        <a href="#debriefing" class="block hover:text-xul_terra transition-colors">3. Guía de Debriefing</a>
                     </nav>
+                </div>
+
+                <!-- Banner Promocional -->
+                <div class="bg-xul_ink border-[3px] border-xul_ink p-6 text-center text-white relative overflow-hidden group hover:shadow-[6px_6px_0px_#EBB134] transition-all cursor-pointer">
+                    <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="message-circle" class="w-32 h-32"></i>
+                    </div>
+                    <h5 class="xul-title font-bold text-2xl mb-2 relative z-10">El Ágora</h5>
+                    <p class="font-sans text-xs text-gray-300 mb-4 relative z-10">
+                        Comparte los resultados de tu laboratorio hermenéutico en nuestra comunidad.
+                    </p>
+                    <a href="#" class="inline-block bg-transparent border-2 border-white px-6 py-2 font-bold text-[10px] uppercase tracking-widest hover:bg-white hover:text-xul_ink transition-colors relative z-10">
+                        Ir al Foro
+                    </a>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- MODAL DE PERFIL -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] transform transition-all text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía Actual</p>
+                <p id="profile-role" class="font-black text-xl text-xul_terra uppercase tracking-wider"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
 
     <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-xul_ink mt-12">
         <div class="max-w-6xl mx-auto text-center">
