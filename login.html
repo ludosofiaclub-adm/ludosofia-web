@@ -266,7 +266,14 @@
                     const docSnap = await getDoc(docRef);
                     if (docSnap.exists()) {
                         localStorage.setItem('rol_usuario', docSnap.data().rol || 'socio');
-                    } else {
+                                        } else {
+                        // Primer login social (Google, Microsoft, etc.) — crear perfil en Firestore
+                        await setDoc(docRef, {
+                            nombre: user.displayName || (user.email ? user.email.split('@')[0] : 'Usuario'),
+                            email: user.email || '',
+                            rol: 'socio',
+                            fechaRegistro: new Date().toISOString()
+                        }, { merge: true });
                         localStorage.setItem('rol_usuario', 'socio');
                     }
                 } catch (error) { 
