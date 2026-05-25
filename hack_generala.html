@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generala: El Azar, el Destino y el Absurdo | LUDOSOFÍA</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_silver: '#C4CAD0',
+                        xul_orange: '#E87524'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        const CONFIG_ACCESO = {
+            PUBLICO: false,           // Bloqueado para visitantes sin cuenta
+            SOCIO: true,              // Acceso permitido
+            FUNDADOR: true            // Acceso permitido
+        };
+    </script>
+    
+    <!-- ========================================== -->
+    <!-- GUARDIÁN DE ACCESO Y SISTEMA DE COMENTARIOS-->
+    <!-- ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const rutaActual = window.location.pathname.split('/').pop() || 'index.html';
+        
+        // Variables globales para la base de datos de comentarios (Identificador único para Generala)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'ludosofia-generala';
+        const commentsCollection = collection(db, 'artifacts', appId, 'public', 'data', 'comentarios');
+        let currentUser = null;
+
+        function getIconByRole(rol) {
+            const r = (rol || '').toUpperCase().trim();
+            if (r.includes('FUNDADOR')) {
+                return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            }
+            if (r.includes('SOCIO')) {
+                return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            }
+            return '';
+        }
+
+        function actualizarNavbar(user, rol) {
+            const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+            const loginBtn = document.getElementById('login-btn-desktop');
+            const loginText = document.getElementById('login-text-desktop');
+            const badge = document.getElementById('badge-container-desktop');
+            const profileModal = document.getElementById('profile-modal');
+
+            if (loginText) loginText.innerText = `HOLA, ${nombre.toUpperCase()}`;
+            if (loginBtn && profileModal) loginBtn.onclick = () => profileModal.classList.toggle('hidden');
+
+            const iconHtml = getIconByRole(rol);
+            if (badge && iconHtml) { badge.innerHTML = iconHtml; badge.style.display = 'flex'; }
+
+            const profileEmail = document.getElementById('profile-email');
+            const profileRole = document.getElementById('profile-role');
+            if (profileEmail) profileEmail.innerText = user.email;
+            if (profileRole) profileRole.innerText = rol;
+
+            const btnLogout = document.getElementById('btn-logout');
+            if (btnLogout) {
+                btnLogout.onclick = () => {
+                    signOut(auth).then(() => {
+                        if (profileModal) profileModal.classList.add('hidden');
+                        window.location.reload();
+                    });
+                };
+            }
+        }
+
+        // LÓGICA DE COMENTARIOS
+        function cargarComentarios() {
+            onSnapshot(commentsCollection, (snapshot) => {
+                let comentarios = [];
+                snapshot.forEach(doc => {
+                    comentarios.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Ordenar localmente por fecha (los más recientes primero)
+                comentarios.sort((a, b) => b.timestamp - a.timestamp);
+                renderComentarios(comentarios);
+            }, (error) => {
+                console.error("Error obteniendo comentarios:", error);
+            });
+        }
+
+        function renderComentarios(comentarios) {
+            const list = document.getElementById('comments-list');
+            if(!list) return;
+            
+            list.innerHTML = '';
+            
+            if (comentarios.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 italic p-4 text-center">Aún no hay mensajes. ¡Abre el debate!</p>';
+                return;
+            }
+            
+            comentarios.forEach(c => {
+                const date = new Date(c.timestamp);
+                const dateString = isNaN(date.getTime()) ? '' : date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                list.innerHTML += `
+                    <div class="bg-white border-2 border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] relative">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-xul_blue border-2 border-xul_ink rounded-full flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0px_#2A2A2A]">
+                                <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-black text-sm uppercase tracking-widest text-xul_ink leading-none mb-1">${c.authorName}</p>
+                                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">${dateString}</p>
+                            </div>
+                        </div>
+                        <p class="font-sans text-gray-800 text-base leading-relaxed whitespace-pre-wrap">${c.text}</p>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        // Evento de publicación del comentario
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('comment-form');
+            if(form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    if(!currentUser) return;
+                    
+                    const input = document.getElementById('comment-input');
+                    const text = input.value.trim();
+                    if(!text) return;
+                    
+                    const btnSubmit = document.getElementById('submit-comment');
+                    const originalText = btnSubmit.innerHTML;
+                    btnSubmit.disabled = true;
+                    btnSubmit.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline mr-2"></i> Enviando...';
+                    lucide.createIcons();
+
+                    try {
+                        const nombre = currentUser.displayName ? currentUser.displayName.split(' ')[0] : currentUser.email.split('@')[0];
+                        await addDoc(commentsCollection, {
+                            text: text,
+                            authorId: currentUser.uid,
+                            authorName: nombre,
+                            timestamp: Date.now()
+                        });
+                        input.value = '';
+                    } catch(error) {
+                        console.error("Error publicando comentario:", error);
+                        btnSubmit.innerHTML = 'Error al publicar';
+                        setTimeout(() => btnSubmit.innerHTML = originalText, 2000);
+                    } finally {
+                        btnSubmit.disabled = false;
+                        if(btnSubmit.innerHTML !== 'Error al publicar') btnSubmit.innerHTML = originalText;
+                    }
+                });
+            }
+        });
+
+        // VALIDACIÓN PRINCIPAL
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                localStorage.setItem('destino_post_login', rutaActual);
+                window.location.replace('login.html');
+                return;
+            }
+            try {
+                const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                if (docSnap.exists()) {
+                    const datos = docSnap.data();
+                    const rol = (datos.rol || '').toUpperCase().trim();
+                    const tieneAcceso = rol.includes('SOCIO') || rol.includes('FUNDADOR');
+                    
+                    if (!tieneAcceso) {
+                        localStorage.setItem('destino_post_login', rutaActual);
+                        window.location.replace('login.html');
+                        return;
+                    }
+                    
+                    // Tiene acceso correcto
+                    currentUser = user; // Guardar usuario globalmente para los comentarios
+                    localStorage.setItem('rol_usuario', datos.rol);
+                    actualizarNavbar(user, datos.rol);
+                    
+                    // Iniciar el oyente de la base de datos de comentarios
+                    cargarComentarios();
+
+                } else {
+                    localStorage.setItem('destino_post_login', rutaActual);
+                    window.location.replace('login.html');
+                }
+            } catch (error) {
+                console.error("Error verificando acceso:", error);
+            }
+        });
+    </script>
+    <!-- ========================================== -->
+
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #FDF8ED; 
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-border {
+            border: 3px solid #2A2A2A;
+            box-shadow: 6px 6px 0px #2A2A2A;
+            transition: all 0.2s ease;
+        }
+        .xul-border:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px #2A2A2A;
+        }
+        .xul-title {
+            font-family: 'Cormorant Garamond', serif;
+        }
+        .text-shadow-xul {
+            text-shadow: 3px 3px 0px #6BA4C4;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate {
+            animation: modalFadeIn 0.3s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_yellow selection:text-xul_ink relative">
+
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index_hack.html" class="flex items-center space-x-3 cursor-pointer group hover:text-xul_terra transition-colors">
+                <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Volver al catálogo</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <span class="text-xul_ink/50">Colección:</span>
+                <span class="text-xul_terra border-b-2 border-xul_terra">Juegos Hackeados</span>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A]" title="Tu Membresía"></div>
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-4 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase text-sm font-bold flex items-center gap-2">
+                    <span id="login-text-desktop">···</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-32 pb-16 px-6 relative border-b-[3px] border-xul_ink overflow-hidden bg-white">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#D1623A 1px, transparent 1px), linear-gradient(90deg, #D1623A 1px, transparent 1px); background-size: 40px 40px;"></div>
+        
+        <div class="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
+            
+            <div class="w-64 h-80 bg-xul_paper border-[3px] border-xul_ink shadow-[12px_12px_0px_#EBB134] flex-shrink-0 relative overflow-hidden flex items-center justify-center group hover:-translate-y-2 transition-transform duration-300">
+                <div class="absolute inset-0 bg-xul_blue/10"></div>
+                <!-- Abstract Dice/Destiny Icon for Generala -->
+                <svg viewBox="0 0 100 100" class="w-48 h-48 group-hover:scale-105 transition-transform">
+                    <!-- Die 1 -->
+                    <rect x="20" y="20" width="35" height="35" rx="5" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="3" transform="rotate(-15 37 37)"/>
+                    <circle cx="37" cy="37" r="4" fill="#D1623A" transform="rotate(-15 37 37)"/>
+                    <!-- Die 2 -->
+                    <rect x="50" y="45" width="35" height="35" rx="5" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="3" transform="rotate(10 67 62)"/>
+                    <circle cx="58" cy="53" r="3" fill="#2A2A2A" transform="rotate(10 67 62)"/>
+                    <circle cx="76" cy="71" r="3" fill="#2A2A2A" transform="rotate(10 67 62)"/>
+                    <!-- Chaos/Path lines -->
+                    <path d="M 15 80 Q 40 60 85 20" fill="none" stroke="#EBB134" stroke-width="3" stroke-dasharray="4 4"/>
+                </svg>
+                <div class="absolute top-4 left-0 bg-xul_ink text-white text-[10px] uppercase font-black tracking-widest py-1 px-4 border-y-[3px] border-r-[3px] border-xul_ink">
+                    Manual de Hackeo
+                </div>
+            </div>
+
+            <div class="text-center md:text-left">
+                <div class="flex flex-wrap justify-center md:justify-start gap-4 mb-4 items-center">
+                    <div class="inline-block bg-xul_yellow border-2 border-xul_ink px-3 py-1 shadow-[3px_3px_0px_#2A2A2A]">
+                        <span class="font-sans font-black text-xs uppercase tracking-widest text-xul_ink">Hack de Tablero</span>
+                    </div>
+                    
+                    <div id="insignia-publico" class="bg-xul_blue border-2 border-xul_ink p-1.5 shadow-[3px_3px_0px_#2A2A2A] hidden flex items-center justify-center" title="Acceso libre">
+                        <i data-lucide="user" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <div id="insignia-socio" class="bg-xul_green border-2 border-xul_ink p-1.5 shadow-[3px_3px_0px_#2A2A2A] hidden flex items-center justify-center" title="Acceso para Socios">
+                        <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <div id="insignia-fundador" class="bg-xul_terra border-2 border-xul_ink p-1.5 shadow-[3px_3px_0px_#2A2A2A] hidden flex items-center justify-center" title="Acceso para Fundadores">
+                        <i data-lucide="crown" class="w-4 h-4 text-white"></i>
+                    </div>
+                </div>
+
+                <script>
+                    // Mostrar insignias según configuración
+                    if (typeof CONFIG_ACCESO !== 'undefined') {
+                        if (CONFIG_ACCESO.PUBLICO) document.getElementById('insignia-publico').classList.remove('hidden');
+                        if (CONFIG_ACCESO.SOCIO) document.getElementById('insignia-socio').classList.remove('hidden');
+                        if (CONFIG_ACCESO.FUNDADOR) document.getElementById('insignia-fundador').classList.remove('hidden');
+                    }
+                </script>
+
+                <h1 class="xul-title text-5xl md:text-7xl font-black text-xul_ink tracking-tighter mb-2 text-shadow-xul">
+                    GENERALA:
+                </h1>
+                <h2 class="xul-title text-4xl md:text-5xl font-bold text-xul_terra leading-none mb-6">
+                    El Azar, el Destino y el Absurdo
+                </h2>
+                
+                <blockquote class="border-l-4 border-xul_blue pl-4 mb-6 italic text-gray-600 font-serif text-xl md:text-2xl">
+                    "Desafía la tiranía de la probabilidad, abraza el caos de lo impredecible y descubre si eres el arquitecto de tu propio destino o un simple espectador de los caprichos del universo."
+                </blockquote>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-4 gap-12 relative">
+        
+        <!-- COLUMNA PRINCIPAL DE CONTENIDO -->
+        <div class="lg:col-span-3 space-y-16">
+            
+            <!-- 1. MARCO FILOSÓFICO -->
+            <section id="marco-filosofico" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#D1623A]">
+                        <span class="text-white font-black text-xl font-sans">1</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Marco Filosófico</h3>
+                </div>
+                <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#2A2A2A]">
+                    <p class="font-serif text-xl leading-relaxed text-gray-700 first-letter:text-5xl first-letter:font-black first-letter:text-xul_terra first-letter:mr-1 mb-6">
+                        El juego tradicional de la Generala es un ejercicio matemático de optimización: el jugador intenta imponer orden y categorías (póker, full, escaleras) sobre tiradas aleatorias. Esta recopilación de "reglas hackeadas" transforma los cinco dados en un laboratorio sobre el libre albedrío, la ética utilitarista y la creación de sentido en un mundo absurdo.
+                    </p>
+                    <p class="font-sans text-lg text-gray-700 leading-relaxed border-t-2 border-dashed border-gray-300 pt-6">
+                        La Generala encarna la tensión perpetua entre el <strong>determinismo</strong> (los números que dicta el azar al caer los dados) y el <strong>libre albedrío</strong> (nuestra elección de qué dados conservar y cuáles volver a tirar). El juego nos sitúa en la posición del agente racional que intenta maximizar su beneficio en un entorno hostil e indiferente. Al intervenir sus reglas, el dispositivo nos permite explorar cómo reaccionamos ante la fatalidad, cómo calculamos el sufrimiento y el placer, y cómo construimos significado cuando las reglas universales desaparecen.
+                    </p>
+                </div>
+            </section>
+
+            <!-- VARIANTES DE HACKEO -->
+            <div class="space-y-12">
+                <h3 class="xul-title text-4xl font-bold text-xul_ink border-b-[3px] border-xul_ink pb-4">Módulos de Hackeo</h3>
+
+                <!-- 2. VARIANTE 1: Amor Fati -->
+                <section id="amor-fati" class="scroll-mt-32 bg-white border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#2A2A2A] relative">
+                    <div class="absolute -left-4 -top-4 bg-xul_blue border-[3px] border-xul_ink text-white w-12 h-12 flex items-center justify-center font-black text-xl shadow-[4px_4px_0px_#2A2A2A]">
+                        <i data-lucide="snowflake" class="w-6 h-6"></i>
+                    </div>
+                    <div class="mb-6">
+                        <span class="font-sans font-bold text-xul_blue uppercase tracking-widest text-sm">Variante 1</span>
+                        <h4 class="font-sans font-black text-3xl uppercase text-xul_ink">Amor Fati <span class="text-xl font-normal block md:inline md:ml-2 text-gray-500">(Estoicismo y Determinismo)</span></h4>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Rama Filosófica</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">Estoicismo (Epicteto, Marco Aurelio, Nietzsche).</p>
+                        </div>
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Concepto Central</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">La aceptación radical del destino, la dicotomía del control y la adaptación a las circunstancias impuestas.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 font-sans text-gray-700 text-lg">
+                        <p>
+                            <strong class="text-xul_ink">La Mecánica Hackeada:</strong> El jugador activo realiza su primer tiro con los 5 dados. Inmediatamente después, el jugador a su derecha (que asume el rol de "El Destino" o "La Naturaleza") elige uno de los dados de la mesa y lo <strong>"congela"</strong>. Ese dado no podrá ser vuelto a tirar en lo que resta del turno del jugador, obligándolo a construir su jugada alrededor de esa imposición externa.
+                        </p>
+                        <div class="border-l-4 border-xul_blue pl-4 bg-gray-50 p-4">
+                            <strong class="text-xul_blue block mb-2 uppercase text-sm tracking-wider">Dinámica de Mesa y Debate:</strong>
+                            <p class="text-base">Esta variante simula la "facticidad" de la vida: no elegimos dónde nacemos ni ciertas tragedias o ventajas que nos ocurren, pero sí elegimos qué hacer con el resto de nuestros "dados". Genera frustración inicial, pero luego exige resiliencia. ¿Qué tanta libertad tenemos realmente si las bases de nuestra jugada nos son impuestas por fuerzas externas?</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. VARIANTE 2: El Cálculo Felicífico -->
+                <section id="calculo" class="scroll-mt-32 bg-white border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#2A2A2A] relative">
+                    <div class="absolute -left-4 -top-4 bg-xul_terra border-[3px] border-xul_ink text-white w-12 h-12 flex items-center justify-center font-black text-xl shadow-[4px_4px_0px_#2A2A2A]">
+                        <i data-lucide="calculator" class="w-6 h-6"></i>
+                    </div>
+                    <div class="mb-6">
+                        <span class="font-sans font-bold text-xul_terra uppercase tracking-widest text-sm">Variante 2</span>
+                        <h4 class="font-sans font-black text-3xl uppercase text-xul_ink">El Cálculo Felicífico <span class="text-xl font-normal block md:inline md:ml-2 text-gray-500">(Ética Utilitarista)</span></h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Rama Filosófica</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">Utilitarismo (Jeremy Bentham, John Stuart Mill).</p>
+                        </div>
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Concepto Central</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">La maximización del placer, la cuantificación del dolor y el análisis de costo-beneficio.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 font-sans text-gray-700 text-lg mb-6">
+                        <p>
+                            <strong class="text-xul_ink">La Mecánica Hackeada:</strong> Se rompe la regla de los "tres tiros máximos". Un jugador puede tirar los dados todas las veces que quiera. Sin embargo, a partir del cuarto tiro, cada lanzamiento adicional tiene un <strong>"costo de sufrimiento"</strong> que se resta de su puntaje final de la partida.
+                        </p>
+                        
+                        <ul class="border-2 border-xul_ink p-4 bg-white space-y-3 font-bold text-xul_ink">
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="trending-down" class="w-5 h-5 text-xul_terra"></i>
+                                <span><strong>4to tiro:</strong> cuesta 2 puntos.</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="trending-down" class="w-5 h-5 text-xul_terra"></i>
+                                <span><strong>5to tiro:</strong> cuesta 5 puntos.</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <i data-lucide="trending-down" class="w-5 h-5 text-xul_terra"></i>
+                                <span><strong>6to tiro:</strong> cuesta 10 puntos, etc.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="border-l-4 border-xul_terra pl-4 bg-gray-50 p-4 font-sans text-gray-700">
+                        <strong class="text-xul_terra block mb-2 uppercase text-sm tracking-wider">Dinámica de Mesa y Debate:</strong>
+                        <p class="text-base">El jugador se enfrenta al dilema utilitarista en tiempo real: ¿Vale la pena el sufrimiento (pérdida de puntos asegurados) en la búsqueda de la jugada perfecta (la Generala)? Convierte la partida en una micro-economía del dolor y el placer, abriendo el debate sobre los límites de la ambición, la codicia y si el fin (obtener la categoría deseada) justifica los medios (el desgaste para conseguirla).</p>
+                    </div>
+                </section>
+
+                <!-- 4. VARIANTE 3: El Mito de Sísifo -->
+                <section id="sisifo" class="scroll-mt-32 bg-white border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#2A2A2A] relative">
+                    <div class="absolute -left-4 -top-4 bg-xul_yellow border-[3px] border-xul_ink text-xul_ink w-12 h-12 flex items-center justify-center font-black text-xl shadow-[4px_4px_0px_#2A2A2A]">
+                        <i data-lucide="mountain" class="w-6 h-6"></i>
+                    </div>
+                    <div class="mb-6">
+                        <span class="font-sans font-bold text-xul_ink uppercase tracking-widest text-sm">Variante 3</span>
+                        <h4 class="font-sans font-black text-3xl uppercase text-xul_ink">El Mito de Sísifo <span class="text-xl font-normal block md:inline md:ml-2 text-gray-500">(Existencialismo y Absurdo)</span></h4>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Rama Filosófica</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">Existencialismo y la Filosofía del Absurdo (Albert Camus, Jean-Paul Sartre).</p>
+                        </div>
+                        <div class="bg-xul_paper border-2 border-xul_ink p-4">
+                            <p class="font-bold text-xs uppercase tracking-widest text-gray-500 mb-1">Concepto Central</p>
+                            <p class="font-serif text-xl font-bold text-xul_ink">La ausencia de sentido inherente en el universo y la responsabilidad humana de crear sus propios valores.</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 font-sans text-gray-700 text-lg mb-6">
+                        <p>
+                            <strong class="text-xul_ink">La Mecánica Hackeada:</strong> Se descarta la tabla de puntuación tradicional (ya no existen el Full, el Póker, ni los números del 1 al 6). El jugador tira los dados hasta tres veces. Con los cinco dados finales sobre la mesa, <strong>el jugador debe inventar una categoría nueva</strong> basándose en esos números y darle un nombre (ej: <em>"La Escalera Rota", "El Trío de la Angustia", "Disonancia de Cuatros"</em>).
+                        </p>
+                        <p>
+                            Luego, tiene <strong>30 segundos para justificar existencialmente</strong> por qué esa combinación tiene un valor profundo. La mesa vota del 1 al 10 para otorgarle el puntaje basado en su creatividad y poder de convicción.
+                        </p>
+                        
+                        <div class="border-l-4 border-xul_yellow pl-4 bg-gray-50 p-4 mb-6">
+                            <strong class="text-xul_ink block mb-2 uppercase text-sm tracking-wider">Dinámica de Mesa y Debate:</strong>
+                            <p class="text-base">El universo de los dados pierde sus reglas objetivas y se vuelve "absurdo". Al igual que Sísifo empujando la piedra, tirar los dados no tiene un sentido preestablecido; el jugador es arrojado al vacío y debe inventar el significado. El debate posterior analiza cómo la sociedad crea estructuras de valor (el dinero, el éxito) de la nada, y qué ocurre cuando esas estructuras se desmoronan.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- 5. GUÍA DE DEBRIEFING -->
+            <section id="debriefing" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#D1623A]">
+                        <span class="text-white font-black text-xl font-sans">5</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Guía de Debriefing</h3>
+                </div>
+                <div class="bg-xul_ink text-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#6BA4C4] mb-12">
+                    <p class="font-sans text-lg mb-6 text-gray-300">
+                        Al concluir las partidas, se sugiere abrir un plenario de discusión con las siguientes preguntas:
+                    </p>
+                    <ul class="space-y-6 font-serif text-xl">
+                        <li class="flex gap-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-xul_yellow flex-shrink-0 mt-1"></i>
+                            <p>En la variante del Amor Fati (Estoicismo), ¿sentiste más satisfacción al lograr una buena jugada a pesar del dado impuesto, que cuando juegas con libertad total? ¿Por qué?</p>
+                        </li>
+                        <li class="flex gap-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-xul_yellow flex-shrink-0 mt-1"></i>
+                            <p>Durante El Cálculo Felicífico, ¿en qué momento la búsqueda racional de un mejor puntaje se convirtió en una obsesión irracional? ¿Cómo se aplica esto a nuestra búsqueda de la felicidad o el éxito económico?</p>
+                        </li>
+                        <li class="flex gap-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-xul_yellow flex-shrink-0 mt-1"></i>
+                            <p>En la variante del Mito de Sísifo, al no haber categorías preexistentes, ¿sentiste angustia ante la libertad absoluta de inventar el sentido, o lo sentiste liberador?</p>
+                        </li>
+                        <li class="flex gap-4">
+                            <i data-lucide="help-circle" class="w-6 h-6 text-xul_yellow flex-shrink-0 mt-1"></i>
+                            <p>Si la vida fuera una partida de Generala, ¿estamos jugando con las reglas clásicas, o crees que alguien más nos está "congelando los dados"?</p>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 6. EL ÁGORA (SECCIÓN DE COMENTARIOS) -->
+            <section id="comentarios" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#D1623A]">
+                        <span class="text-white font-black text-xl font-sans">6</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">El Ágora</h3>
+                </div>
+                
+                <div class="bg-xul_paper border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#EBB134] mb-10">
+                    <h4 class="font-sans font-black text-xl uppercase text-xul_ink mb-4 border-b-2 border-xul_ink pb-2">Suma tu voz al debate</h4>
+                    <form id="comment-form" class="space-y-4">
+                        <textarea id="comment-input" required rows="3" class="w-full border-2 border-xul_ink bg-white p-4 font-sans text-base focus:outline-none focus:border-xul_blue transition-all" placeholder="Comparte los debates que surgieron en tu mesa..."></textarea>
+                        <div class="flex justify-end">
+                            <button type="submit" id="submit-comment" class="bg-xul_ink text-white font-black text-sm py-3 px-6 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] flex items-center gap-2">
+                                <i data-lucide="send" class="w-4 h-4"></i> Publicar Comentario
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="space-y-6">
+                    <h4 class="font-sans font-black text-xl uppercase text-xul_ink border-b-2 border-xul_ink pb-2">Comunidad Ludosofía</h4>
+                    <div id="comments-list" class="space-y-5">
+                        <!-- Loading spinner inicial -->
+                        <div class="flex items-center justify-center p-8">
+                            <i data-lucide="loader-2" class="w-8 h-8 text-xul_blue animate-spin"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- COLUMNA LATERAL (ÍNDICE FIJO) -->
+        <div class="lg:col-span-1 hidden lg:block">
+            <div class="sticky top-28 flex flex-col gap-6">
+                <div class="bg-white border-[3px] border-xul_ink shadow-[8px_8px_0px_#6BA4C4] p-6">
+                    <h4 class="font-sans font-black text-xl uppercase tracking-widest text-xul_ink border-b-2 border-xul_ink pb-3 mb-4">Índice</h4>
+                    <nav class="space-y-4 font-sans font-bold text-gray-600 text-sm">
+                        <a href="#marco-filosofico" class="block hover:text-xul_terra transition-colors">1. Marco Filosófico</a>
+                        
+                        <div>
+                            <span class="block text-xul_ink mb-2">2. Módulos de Hackeo</span>
+                            <div class="pl-4 border-l-2 border-gray-200 space-y-2 font-normal text-xs uppercase tracking-wider">
+                                <a href="#amor-fati" class="block hover:text-xul_blue transition-colors">• Amor Fati</a>
+                                <a href="#calculo" class="block hover:text-xul_terra transition-colors">• Cálculo Felicífico</a>
+                                <a href="#sisifo" class="block hover:text-xul_yellow transition-colors">• El Mito de Sísifo</a>
+                            </div>
+                        </div>
+
+                        <a href="#debriefing" class="block hover:text-xul_terra transition-colors">3. Guía de Debriefing</a>
+                        <a href="#comentarios" class="block hover:text-xul_terra transition-colors">4. El Ágora (Foro)</a>
+                    </nav>
+                </div>
+
+                <!-- Banner Promocional ahora funciona como atajo a los comentarios -->
+                <a href="#comentarios" class="block bg-xul_ink border-[3px] border-xul_ink p-6 text-center text-white relative overflow-hidden group hover:shadow-[6px_6px_0px_#EBB134] transition-all">
+                    <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="message-circle" class="w-32 h-32"></i>
+                    </div>
+                    <h5 class="xul-title font-bold text-2xl mb-2 relative z-10">El Ágora</h5>
+                    <p class="font-sans text-xs text-gray-300 mb-4 relative z-10">
+                        Lee las opiniones de otros miembros y comparte tus experiencias.
+                    </p>
+                    <span class="inline-block bg-transparent border-2 border-white px-6 py-2 font-bold text-[10px] uppercase tracking-widest group-hover:bg-white group-hover:text-xul_ink transition-colors relative z-10">
+                        Ir a Comentarios
+                    </span>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- MODAL DE PERFIL -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] transform transition-all text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía Actual</p>
+                <p id="profile-role" class="font-black text-xl text-xul_terra uppercase tracking-wider"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
+
+    <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-xul_ink mt-12">
+        <div class="max-w-6xl mx-auto text-center">
+            <span class="font-sans font-black tracking-widest text-lg">LUDOSOFÍA &copy; 2026</span>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
