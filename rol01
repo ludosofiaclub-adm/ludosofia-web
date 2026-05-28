@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dossier Confidencial | LUDOSOFÍA</title>
+
+    <script>
+        window.CONFIG_ACCESO = {
+            PUBLICO: true,
+            SOCIO: true,
+            SOCIO_FUNDADOR: true
+        };
+    </script>
+    <script type="module" src="seguridad.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_purple: '#8C6BC9'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background-color: #FDF8ED; 
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-xul { text-shadow: 3px 3px 0px #2A2A2A; }
+        
+        @keyframes stampFade {
+            0% { opacity: 0; transform: scale(1.5) rotate(-10deg); }
+            50% { opacity: 1; transform: scale(0.9) rotate(5deg); }
+            100% { opacity: 1; transform: scale(1) rotate(0deg); }
+        }
+        .animate-stamp {
+            animation: stampFade 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        /* Glitch Effect para seguridad */
+        .glitch-text { position: relative; }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text);
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #FDF8ED;
+        }
+        .glitch-text::before {
+            left: 2px; text-shadow: -1px 0 red; clip: rect(24px, 550px, 90px, 0); animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        .glitch-text::after {
+            left: -2px; text-shadow: -1px 0 blue; clip: rect(85px, 550px, 140px, 0); animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+        @keyframes glitch-anim {
+            0% { clip: rect(13px, 9999px, 86px, 0); }
+            20% { clip: rect(32px, 9999px, 14px, 0); }
+            40% { clip: rect(6px, 9999px, 73px, 0); }
+            60% { clip: rect(89px, 9999px, 2px, 0); }
+            80% { clip: rect(41px, 9999px, 55px, 0); }
+            100% { clip: rect(98px, 9999px, 20px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(44px, 9999px, 18px, 0); }
+            20% { clip: rect(66px, 9999px, 9px, 0); }
+            40% { clip: rect(22px, 9999px, 88px, 0); }
+            60% { clip: rect(11px, 9999px, 55px, 0); }
+            80% { clip: rect(77px, 9999px, 33px, 0); }
+            100% { clip: rect(5px, 9999px, 44px, 0); }
+        }
+
+        @media print {
+            body { background: white; }
+            nav, footer, #intro-section, #login-section, .print-hide { display: none !important; }
+            #dossier-container { display: block !important; box-shadow: none !important; border: none !important; padding-top: 0 !important; }
+            .bg-xul_blue, .bg-xul_pink, .bg-xul_terra, .bg-gray-800, .bg-xul_purple {
+                background-color: white !important; border-bottom: 2px solid black;
+            }
+            .text-white { color: black !important; }
+            .bg-xul_yellow\/30 { background-color: transparent !important; border: 1px solid black !important; }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_terra selection:text-white min-h-screen flex flex-col">
+
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+            
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="index.html#schole" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="index.html#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="rol.html" class="text-xul_terra border-b-2 border-xul_terra pb-1 transition-colors">Juegos de Rol</a>
+                
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A]" title="Tu Membresía"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+            
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+        
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="index.html#schole" class="mobile-link text-xul_ink hover:text-xul_terra transition block">Scholē</a>
+            <a href="index.html#ludoteca" class="mobile-link text-xul_ink hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="rol.html" class="mobile-link text-xul_terra border-l-4 border-xul_terra pl-2 transition block">Juegos de Rol</a>
+            
+            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
+
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="flex-grow pt-28 pb-12 w-full">
+        
+        <!-- INTRO Y OPCIONES (Visible al entrar) -->
+        <section id="intro-section" class="max-w-4xl mx-auto px-6 mt-8 transition-all duration-500">
+            <div class="bg-white border-[4px] border-xul_ink p-8 md:p-12 shadow-[12px_12px_0px_#D1623A] text-center relative overflow-hidden">
+                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(45deg, #2A2A2A 0, #2A2A2A 2px, transparent 2px, transparent 20px);"></div>
+                
+                <div class="relative z-10">
+                    <span class="inline-block bg-xul_ink text-white font-black px-3 py-1 text-xs uppercase tracking-widest mb-4">Caso Activo</span>
+                    <h1 class="xul-title text-4xl md:text-6xl font-black text-xul_ink leading-none uppercase mb-6">El Criminal Predestinado</h1>
+                    <p class="font-serif text-xl text-gray-700 leading-relaxed max-w-2xl mx-auto mb-10">
+                        El sistema Panóptico-IA ha dictaminado una sentencia de culpabilidad absoluta sobre un crimen que aún no ocurre. Se convoca al Tribunal Supremo para deliberar: ¿Libertad o Seguridad?
+                    </p>
+
+                    <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                        <button id="btn-inscribirse" class="w-full md:w-auto bg-xul_terra text-white font-black uppercase tracking-widest px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="pen-tool" class="w-5 h-5"></i> Inscribirse
+                        </button>
+                        <button id="btn-tengo-clave" class="w-full md:w-auto bg-xul_paper text-xul_ink font-black uppercase tracking-widest px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#6BA4C4] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all flex items-center justify-center gap-2">
+                            <i data-lucide="key" class="w-5 h-5"></i> Ya tengo una clave
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DE LOGIN CLAVE (Oculta) -->
+        <section id="login-section" class="hidden max-w-lg mx-auto px-6 mt-16 transition-all duration-500">
+            <div class="bg-white border-[4px] border-xul_ink shadow-[12px_12px_0px_rgba(42,42,42,1)] p-8 md:p-12 relative overflow-hidden">
+                <!-- Cinta de precaución -->
+                <div class="absolute top-0 left-0 w-full h-3" style="background-image: repeating-linear-gradient(45deg, #EBB134 0, #EBB134 10px, #2A2A2A 10px, #2A2A2A 20px);"></div>
+                
+                <button id="btn-back-intro" class="absolute top-6 left-6 text-gray-400 hover:text-xul_ink"><i data-lucide="arrow-left"></i></button>
+
+                <div class="text-center mb-8 mt-4">
+                    <i data-lucide="shield-alert" class="w-12 h-12 text-xul_terra mx-auto mb-4"></i>
+                    <h2 class="font-sans font-black text-xul_ink text-2xl uppercase tracking-widest glitch-text" data-text="ACCESO CLASIFICADO">ACCESO CLASIFICADO</h2>
+                    <p class="font-serif text-gray-600 mt-2">Ingrese la palabra clave recibida en su correo electrónico.</p>
+                </div>
+
+                <div class="flex flex-col gap-4">
+                    <input type="text" id="clave-input" placeholder="PALABRA CLAVE..." class="w-full border-[3px] border-xul_ink bg-xul_paper p-4 font-sans font-black text-xl text-center uppercase tracking-widest focus:outline-none focus:border-xul_blue transition-colors" autocomplete="off">
+                    <button id="btn-desclasificar" class="w-full bg-xul_ink text-white font-black text-lg uppercase tracking-widest py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#D1623A] hover:bg-xul_terra transition-all transform active:scale-95">
+                        Desclasificar
+                    </button>
+                    <p id="error-msg" class="hidden text-red-600 font-bold text-center text-sm uppercase tracking-widest bg-red-100 border border-red-600 py-2 mt-2">CÓDIGO INVÁLIDO</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECCIÓN DEL DOSSIER (Oculta hasta el login) -->
+        <section id="dossier-container" class="hidden max-w-4xl mx-auto px-6 mt-4 w-full">
+            <div class="bg-xul_paper border-[4px] border-xul_ink shadow-[12px_12px_0px_#2A2A2A] relative overflow-hidden">
+                <!-- Sello Confidencial -->
+                <div class="absolute top-4 right-4 md:top-8 md:right-8 z-20 pointer-events-none print-hide">
+                    <div class="w-24 h-24 rounded-full border-4 border-red-600 text-red-600 flex flex-col items-center justify-center transform rotate-12 opacity-80 mix-blend-multiply">
+                        <span class="font-sans font-black text-[10px] tracking-widest uppercase">Propiedad de</span>
+                        <span class="font-serif font-bold text-xl uppercase leading-none border-t border-b border-red-600 py-1 my-1">Tribunal</span>
+                        <span class="font-sans font-black text-[10px] tracking-widest uppercase">Clasificado</span>
+                    </div>
+                </div>
+
+                <!-- Cabecera Dinámica -->
+                <div id="d-header" class="p-8 md:p-12 border-b-[4px] border-xul_ink relative transition-colors duration-500">
+                    <svg viewBox="0 0 100 100" class="absolute right-0 bottom-0 w-48 h-48 opacity-20 transform translate-x-1/4 translate-y-1/4 pointer-events-none">
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="#2A2A2A" stroke-width="8"/>
+                        <path d="M 10 50 L 90 50 M 50 10 L 50 90" stroke="#2A2A2A" stroke-width="4"/>
+                    </svg>
+                    <div class="relative z-10">
+                        <span class="inline-block bg-white border-2 border-xul_ink px-3 py-1 font-sans font-black text-xs uppercase tracking-widest text-xul_ink shadow-[2px_2px_0px_#2A2A2A] mb-4">
+                            Identidad Asumida
+                        </span>
+                        <h2 id="d-name" class="xul-title text-5xl md:text-7xl font-black text-white text-shadow-xul uppercase tracking-tight leading-none mb-2">Nombre</h2>
+                        <p id="d-subtitle" class="font-sans font-bold text-xul_ink text-lg md:text-xl uppercase tracking-widest bg-white/80 inline-block px-3 mt-2">Subtitulo</p>
+                    </div>
+                </div>
+
+                <!-- Cuerpo del Dossier -->
+                <div class="p-8 md:p-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+                    <!-- Columna Principal -->
+                    <div class="md:col-span-2 flex flex-col gap-8">
+                        <div class="relative">
+                            <div class="absolute -left-4 top-0 w-2 h-full bg-xul_terra border border-xul_ink"></div>
+                            <h3 class="font-sans font-black text-xul_ink uppercase tracking-widest text-sm mb-3 flex items-center gap-2">
+                                <i data-lucide="target" class="w-5 h-5 text-xul_terra"></i> Tu Objetivo Principal
+                            </h3>
+                            <p id="d-goal" class="font-serif text-2xl text-gray-800 font-bold leading-snug bg-white p-6 border-2 border-xul_ink shadow-[4px_4px_0px_rgba(42,42,42,0.1)]">
+                                Objetivo...
+                            </p>
+                        </div>
+
+                        <div>
+                            <h3 class="font-sans font-black text-xul_ink uppercase tracking-widest text-sm mb-3 flex items-center gap-2">
+                                <i data-lucide="gavel" class="w-5 h-5 text-xul_ink"></i> Postura en el Debate
+                            </h3>
+                            <div id="d-stance" class="font-sans text-lg text-gray-700 leading-relaxed space-y-4">
+                                Postura...
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Columna Lateral -->
+                    <div class="flex flex-col gap-6">
+                        <div class="bg-xul_yellow/30 border-[3px] border-xul_yellow p-5">
+                            <h3 class="font-sans font-black text-xul_ink uppercase tracking-widest text-xs mb-3 border-b-2 border-xul_yellow pb-2">
+                                Conceptos Clave
+                            </h3>
+                            <ul id="d-concepts" class="font-serif text-lg font-bold text-xul_ink space-y-2 list-disc list-inside">
+                            </ul>
+                        </div>
+
+                        <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#6BA4C4]">
+                            <h3 class="font-sans font-black text-xul_ink uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
+                                <i data-lucide="message-square" class="w-4 h-4 text-xul_blue"></i> Tu Retórica
+                            </h3>
+                            <p id="d-rhetoric" class="font-sans text-sm text-gray-700 leading-relaxed">
+                                Retórica...
+                            </p>
+                        </div>
+
+                        <div class="bg-xul_ink text-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#C96B8C]">
+                            <h3 class="font-sans font-black text-xul_pink uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
+                                <i data-lucide="skull" class="w-4 h-4 text-xul_pink"></i> Fobias (Qué Atacar)
+                            </h3>
+                            <p id="d-phobias" class="font-sans text-sm text-gray-300 leading-relaxed">
+                                Fobias...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botonera de Acción Dossier -->
+            <div class="mt-8 flex flex-col sm:flex-row justify-center gap-4 print-hide">
+                <button onclick="window.location.href='rol.html#cartelera'" class="bg-white text-xul_ink font-black text-sm uppercase tracking-widest px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i> Volver a Cartelera
+                </button>
+                <button onclick="window.print()" class="bg-xul_ink text-white font-black text-sm uppercase tracking-widest px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#D1623A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#D1623A] transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="printer" class="w-5 h-5"></i> Imprimir Expediente
+                </button>
+            </div>
+            
+            <!-- Bypass Admin -->
+            <div class="mt-8 text-center print-hide">
+                <button id="btn-admin-bypass" class="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-xul_blue transition-colors">Modo Director</button>
+                <div id="admin-nav" class="hidden flex flex-wrap justify-center gap-2 mt-4 bg-white p-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER UNIFICADO -->
+    <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-gray-800 mt-auto print-hide">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-700 pb-8">
+            <div class="flex items-center space-x-3">
+                <svg viewBox="0 0 100 100" class="w-8 h-8">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="currentColor" stroke-width="3"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="font-sans font-black tracking-widest text-lg leading-none">LUDOSOFÍA</span>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
+                <a href="index.html" class="hover:text-xul_blue transition">Inicio</a>
+                <a href="index.html#schole" class="hover:text-xul_blue transition">Scholē</a>
+                <a href="index.html#faqs" class="hover:text-xul_blue transition">FAQs</a>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-6 text-center text-sm font-sans text-gray-400">
+            © 2026 Ludosofía - El juego infinito del pensamiento.
+        </div>
+    </footer>
+
+    <!-- MODAL CONDICIONES DE INSCRIPCIÓN -->
+    <div id="conditions-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('conditions-modal').classList.add('hidden')"></div>
+        <div class="relative bg-white border-[4px] border-xul_ink p-8 md:p-10 max-w-md w-full shadow-[12px_12px_0px_#EBB134] transform transition-all">
+            <button onclick="document.getElementById('conditions-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra"><i data-lucide="x" class="w-6 h-6"></i></button>
+            
+            <div class="flex items-center gap-3 mb-6 border-b-[3px] border-xul_ink pb-4">
+                <i data-lucide="scale" class="w-8 h-8 text-xul_terra"></i>
+                <h3 class="xul-title text-2xl font-black text-xul_ink tracking-tight uppercase">Condiciones del Tribunal</h3>
+            </div>
+            
+            <ul class="font-sans text-sm text-gray-700 space-y-4 mb-8">
+                <li class="flex items-start gap-3">
+                    <i data-lucide="video" class="w-5 h-5 text-xul_blue flex-shrink-0 mt-0.5"></i>
+                    <span>El encuentro será por <strong>Zoom</strong>. Se requiere posibilidad de conectarse con micrófono y <strong>cámara encendida</strong>.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i data-lucide="masks" class="w-5 h-5 text-xul_pink flex-shrink-0 mt-0.5"></i>
+                    <span>Deberás asumir y defender la filosofía de tu máscara asignada, <strong>incluso si no estás de acuerdo con ella</strong> personalmente.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <i data-lucide="calendar-clock" class="w-5 h-5 text-xul_green flex-shrink-0 mt-0.5"></i>
+                    <span>Los cupos son estrictos para el debate. Solicitamos el compromiso de <strong>avisar con anticipación</strong> en caso de no poder participar.</span>
+                </li>
+            </ul>
+            
+            <a id="btn-confirmar-inscripcion" href="mailto:rol@ludosofiaclub.ar?subject=Inscripción:%20El%20Criminal%20Predestinado&body=Hola!%20Acepto%20las%20condiciones%20(cámara%20encendida,%20Zoom)%20y%20quiero%20inscribirme%20en%20el%20juicio.%20Espero%20mi%20máscara." class="block w-full bg-xul_ink text-white text-center font-black py-4 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">
+                Acepto el desafío
+            </a>
+        </div>
+    </div>
+
+    <!-- MODAL PERFIL/ALERTAS GENERICAS -->
+    <div id="alert-modal" class="hidden fixed inset-0 z-[120] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('alert-modal').classList.add('hidden')"></div>
+        <div id="alert-box" class="relative bg-xul_paper border-[3px] border-xul_ink p-8 md:p-10 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] transform transition-all text-center">
+            <h3 id="alert-title" class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-2">Aviso</h3>
+            <p id="alert-message" class="font-sans text-gray-700 mb-6">Mensaje.</p>
+            <button onclick="document.getElementById('alert-modal').classList.add('hidden')" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">Entendido</button>
+        </div>
+    </div>
+
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] transform transition-all text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía Actual</p>
+                <p id="profile-role" class="font-black text-xl text-xul_ink uppercase tracking-wider text-xul_terra"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        const btnMenu = document.getElementById('mobile-menu-btn');
+        const menuMobile = document.getElementById('mobile-menu');
+        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+
+        // BD DE FILÓSOFOS (5 Máscaras para el Juicio Preventivo)
+        const masksData = {
+            "NADA": { // Sartre
+                name: "Jean-Paul Sartre",
+                subtitle: "El Defensor de la Libertad Radical",
+                color: "bg-xul_pink",
+                goal: "Exigir la liberación inmediata del acusado. Nadie está determinado a hacer nada hasta que lo elige en el presente.",
+                stance: "<p>El ser humano es pura nada, un lienzo en blanco. Ninguna máquina, ni siquiera Dios o el algoritmo más avanzado, puede predecir el futuro de un hombre porque su futuro se crea en el instante preciso en que decide actuar.</p><p>Encerrar a este ciudadano ahora basándose en un código informático es actuar con <strong>'Mala Fe'</strong>: es tratar al ser humano como una cosa, como una piedra que cae por gravedad, negando su capacidad de elegir libremente hasta el último segundo. Si lo encerramos, declaramos que el humano es solo un robot de carne.</p>",
+                concepts: ["La existencia precede a la esencia", "Libertad radical", "Condenados a ser libres", "Angustia y Mala Fe"],
+                rhetoric: "Tono rebelde, existencial, apasionado. Uso de frases tajantes sobre la responsabilidad individual. Apela a la angustia de tomar decisiones libres.",
+                phobias: "El determinismo. Las excusas psicológicas, biológicas o algorítmicas. Reducir al hombre a un mero objeto calculable."
+            },
+            "CONATUS": { // Spinoza
+                name: "Baruch Spinoza",
+                subtitle: "El Geómetra del Universo",
+                color: "bg-xul_blue",
+                goal: "Aprobar el encierro preventivo para mantener el orden, pero exigir que no se juzgue moralmente al acusado.",
+                stance: "<p>Creemos que somos libres solo porque somos conscientes de nuestros actos, pero somos completamente ignorantes de las causas que nos empujan a hacerlos. El libre albedrío es una ilusión infantil.</p><p>El ciudadano es solo un engranaje más de la naturaleza; la química de su cerebro y su entorno ya han 'causado' que cometa el crimen. La IA solo ha sabido leer esta cadena inquebrantable de causas y efectos. Hay que aislarlo como quien desvía un río peligroso: para proteger al Estado, pero sin odio ni condena moral, pues él no es 'culpable' de las leyes de la física.</p>",
+                concepts: ["Determinismo absoluto", "Conatus (esfuerzo vital)", "Dios es la Naturaleza", "La ilusión del libre albedrío"],
+                rhetoric: "Tono sereno, lógico, carente de emociones extremas. Razonamiento geométrico, frío y pacífico. Busca comprender el mecanismo, no juzgarlo.",
+                phobias: "El odio ciego, la idea de castigo vengativo o justicia retributiva. Los idealistas que creen en la voluntad mágica sobre las leyes físicas."
+            },
+            "LEVIATAN": { // Hobbes
+                name: "Thomas Hobbes",
+                subtitle: "El Arquitecto del Leviatán",
+                color: "bg-xul_terra",
+                goal: "Exigir el encarcelamiento inmediato y celebrar al Panóptico-IA como la herramienta divina del nuevo Estado para erradicar el miedo.",
+                stance: "<p>Sin un poder absoluto que nos vigile, la humanidad volvería inmediatamente al Estado de Naturaleza, donde la vida es 'solitaria, pobre, sucia, brutal y breve'. No se engañen: el hombre es el lobo del hombre, y este ciudadano está a punto de morder.</p><p>Entregamos nuestra libertad natural al Leviatán exclusivamente a cambio de seguridad. Hoy, el Panóptico-IA es nuestro nuevo e infalible soberano. Si cuestionamos el dictamen de la máquina por salvar a un individuo peligroso, destruiremos el pacto social. ¡Encierren al futuro asesino para que el resto podamos dormir en paz!</p>",
+                concepts: ["El Leviatán", "Estado de Naturaleza", "Guerra de todos contra todos", "Contrato Social por Seguridad"],
+                rhetoric: "Tono autoritario, profundamente pesimista sobre la naturaleza humana, implacable. Busca el orden, el control y la obediencia a toda costa.",
+                phobias: "La anarquía, el desorden civil. Los idealistas ingenuos que confían en la 'bondad natural' del ser humano. La debilidad institucional."
+            },
+            "PANOPTICO": { // Foucault
+                name: "Michel Foucault",
+                subtitle: "El Analista del Poder",
+                color: "bg-gray-800",
+                goal: "Defender al acusado atacando ferozmente al sistema IA, revelando que es un instrumento opresivo de control social y biopolítica.",
+                stance: "<p>¿Ustedes realmente creen que estamos discutiendo sobre el libre albedrío? Este tribunal es una farsa trágica. El <em>Panóptico-IA</em> no está 'prediciendo' crímenes neutrales; está fabricando criminales útiles para justificar la expansión de su propio poder disciplinario.</p><p>El objetivo del Estado moderno no es 'salvar' vidas, es vigilar, clasificar y normalizar a todos los ciudadanos. Si aprobamos este arresto, legitimamos la <strong>Biopolítica absoluta</strong>: el Estado ya no solo castigará lo que hacemos, sino lo que la máquina dice que <em>somos</em>. Hoy encerramos a este ciudadano por un código binario; mañana seremos todos nosotros.</p>",
+                concepts: ["Panoptismo", "Sociedades Disciplinarias", "Biopolítica", "La microfísica del poder"],
+                rhetoric: "Tono subversivo, analítico, conspirativo pero altamente académico. Desvía hábilmente la atención del 'criminal' para juzgar a los 'jueces'.",
+                phobias: "Las prisiones y toda institución de encierro. Las verdades 'científicas' o 'algorítmicas' usadas como excusa para dominar los cuerpos."
+            },
+            "PLURALIDAD": { // Arendt
+                name: "Hannah Arendt",
+                subtitle: "La Defensora de la Condición Humana",
+                color: "bg-xul_purple",
+                goal: "Destruir la legitimidad del Panóptico-IA. Demostrar que predecir la acción humana es el inicio del totalitarismo perfecto.",
+                stance: "<p>La condición fundamental de la humanidad es la <em>pluralidad</em> y la capacidad de <em>acción</em>, que es por definición impredecible e introduce siempre algo nuevo en el mundo. Al aceptar el dictamen de esta máquina, estamos tratando a los seres humanos como engranajes calculables, eliminando lo que nos hace libres.</p><p>El terror totalitario no solo aísla, sino que vuelve superfluos a los hombres. Esta IA es la culminación de esa pesadilla: no castiga lo que elegimos hacer, sino que aniquila por completo nuestra posibilidad de iniciar algo nuevo. Aceptar este juicio preventivo es aceptar el fin de lo humano.</p>",
+                concepts: ["La Acción y la Pluralidad", "Banalidad del mal", "Condición Humana", "Totalitarismo tecnológico"],
+                rhetoric: "Tono lúcido, histórico y de advertencia severa. Rechaza las categorías técnicas para centrarse en la pérdida trágica de la esencia humana.",
+                phobias: "La reducción de la política y la justicia a una administración técnica o estadística. La obediencia ciega a las 'leyes algorítmicas'."
+            }
+        };
+
+        // DOM Elements
+        const sectionIntro = document.getElementById('intro-section');
+        const sectionLogin = document.getElementById('login-section');
+        const dossierContainer = document.getElementById('dossier-container');
+        const modalConditions = document.getElementById('conditions-modal');
+        const errorMsg = document.getElementById('error-msg');
+        
+        // Buttons
+        document.getElementById('btn-inscribirse').onclick = () => modalConditions.classList.remove('hidden');
+        
+        document.getElementById('btn-confirmar-inscripcion').onclick = () => {
+            modalConditions.classList.add('hidden');
+        };
+
+        document.getElementById('btn-tengo-clave').onclick = () => {
+            sectionIntro.classList.add('hidden');
+            sectionLogin.classList.remove('hidden');
+        };
+        
+        document.getElementById('btn-back-intro').onclick = () => {
+            sectionLogin.classList.add('hidden');
+            sectionIntro.classList.remove('hidden');
+        };
+
+        // Render function
+        function renderDossier(key) {
+            const data = masksData[key];
+            if(!data) return;
+
+            sectionLogin.classList.add('hidden');
+            sectionIntro.classList.add('hidden');
+            dossierContainer.classList.remove('hidden');
+            dossierContainer.classList.remove('animate-stamp');
+
+            setTimeout(() => {
+                const header = document.getElementById('d-header');
+                header.className = `${data.color} p-8 md:p-12 border-b-[4px] border-xul_ink relative transition-colors duration-500`;
+                
+                document.getElementById('d-name').innerText = data.name;
+                document.getElementById('d-subtitle').innerText = data.subtitle;
+                document.getElementById('d-goal').innerText = data.goal;
+                document.getElementById('d-stance').innerHTML = data.stance;
+                document.getElementById('d-rhetoric').innerText = data.rhetoric;
+                document.getElementById('d-phobias').innerText = data.phobias;
+                
+                const list = document.getElementById('d-concepts');
+                list.innerHTML = '';
+                data.concepts.forEach(c => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span class="text-gray-800">${c}</span>`;
+                    list.appendChild(li);
+                });
+
+                dossierContainer.classList.add('animate-stamp');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 50);
+        }
+
+        // Login Logic
+        document.getElementById('btn-desclasificar').onclick = () => {
+            const input = document.getElementById('clave-input').value.trim().toUpperCase();
+            if (masksData[input]) {
+                errorMsg.classList.add('hidden');
+                renderDossier(input);
+            } else {
+                errorMsg.classList.remove('hidden');
+                document.getElementById('clave-input').classList.add('border-red-500');
+                setTimeout(() => document.getElementById('clave-input').classList.remove('border-red-500'), 1000);
+            }
+        };
+
+        document.getElementById('clave-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') document.getElementById('btn-desclasificar').click();
+        });
+
+        // Admin Bypass
+        document.getElementById('btn-admin-bypass').onclick = () => {
+            const adminNav = document.getElementById('admin-nav');
+            adminNav.classList.remove('hidden');
+            adminNav.innerHTML = '';
+            
+            Object.keys(masksData).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = `bg-white border-2 border-xul_ink py-2 px-3 font-black text-xs text-xul_ink shadow-[2px_2px_0px_#2A2A2A] hover:bg-gray-100 uppercase`;
+                btn.innerText = masksData[key].name;
+                btn.onclick = () => renderDossier(key);
+                adminNav.appendChild(btn);
+            });
+            renderDossier(Object.keys(masksData)[0]); // Carga el primero
+        };
+    </script>
+
+    <script type="module">
+        import { getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        window.showAlert = (message, title = 'Aviso') => {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        };
+
+        const app = getApp();
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        function updateUIWithRole(rol) {
+            let r = (rol || 'SOCIO').toUpperCase().trim();
+            let iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+
+            if (r.includes('FUNDADOR')) {
+                iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            } else if (r.includes('SOCIO') || r.includes('EXPLORADOR')) {
+                iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            }
+
+            const deskBadge = document.getElementById('badge-container-desktop');
+            const mobBadge = document.getElementById('badge-container-mobile');
+            if (deskBadge) { deskBadge.innerHTML = iconHtml; deskBadge.style.display = 'flex'; }
+            if (mobBadge) { mobBadge.innerHTML = iconHtml; mobBadge.style.display = 'flex'; }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            const loginBtnDesktop = document.getElementById('login-btn-desktop');
+            const loginBtnMobile = document.getElementById('login-btn-mobile');
+
+            if (user && !user.isAnonymous) {
+                const nombreMostrar = user.displayName ? user.displayName.split(' ')[0] : (user.email ? user.email.split('@')[0] : 'Pensador');
+
+                document.getElementById('login-text-desktop').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
+                if (document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = `HOLA, ${nombreMostrar.toUpperCase()}`;
+
+                document.getElementById('profile-email').innerText = user.email || 'Identidad Oculta';
+
+                const irAlInicio = () => window.location.href = 'index.html';
+                if (loginBtnDesktop) loginBtnDesktop.onclick = irAlInicio;
+                if (loginBtnMobile) loginBtnMobile.onclick = irAlInicio;
+
+                try {
+                    const docSnap = await getDoc(doc(db, 'usuarios', user.uid));
+                    if (docSnap.exists() && docSnap.data().rol) {
+                        const rol = docSnap.data().rol;
+                        document.getElementById('profile-role').innerText = rol;
+                        updateUIWithRole(rol);
+                    } else {
+                        updateUIWithRole('EXPLORADOR');
+                    }
+                } catch (error) {
+                    updateUIWithRole('EXPLORADOR');
+                }
+            } else {
+                document.getElementById('login-text-desktop').innerText = 'INGRESAR';
+                if (document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = 'INGRESAR';
+
+                if (document.getElementById('badge-container-desktop')) document.getElementById('badge-container-desktop').style.display = 'none';
+                if (document.getElementById('badge-container-mobile')) document.getElementById('badge-container-mobile').style.display = 'none';
+
+                const irALogin = () => window.location.href = 'login.html';
+                if (loginBtnDesktop) loginBtnDesktop.onclick = irALogin;
+                if (loginBtnMobile) loginBtnMobile.onclick = irALogin;
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                document.getElementById('profile-modal').classList.add('hidden');
+                window.location.reload();
+            });
+        });
+    </script>
+</body>
+</html>
