@@ -568,8 +568,10 @@
                     const docRef = getDocRef(user.uid);
                     await setDoc(docRef, {
                         paypalSubscriptionId: subscriptionID,
-                        paypalFecha: new Date().toISOString()
+                        paypalFecha: new Date().toISOString(),
+                        rol: planActual  // ← A1 fix: asigna el rol correcto (no queda en _pendiente)
                     }, { merge: true });
+                    localStorage.setItem('rol_usuario', planActual);
                 } catch(e) {
                     console.error('Error guardando subscription ID:', e);
                 }
