@@ -422,7 +422,10 @@
             paypal.Buttons({
                 style: { shape: 'rect', color: 'gold', layout: 'vertical', label: 'subscribe' },
                 createSubscription: function(data, actions) {
-                    return actions.subscription.create({ plan_id: planId });
+                    return actions.subscription.create({
+                        plan_id: planId,
+                        custom_id: window._paypalUid || '' // UID de Firebase → llega al webhook
+                    });
                 },
                 onApprove: function(data) {
                     window.handlePaypalSuccess(data.subscriptionID);
@@ -434,6 +437,7 @@
         }
 
         function showPaymentStep(uid) {
+            window._paypalUid = uid; // expuesto para renderPaypalButton → createSubscription
             const info = PLAN_INFO[planActual];
             document.getElementById('step-register').classList.add('hidden');
             document.getElementById('step-payment').classList.remove('hidden');
