@@ -156,6 +156,12 @@
             transform: translate(-50%, -50%) scale(1) !important;
             cursor: not-allowed;
         }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
     </style>
 </head>
 <body class="antialiased selection:bg-xul_terra selection:text-white relative overflow-x-hidden min-h-screen flex flex-col">
@@ -201,7 +207,9 @@
             <a href="index.html#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
             <a href="index.html#tablero" class="mobile-link hover:text-xul_terra transition block">Caja de Herramientas</a>
             <span class="mobile-link text-xul_green block">Ejercicios</span>
-            
+
+            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
+
             <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2 active:translate-y-1">
                 <span id="login-text-mobile">Mi Perfil</span>
             </button>
@@ -348,6 +356,26 @@
         </div>
     </footer>
 
+    <!-- Modal Perfil -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[4px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#75B07E] text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra bg-white border-2 border-xul_ink rounded-full p-1">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="w-20 h-20 bg-xul_green border-[3px] border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-10 h-10 text-xul_paper"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-6">usuario@ejemplo.com</p>
+            <div class="bg-white border-[3px] border-xul_ink p-4 mb-6 shadow-inner">
+                <label class="block font-bold text-xs uppercase tracking-widest text-gray-500 mb-2">Tu Membresía</label>
+                <p id="profile-role" class="font-black text-xl text-center uppercase tracking-wider text-xul_terra">—</p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_ink hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">Cerrar Sesión</button>
+        </div>
+    </div>
+
     <!-- Script UI -->
     <script>
         // Inicializar íconos Phosphor/Lucide
@@ -364,6 +392,67 @@
                 document.documentElement.style.display = '';
                 console.warn("Seguridad evadida visualmente por protocolo local file://");
             }
+        });
+    </script>
+    <script type="module">
+        import { getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const auth = getAuth(getApp());
+        const db   = getFirestore(getApp());
+
+        const loginBtnDesktop = document.getElementById('login-btn-desktop');
+        const loginBtnMobile  = document.getElementById('login-btn-mobile');
+
+        function actualizarNavbar(rol) {
+            const rolUp = (rol || 'PUBLICO').toUpperCase();
+            let iconHtml = '';
+            if (rolUp.includes('FUNDADOR')) {
+                iconHtml = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            } else if (rolUp.includes('SOCIO')) {
+                iconHtml = '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            }
+            const deskBadge = document.getElementById('badge-container-desktop');
+            const mobBadge  = document.getElementById('badge-container-mobile');
+            if (iconHtml) {
+                if (deskBadge) { deskBadge.innerHTML = iconHtml; deskBadge.style.display = 'flex'; deskBadge.classList.remove('hidden'); }
+                if (mobBadge)  { mobBadge.innerHTML  = iconHtml; mobBadge.style.display  = 'flex'; }
+            }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.replace('login.html');
+                return;
+            }
+
+            const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+            document.getElementById('login-text-desktop').innerText = 'HOLA, ' + nombre.toUpperCase();
+            const loginTextMobile = document.getElementById('login-text-mobile');
+            if (loginTextMobile) loginTextMobile.innerText = 'HOLA, ' + nombre.toUpperCase();
+
+            document.getElementById('profile-email').innerText = user.email || '';
+
+            const abrirPerfil = () => document.getElementById('profile-modal').classList.remove('hidden');
+            if (loginBtnDesktop) loginBtnDesktop.onclick = abrirPerfil;
+            if (loginBtnMobile)  loginBtnMobile.onclick  = abrirPerfil;
+
+            try {
+                const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                const rol = docSnap.exists() ? (docSnap.data().rol || 'SOCIO').toUpperCase() : 'SOCIO';
+                const profileRoleEl = document.getElementById('profile-role');
+                if (profileRoleEl) profileRoleEl.innerText = rol;
+                actualizarNavbar(rol);
+            } catch (e) {
+                actualizarNavbar('SOCIO');
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', async () => {
+            document.getElementById('profile-modal').classList.add('hidden');
+            await signOut(auth);
+            window.location.replace('login.html');
         });
     </script>
 </body>
