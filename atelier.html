@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Atelier | LUDOSOFÍA</title>
+
+    <script>
+        window.CONFIG_ACCESO = {
+            PUBLICO: false,
+            SOCIO: true,
+            SOCIO_FUNDADOR: true
+        };
+    </script>
+    <script type="module" src="seguridad.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_orange: '#E87524'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDF8ED;
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-xul { text-shadow: 4px 4px 0px #D1623A; }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
+
+        .card-hack {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-hack:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px #2A2A2A;
+        }
+
+        .tag { display: inline-block; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; padding: 2px 8px; border: 1.5px solid #2A2A2A; }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FDF8ED; border-left: 2px solid #2A2A2A; }
+        ::-webkit-scrollbar-thumb { background: #D1623A; border: 2px solid #2A2A2A; }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_terra selection:text-white relative min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="schole.html" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="index.html#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="cartas1.html" class="text-xul_ink hover:text-xul_terra transition-colors">Cartas</a>
+                <span class="text-xul_terra border-b-2 border-xul_terra cursor-default">Atelier</span>
+
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="schole.html" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="index.html#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="cartas1.html" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
+            <span class="mobile-link text-xul_terra block">Atelier</span>
+
+            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
+
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="pt-32 pb-16 px-6 relative border-b-[3px] border-xul_ink bg-[#D1623A] overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: repeating-linear-gradient(-45deg, #2A2A2A 0, #2A2A2A 2px, transparent 2px, transparent 20px);"></div>
+
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
+            <div class="flex-1 text-center md:text-left">
+                <div class="inline-block bg-white border-[3px] border-xul_ink px-4 py-1 mb-6 shadow-[4px_4px_0px_#2A2A2A] transform -rotate-1">
+                    <span class="font-sans font-black text-xs md:text-sm uppercase tracking-widest text-xul_ink">Espacio de Miembros</span>
+                </div>
+
+                <h1 class="xul-title text-6xl md:text-8xl font-black text-white tracking-tighter mb-6 text-shadow-xul uppercase">
+                    El Atelier
+                </h1>
+
+                <p class="font-serif text-xl md:text-2xl text-white/90 max-w-2xl leading-relaxed mb-8">
+                    Laboratorio colaborativo donde los miembros desarman juegos clásicos y los vuelven a armar con teoría crítica. Propone, prototipa, comparte.
+                </p>
+
+                <div class="flex flex-wrap gap-4 justify-center md:justify-start">
+                    <a href="#proponer" class="bg-xul_ink text-white font-black text-sm uppercase tracking-widest px-6 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_white] hover:-translate-y-1 hover:shadow-[6px_6px_0px_white] transition-all flex items-center gap-2">
+                        <i data-lucide="lightbulb" class="w-4 h-4"></i> Proponer un Hack
+                    </a>
+                    <a href="#galeria" class="bg-white text-xul_ink font-black text-sm uppercase tracking-widest px-6 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all flex items-center gap-2">
+                        <i data-lucide="layout-grid" class="w-4 h-4"></i> Ver Prototipos
+                    </a>
+                </div>
+            </div>
+
+            <!-- Ícono decorativo -->
+            <div class="hidden md:flex w-64 h-64 bg-xul_paper border-[4px] border-xul_ink items-center justify-center flex-shrink-0 shadow-[12px_12px_0px_#2A2A2A] relative overflow-hidden">
+                <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: repeating-linear-gradient(-45deg, #2A2A2A 0, #2A2A2A 1px, transparent 1px, transparent 20px);"></div>
+                <svg viewBox="0 0 100 100" class="w-36 h-36 relative z-10">
+                  <!-- Anillo de selección -->
+                  <circle cx="50" cy="42" r="34" fill="none" stroke="#2A2A2A" stroke-width="2.5"/>
+                  <!-- Marcas de mira -->
+                  <line x1="50" y1="5"  x2="50" y2="14" stroke="#2A2A2A" stroke-width="2"/>
+                  <line x1="50" y1="70" x2="50" y2="79" stroke="#2A2A2A" stroke-width="2"/>
+                  <!-- Puntos lateral izq/der -->
+                  <circle cx="16" cy="42" r="5.5" fill="#EBB134" stroke="#2A2A2A" stroke-width="1.5"/>
+                  <circle cx="84" cy="42" r="5.5" fill="#75B07E" stroke="#2A2A2A" stroke-width="1.5"/>
+                  <!-- Peón -->
+                  <circle cx="50" cy="28" r="11" fill="#D1623A" stroke="#2A2A2A" stroke-width="2.5"/>
+                  <rect x="44" y="38" width="12" height="7" fill="#D1623A" stroke="#2A2A2A" stroke-width="2.5"/>
+                  <path d="M 33,45 L 67,45 L 71,57 L 29,57 Z" fill="#D1623A" stroke="#2A2A2A" stroke-width="2.5"/>
+                  <rect x="29" y="57" width="42" height="7" fill="#D1623A" stroke="#2A2A2A" stroke-width="2.5"/>
+                  <!-- Ojo -->
+                  <circle cx="50" cy="25" r="4" fill="#FDF8ED"/>
+                  <circle cx="50" cy="25" r="1.6" fill="#2A2A2A"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-20 space-y-24 w-full flex-grow">
+
+        <!-- GALERÍA DE PROTOTIPOS -->
+        <section id="galeria" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-10 border-b-[3px] border-xul_ink pb-4">
+                <div class="w-12 h-12 bg-xul_terra border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
+                    <i data-lucide="layout-grid" class="w-6 h-6 text-white"></i>
+                </div>
+                <h2 class="xul-title text-4xl md:text-5xl font-black text-xul_ink tracking-tight uppercase">Galería de Prototipos</h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                <!-- Prototipo 1 -->
+                <div class="card-hack bg-white border-[3px] border-xul_ink p-6 shadow-[6px_6px_0px_#2A2A2A] flex flex-col">
+                    <div class="h-36 bg-xul_blue/20 border-[2px] border-xul_ink mb-4 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(45deg, #2A2A2A 0, #2A2A2A 1px, transparent 1px, transparent 10px);"></div>
+                        <svg viewBox="0 0 60 60" class="w-20 h-20 text-xul_blue relative z-10">
+                            <rect x="10" y="10" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <rect x="32" y="10" width="18" height="18" fill="currentColor" opacity="0.4" stroke="currentColor" stroke-width="2"/>
+                            <rect x="10" y="32" width="18" height="18" fill="currentColor" opacity="0.4" stroke="currentColor" stroke-width="2"/>
+                            <rect x="32" y="32" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="19" y1="19" x2="41" y2="41" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 2"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="tag bg-xul_blue/10">Ajedrez</span>
+                        <span class="tag bg-xul_yellow/20">Foucault</span>
+                    </div>
+                    <h3 class="font-sans font-black text-lg text-xul_ink uppercase tracking-wide leading-tight mb-2">Tablero del Panóptico</h3>
+                    <p class="font-serif text-sm text-gray-600 flex-grow leading-relaxed mb-4">Variante del ajedrez donde el rey no puede ver pero controla. Las piezas se mueven según quién observa a quién.</p>
+                    <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-200">
+                        <span class="font-sans text-xs text-gray-500 font-bold uppercase">Atelier · Abril 2026</span>
+                        <span class="tag bg-xul_green/20 text-xul_green">En proceso</span>
+                    </div>
+                </div>
+
+                <!-- Prototipo 2 -->
+                <div class="card-hack bg-white border-[3px] border-xul_ink p-6 shadow-[6px_6px_0px_#2A2A2A] flex flex-col">
+                    <div class="h-36 bg-xul_yellow/20 border-[2px] border-xul_ink mb-4 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(circle, #2A2A2A 1px, transparent 1px); background-size: 12px 12px;"></div>
+                        <svg viewBox="0 0 60 60" class="w-20 h-20 text-xul_terra relative z-10">
+                            <circle cx="30" cy="30" r="20" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <polygon points="30,12 36,24 48,24 38,32 42,45 30,37 18,45 22,32 12,24 24,24" fill="currentColor" opacity="0.4" stroke="currentColor" stroke-width="1.5"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="tag bg-xul_yellow/20">Monopoly</span>
+                        <span class="tag bg-xul_terra/10">Marx</span>
+                    </div>
+                    <h3 class="font-sans font-black text-lg text-xul_ink uppercase tracking-wide leading-tight mb-2">Monopoviet</h3>
+                    <p class="font-serif text-sm text-gray-600 flex-grow leading-relaxed mb-4">Monopoly donde la propiedad privada no existe: todo se colectiviza. Las cartas de Azar son resoluciones asamblearias.</p>
+                    <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-200">
+                        <span class="font-sans text-xs text-gray-500 font-bold uppercase">Atelier · Feb 2026</span>
+                        <span class="tag bg-xul_blue/20 text-xul_blue">Prototipado</span>
+                    </div>
+                </div>
+
+                <!-- Prototipo 3 -->
+                <div class="card-hack bg-white border-[3px] border-xul_ink p-6 shadow-[6px_6px_0px_#2A2A2A] flex flex-col">
+                    <div class="h-36 bg-xul_pink/10 border-[2px] border-xul_ink mb-4 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-10" style="background-image: repeating-linear-gradient(0deg, #2A2A2A 0, #2A2A2A 1px, transparent 1px, transparent 15px);"></div>
+                        <svg viewBox="0 0 60 60" class="w-20 h-20 text-xul_pink relative z-10">
+                            <rect x="5" y="25" width="50" height="15" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <rect x="5" y="25" width="20" height="15" fill="currentColor" opacity="0.3"/>
+                            <circle cx="18" cy="20" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <circle cx="42" cy="20" r="6" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <path d="M 18 26 L 18 40 M 42 26 L 42 40" stroke="currentColor" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="flex flex-wrap gap-2 mb-3">
+                        <span class="tag bg-xul_pink/10">Truco</span>
+                        <span class="tag bg-xul_green/20">Simone de Beauvoir</span>
+                    </div>
+                    <h3 class="font-sans font-black text-lg text-xul_ink uppercase tracking-wide leading-tight mb-2">El Género del Engaño</h3>
+                    <p class="font-serif text-sm text-gray-600 flex-grow leading-relaxed mb-4">Variante del truco donde los roles de género se asignan por las cartas. El farol no puede hacerlo quien siempre lo hizo.</p>
+                    <div class="flex items-center justify-between mt-auto pt-4 border-t border-gray-200">
+                        <span class="font-sans text-xs text-gray-500 font-bold uppercase">Atelier · Nov 2025</span>
+                        <span class="tag bg-xul_yellow/30 text-xul_ink">Idea</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <p class="text-center font-sans text-sm text-gray-500 mt-8 font-bold uppercase tracking-widest">
+                Los prototipos se publican con el consentimiento del autor · <a href="#proponer" class="text-xul_terra hover:underline">Sumá el tuyo</a>
+            </p>
+        </section>
+
+        <!-- ARCHIVO DE ATELIERS PASADOS -->
+        <section id="archivo" class="scroll-mt-24">
+            <div class="flex items-center gap-4 mb-10 border-b-[3px] border-xul_ink pb-4">
+                <div class="w-12 h-12 bg-xul_ink border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
+                    <i data-lucide="archive" class="w-6 h-6 text-white"></i>
+                </div>
+                <h2 class="xul-title text-4xl md:text-5xl font-black text-xul_ink tracking-tight uppercase">Archivo de Ateliers</h2>
+            </div>
+
+            <div class="space-y-4">
+
+                <!-- Sesión 3 -->
+                <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-3 mb-1">
+                            <span class="font-sans font-black text-xs uppercase tracking-widest text-gray-500">Atelier #3 · Abril 2026</span>
+                            <span class="tag bg-xul_green/20 text-xul_green">Completado</span>
+                        </div>
+                        <h3 class="font-sans font-black text-xl text-xul_ink">Poder y Tablero — Foucault en el juego</h3>
+                        <p class="font-serif text-sm text-gray-600 mt-1">Sesión de hacking colectivo a partir de <em>Vigilar y castigar</em>. Se desarrollaron 3 prototipos.</p>
+                    </div>
+                    <div class="flex gap-2 flex-shrink-0">
+                        <span class="flex items-center gap-1 font-sans text-xs font-bold uppercase text-gray-400 border-2 border-gray-200 px-3 py-2">
+                            <i data-lucide="lock" class="w-3 h-3"></i> Grabación próximamente
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Sesión 2 -->
+                <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-3 mb-1">
+                            <span class="font-sans font-black text-xs uppercase tracking-widest text-gray-500">Atelier #2 · Feb 2026</span>
+                            <span class="tag bg-xul_green/20 text-xul_green">Completado</span>
+                        </div>
+                        <h3 class="font-sans font-black text-xl text-xul_ink">Economía Política del Juego — Marx y el Monopoly</h3>
+                        <p class="font-serif text-sm text-gray-600 mt-1">Análisis de la estructura del Monopoly como modelo de acumulación capitalista. Diseño de variante colectivista.</p>
+                    </div>
+                    <div class="flex gap-2 flex-shrink-0">
+                        <span class="flex items-center gap-1 font-sans text-xs font-bold uppercase text-gray-400 border-2 border-gray-200 px-3 py-2">
+                            <i data-lucide="lock" class="w-3 h-3"></i> Grabación próximamente
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Sesión 1 -->
+                <div class="bg-white border-[3px] border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap items-center gap-3 mb-1">
+                            <span class="font-sans font-black text-xs uppercase tracking-widest text-gray-500">Atelier #1 · Nov 2025</span>
+                            <span class="tag bg-xul_green/20 text-xul_green">Completado</span>
+                        </div>
+                        <h3 class="font-sans font-black text-xl text-xul_ink">Género y Reglas — De Beauvoir en el truco</h3>
+                        <p class="font-serif text-sm text-gray-600 mt-1">Primera sesión del Atelier. Exploración de cómo las reglas de juego reproducen estructuras de género.</p>
+                    </div>
+                    <div class="flex gap-2 flex-shrink-0">
+                        <span class="flex items-center gap-1 font-sans text-xs font-bold uppercase text-gray-400 border-2 border-gray-200 px-3 py-2">
+                            <i data-lucide="lock" class="w-3 h-3"></i> Grabación próximamente
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PROPONER UN HACK -->
+        <section id="proponer" class="scroll-mt-24">
+            <div class="bg-xul_paper border-[4px] border-xul_ink p-8 md:p-12 shadow-[12px_12px_0px_#D1623A] relative overflow-hidden">
+                <div class="absolute -right-16 -bottom-16 opacity-10 pointer-events-none">
+                    <svg viewBox="0 0 100 100" class="w-64 h-64 text-xul_terra">
+                        <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <polygon points="50,10 85,70 15,70" fill="none" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </div>
+
+                <div class="relative z-10 max-w-2xl">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-14 h-14 bg-xul_terra border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] rounded-full">
+                            <i data-lucide="lightbulb" class="w-7 h-7 text-white"></i>
+                        </div>
+                        <h2 class="xul-title text-4xl md:text-5xl font-black text-xul_ink tracking-tight uppercase">Proponer un Hack</h2>
+                    </div>
+
+                    <p class="font-serif text-xl text-gray-700 leading-relaxed mb-8">
+                        Describí tu idea: qué juego querés hackear, qué autor o concepto filosófico usarías, y cómo cambiarías las reglas. El equipo de Ludosofía la lee y te da feedback.
+                    </p>
+
+                    <!-- EmailJS SDK -->
+                    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+                    <form id="hack-form" class="space-y-5">
+                        <div>
+                            <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Juego a hackear</label>
+                            <input id="hack-juego" type="text" required placeholder="Ej: Ajedrez, Monopoly, Uno..." class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue transition-all">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Autor / concepto filosófico</label>
+                            <input id="hack-filosofo" type="text" required placeholder="Ej: Foucault, alienación, cuidado..." class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue transition-all">
+                        </div>
+                        <div>
+                            <label class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-2">Tu idea de hack</label>
+                            <textarea id="hack-idea" required rows="4" placeholder="Describí cómo cambiarías las reglas..." class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-lg focus:outline-none focus:border-xul_blue transition-all resize-none"></textarea>
+                        </div>
+                        <button type="submit" id="hack-submit" class="w-full bg-xul_terra border-[3px] border-xul_ink py-4 font-black text-xl uppercase tracking-widest text-white shadow-[6px_6px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[8px_8px_0px_#2A2A2A] transition-all">
+                            Enviar Propuesta
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-xul_ink mt-auto">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-700 pb-8">
+            <div class="flex items-center space-x-3">
+                <svg viewBox="0 0 100 100" class="w-8 h-8">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="currentColor" stroke-width="3"/>
+                </svg>
+                <span class="font-sans font-black tracking-widest text-lg leading-none">LUDOSOFÍA</span>
+            </div>
+            <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
+                <a href="index.html" class="hover:text-xul_yellow transition">Inicio</a>
+                <a href="schole.html" class="hover:text-xul_yellow transition">Scholē</a>
+                <a href="index.html#faqs" class="hover:text-xul_yellow transition">FAQs</a>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-6 text-center text-sm font-sans text-gray-400">
+            &copy; 2026 Ludosofía · Espacio de Miembros
+        </div>
+    </footer>
+
+    <!-- MODAL ALERTA -->
+    <div id="alert-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm" onclick="document.getElementById('alert-modal').classList.add('hidden')"></div>
+        <div id="alert-box" class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] text-center">
+            <h3 id="alert-title" class="xul-title text-3xl font-black text-xul_ink uppercase mb-2">Aviso</h3>
+            <p id="alert-message" class="font-sans text-gray-700 mb-6"></p>
+            <button onclick="document.getElementById('alert-modal').classList.add('hidden')" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">Entendido</button>
+        </div>
+    </div>
+
+    <!-- MODAL PERFIL -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía</p>
+                <p id="profile-role" class="font-black text-xl text-xul_terra uppercase tracking-wider"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // ── EmailJS ──────────────────────────────────────────────────────────
+        const EMAILJS_PUBLIC_KEY  = 'TU_PUBLIC_KEY';
+        const EMAILJS_SERVICE_ID  = 'TU_SERVICE_ID';
+        const EMAILJS_TEMPLATE_ID = 'TU_TEMPLATE_ID';
+
+        function mostrarAlerta(titulo, mensaje, color = '#D1623A') {
+            document.getElementById('alert-title').innerText = titulo;
+            document.getElementById('alert-message').innerText = mensaje;
+            document.getElementById('alert-box').style.boxShadow = `12px 12px 0px ${color}`;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        }
+
+        document.getElementById('hack-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const juego    = document.getElementById('hack-juego').value.trim();
+            const filosofo = document.getElementById('hack-filosofo').value.trim();
+            const idea     = document.getElementById('hack-idea').value.trim();
+            const btn      = document.getElementById('hack-submit');
+
+            btn.disabled    = true;
+            btn.textContent = 'Enviando...';
+
+            emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+            emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+                juego,
+                filosofo,
+                idea,
+                usuario: window._nombreUsuario || 'Miembro',
+                email:   window._emailUsuario  || ''
+            }).then(() => {
+                mostrarAlerta('¡Propuesta enviada!', 'Tu idea llegó al Atelier. Te contactamos pronto.', '#75B07E');
+                e.target.reset();
+            }).catch((err) => {
+                console.error('EmailJS error:', err);
+                mostrarAlerta('Error al enviar', 'No se pudo enviar la propuesta. Intentá de nuevo más tarde.');
+            }).finally(() => {
+                btn.disabled    = false;
+                btn.textContent = 'Enviar Propuesta';
+            });
+        });
+    </script>
+
+    <!-- FIREBASE: navbar + perfil -->
+    <script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const btnMenu = document.getElementById('mobile-menu-btn');
+        const menuMobile = document.getElementById('mobile-menu');
+        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+
+        const loginBtnDesktop = document.getElementById('login-btn-desktop');
+        const loginBtnMobile  = document.getElementById('login-btn-mobile');
+        const profileModal    = document.getElementById('profile-modal');
+
+        function toggleProfileModal() {
+            profileModal.classList.toggle('hidden');
+            if (menuMobile && !menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
+        }
+
+        function updateUIWithRole(rol) {
+            let r = (rol || '').toUpperCase().trim();
+            let iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+            if (r.includes('FUNDADOR')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            else if (r.includes('SOCIO')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            const deskBadge = document.getElementById('badge-container-desktop');
+            const mobBadge  = document.getElementById('badge-container-mobile');
+            if (deskBadge) { deskBadge.innerHTML = iconHtml; deskBadge.style.display = 'flex'; }
+            if (mobBadge)  { mobBadge.innerHTML  = iconHtml; mobBadge.style.display  = 'flex'; }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+                window._nombreUsuario = nombre;
+                window._emailUsuario  = user.email;
+                document.getElementById('login-text-desktop').innerText = nombre.toUpperCase();
+                if (document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = nombre.toUpperCase();
+                loginBtnDesktop.onclick = toggleProfileModal;
+                if (loginBtnMobile) loginBtnMobile.onclick = toggleProfileModal;
+                document.getElementById('profile-email').innerText = user.email;
+
+                try {
+                    const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                    if (docSnap.exists()) {
+                        const rol = (docSnap.data().rol || '').toUpperCase();
+                        document.getElementById('profile-role').innerText = rol;
+                        updateUIWithRole(rol);
+                    }
+                } catch(e) { console.error(e); }
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth).then(() => { window.location.href = 'index.html'; });
+        });
+    </script>
+
+</body>
+</html>

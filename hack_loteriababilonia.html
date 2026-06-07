@@ -1,0 +1,1106 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Lotería de los Jardines | LUDOSOFÍA</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_silver: '#C4CAD0',
+                        xul_orange: '#E87524',
+                        bab_lapis: '#3B5B8A',
+                        bab_gold: '#D4A017',
+                        bab_sand: '#E8D5A3',
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <script>
+        const CONFIG_ACCESO = {
+            PUBLICO: false,
+            SOCIO: true,
+            FUNDADOR: true
+        };
+    </script>
+
+    <!-- ========================================== -->
+    <!-- GUARDIÁN DE ACCESO: AUTENTICACIÓN + ROL    -->
+    <!-- ========================================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const rutaActual = window.location.pathname.split('/').pop() || 'index.html';
+        const commentsCollection = collection(db, 'artifacts', 'ludosofia-loteriababilonia', 'public', 'data', 'comentarios');
+        let currentUser = null;
+
+        function getIconByRole(rol) {
+            const r = (rol || '').toUpperCase().trim();
+            if (r.includes('FUNDADOR')) {
+                return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            }
+            if (r.includes('SOCIO')) {
+                return '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            }
+            return '';
+        }
+
+        function actualizarNavbar(user, rol) {
+            const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+            const loginBtn = document.getElementById('login-btn-desktop');
+            const loginText = document.getElementById('login-text-desktop');
+            const badge = document.getElementById('badge-container-desktop');
+            const profileModal = document.getElementById('profile-modal');
+
+            if (loginText) loginText.innerText = `HOLA, ${nombre.toUpperCase()}`;
+            if (loginBtn && profileModal) loginBtn.onclick = () => profileModal.classList.toggle('hidden');
+
+            const iconHtml = getIconByRole(rol);
+            if (badge && iconHtml) { badge.innerHTML = iconHtml; badge.style.display = 'flex'; }
+
+            const profileEmail = document.getElementById('profile-email');
+            const profileRole = document.getElementById('profile-role');
+            if (profileEmail) profileEmail.innerText = user.email;
+            if (profileRole) profileRole.innerText = rol;
+
+            const btnLogout = document.getElementById('btn-logout');
+            if (btnLogout) {
+                btnLogout.onclick = () => {
+                    signOut(auth).then(() => {
+                        if (profileModal) profileModal.classList.add('hidden');
+                        window.location.reload();
+                    });
+                };
+            }
+        }
+
+        function cargarComentarios() {
+            onSnapshot(commentsCollection, (snapshot) => {
+                let comentarios = [];
+                snapshot.forEach(doc => {
+                    comentarios.push({ id: doc.id, ...doc.data() });
+                });
+                comentarios.sort((a, b) => b.timestamp - a.timestamp);
+                renderComentarios(comentarios);
+            }, (error) => {
+                console.error("Error obteniendo comentarios:", error);
+            });
+        }
+
+        function renderComentarios(comentarios) {
+            const list = document.getElementById('comments-list');
+            if (!list) return;
+            list.innerHTML = '';
+            if (comentarios.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 italic p-4 text-center">Aún no hay mensajes. ¡La Compañía espera tu voz!</p>';
+                return;
+            }
+            comentarios.forEach(c => {
+                const date = new Date(c.timestamp);
+                const dateString = isNaN(date.getTime()) ? '' : date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                list.innerHTML += `
+                    <div class="bg-white border-2 border-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A] relative">
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-10 h-10 bg-bab_lapis border-2 border-xul_ink rounded-full flex items-center justify-center flex-shrink-0 shadow-[2px_2px_0px_#2A2A2A]">
+                                <i data-lucide="user" class="w-5 h-5 text-white"></i>
+                            </div>
+                            <div>
+                                <p class="font-black text-sm uppercase tracking-widest text-xul_ink leading-none mb-1">${c.authorName}</p>
+                                <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">${dateString}</p>
+                            </div>
+                        </div>
+                        <p class="font-sans text-gray-800 text-base leading-relaxed whitespace-pre-wrap">${c.text}</p>
+                    </div>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('comment-form');
+            if (form) {
+                form.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    if (!currentUser) return;
+                    const input = document.getElementById('comment-input');
+                    const text = input.value.trim();
+                    if (!text) return;
+                    const btnSubmit = document.getElementById('submit-comment');
+                    const originalText = btnSubmit.innerHTML;
+                    btnSubmit.disabled = true;
+                    btnSubmit.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin inline mr-2"></i> Enviando...';
+                    lucide.createIcons();
+                    try {
+                        const nombre = currentUser.displayName ? currentUser.displayName.split(' ')[0] : currentUser.email.split('@')[0];
+                        await addDoc(commentsCollection, {
+                            text: text,
+                            authorId: currentUser.uid,
+                            authorName: nombre,
+                            timestamp: Date.now()
+                        });
+                        input.value = '';
+                    } catch(error) {
+                        console.error("Error publicando comentario:", error);
+                        btnSubmit.innerHTML = 'Error al publicar';
+                        setTimeout(() => btnSubmit.innerHTML = originalText, 2000);
+                    } finally {
+                        btnSubmit.disabled = false;
+                        if (btnSubmit.innerHTML !== 'Error al publicar') btnSubmit.innerHTML = originalText;
+                    }
+                });
+            }
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                localStorage.setItem('destino_post_login', rutaActual);
+                window.location.replace('login.html');
+                return;
+            }
+            try {
+                const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                if (docSnap.exists()) {
+                    const datos = docSnap.data();
+                    const rol = (datos.rol || '').toUpperCase().trim();
+                    const tieneAcceso = rol.includes('SOCIO') || rol.includes('FUNDADOR');
+                    if (!tieneAcceso) {
+                        localStorage.setItem('destino_post_login', rutaActual);
+                        window.location.replace('login.html');
+                        return;
+                    }
+                    currentUser = user;
+                    localStorage.setItem('rol_usuario', datos.rol);
+                    actualizarNavbar(user, datos.rol);
+                    cargarComentarios();
+                } else {
+                    localStorage.setItem('destino_post_login', rutaActual);
+                    window.location.replace('login.html');
+                }
+            } catch (error) {
+                console.error("Error verificando acceso:", error);
+            }
+        });
+    </script>
+    <!-- ========================================== -->
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDF8ED;
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-border {
+            border: 3px solid #2A2A2A;
+            box-shadow: 6px 6px 0px #2A2A2A;
+            transition: all 0.2s ease;
+        }
+        .xul-border:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: 9px 9px 0px #2A2A2A;
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-bab { text-shadow: 3px 3px 0px #3B5B8A; }
+
+        /* Die animation */
+        @keyframes dieRoll {
+            0%   { transform: rotate(0deg) scale(1); }
+            20%  { transform: rotate(180deg) scale(0.8); }
+            40%  { transform: rotate(360deg) scale(1.1); }
+            60%  { transform: rotate(540deg) scale(0.9); }
+            80%  { transform: rotate(680deg) scale(1.05); }
+            100% { transform: rotate(720deg) scale(1); }
+        }
+        .die-rolling { animation: dieRoll 0.9s ease-out forwards; }
+
+        /* Bag shake */
+        @keyframes bagShake {
+            0%,100% { transform: rotate(0deg); }
+            20%  { transform: rotate(-12deg) scale(0.95); }
+            40%  { transform: rotate(14deg) scale(1.05); }
+            60%  { transform: rotate(-10deg) scale(0.97); }
+            80%  { transform: rotate(8deg) scale(1.02); }
+        }
+        .bag-shaking { animation: bagShake 0.8s ease-out forwards; }
+
+        /* Card flip */
+        @keyframes cardFlip {
+            0%   { transform: rotateY(0deg) scale(1); opacity: 1; }
+            50%  { transform: rotateY(90deg) scale(0.9); opacity: 0.3; }
+            100% { transform: rotateY(0deg) scale(1); opacity: 1; }
+        }
+        .card-flipping { animation: cardFlip 0.7s ease-out forwards; }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
+
+        /* Trapezoid card shape */
+        .trapezoid-card {
+            clip-path: polygon(8% 0%, 92% 0%, 100% 100%, 0% 100%);
+        }
+
+        /* Ziggurat levels */
+        .zigurat-level {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_yellow selection:text-xul_ink relative">
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index_hack.html" class="flex items-center space-x-3 cursor-pointer group hover:text-xul_terra transition-colors">
+                <i data-lucide="arrow-left" class="w-6 h-6"></i>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Volver al catálogo</span>
+                </div>
+            </a>
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <span class="text-xul_ink/50">Colección:</span>
+                <span class="text-xul_terra border-b-2 border-xul_terra">Juegos Hackeados</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A]" title="Tu Membresía"></div>
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-4 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase text-sm font-bold flex items-center gap-2">
+                    <span id="login-text-desktop">···</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="pt-32 pb-16 px-6 relative border-b-[3px] border-xul_ink overflow-hidden" style="background: linear-gradient(135deg, #1A2940 0%, #2A3F5F 50%, #1A2940 100%);">
+        <!-- Gold grid overlay -->
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#D4A017 1px, transparent 1px), linear-gradient(90deg, #D4A017 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+        <div class="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-12">
+
+            <!-- Cover Art: Ziggurat SVG -->
+            <div class="w-64 h-80 flex-shrink-0 relative border-[3px] border-[#D4A017] shadow-[12px_12px_0px_#D4A017] overflow-hidden flex items-end justify-center group hover:-translate-y-2 transition-transform duration-300" style="background: linear-gradient(180deg, #0D1B2A 0%, #1A2940 40%, #2C1810 100%);">
+                <svg viewBox="0 0 120 140" class="w-full absolute bottom-0" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Stars -->
+                    <circle cx="15" cy="12" r="1.2" fill="#D4A017" opacity="0.9"/>
+                    <circle cx="45" cy="6" r="0.8" fill="#D4A017" opacity="0.7"/>
+                    <circle cx="75" cy="10" r="1" fill="#D4A017" opacity="0.8"/>
+                    <circle cx="100" cy="5" r="1.2" fill="#D4A017" opacity="0.6"/>
+                    <circle cx="110" cy="18" r="0.7" fill="#D4A017" opacity="0.9"/>
+                    <circle cx="30" cy="22" r="0.6" fill="#ffffff" opacity="0.5"/>
+                    <circle cx="85" cy="20" r="0.8" fill="#ffffff" opacity="0.4"/>
+                    <!-- Moon -->
+                    <path d="M 95 8 Q 104 14 96 22 Q 90 14 95 8 Z" fill="#E8D5A3" opacity="0.9"/>
+                    <!-- Euphrates river -->
+                    <path d="M 0 105 Q 30 100 60 108 Q 90 115 120 105" stroke="#6BA4C4" stroke-width="4" fill="none" opacity="0.6"/>
+                    <path d="M 0 112 Q 30 107 60 115 Q 90 122 120 112" stroke="#6BA4C4" stroke-width="3" fill="none" opacity="0.3"/>
+                    <!-- Level 1 base -->
+                    <rect x="10" y="100" width="100" height="14" fill="#8B6B3D" stroke="#D4A017" stroke-width="1.5"/>
+                    <line x1="10" y1="106" x2="110" y2="106" stroke="#D4A017" stroke-width="0.5" opacity="0.5"/>
+                    <!-- Level 2 -->
+                    <rect x="20" y="86" width="80" height="16" fill="#A07840" stroke="#D4A017" stroke-width="1.5"/>
+                    <!-- Hanging vines level 2 -->
+                    <path d="M 25 86 Q 28 92 25 98" stroke="#75B07E" stroke-width="1.5" fill="none"/>
+                    <path d="M 38 86 Q 41 93 37 98" stroke="#75B07E" stroke-width="1.5" fill="none"/>
+                    <path d="M 82 86 Q 85 93 81 98" stroke="#75B07E" stroke-width="1.5" fill="none"/>
+                    <path d="M 95 86 Q 98 92 95 98" stroke="#75B07E" stroke-width="1.5" fill="none"/>
+                    <!-- Level 3 -->
+                    <rect x="30" y="72" width="60" height="16" fill="#3B5B8A" stroke="#D4A017" stroke-width="1.5"/>
+                    <!-- Water channels level 3 -->
+                    <path d="M 35 78 Q 40 81 50 78 Q 60 75 70 78 Q 80 81 85 78" stroke="#6BA4C4" stroke-width="1.5" fill="none" opacity="0.8"/>
+                    <!-- Level 4 -->
+                    <rect x="40" y="58" width="40" height="16" fill="#2A6B3A" stroke="#D4A017" stroke-width="1.5"/>
+                    <!-- Vines level 4 -->
+                    <path d="M 44 58 Q 46 65 43 74" stroke="#75B07E" stroke-width="1.5" fill="none"/>
+                    <path d="M 55 58 Q 57 65 54 74" stroke="#75B07E" stroke-width="1.5" fill="none"/>
+                    <path d="M 66 58 Q 68 65 65 74" stroke="#75B07E" stroke-width="1.5" fill="none"/>
+                    <path d="M 77 58 Q 79 65 76 74" stroke="#75B07E" stroke-width="1.5" fill="none"/>
+                    <!-- Level 5 (top) -->
+                    <rect x="50" y="44" width="20" height="16" fill="#8B6B3D" stroke="#D4A017" stroke-width="1.5"/>
+                    <!-- Golden flower at top -->
+                    <circle cx="60" cy="38" r="5" fill="#D4A017" stroke="#2A2A2A" stroke-width="1"/>
+                    <path d="M 60 33 L 62 37 L 66 37 L 63 40 L 64 44 L 60 41 L 56 44 L 57 40 L 54 37 L 58 37 Z" fill="#EBB134" stroke="#8B6B3D" stroke-width="0.5"/>
+                    <!-- Gradient overlay for depth -->
+                    <rect x="0" y="0" width="120" height="140" fill="url(#headerGrad)" opacity="0.2"/>
+                    <defs>
+                        <linearGradient id="headerGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="#0D1B2A"/>
+                            <stop offset="100%" stop-color="transparent"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="absolute top-4 left-0 bg-[#D4A017] text-[#0D1B2A] text-[10px] uppercase font-black tracking-widest py-1 px-4">
+                    Manual del Arquitecto
+                </div>
+            </div>
+
+            <div class="text-center md:text-left">
+                <div class="flex flex-wrap justify-center md:justify-start gap-4 mb-4 items-center">
+                    <div class="inline-block border-2 px-3 py-1 shadow-[3px_3px_0px_#D4A017]" style="background: #D4A017; border-color: #D4A017;">
+                        <span class="font-sans font-black text-xs uppercase tracking-widest text-[#0D1B2A]">Juego Original</span>
+                    </div>
+                    <div id="insignia-socio" class="bg-xul_green border-2 border-[#D4A017] p-1.5 shadow-[3px_3px_0px_#D4A017] hidden flex items-center justify-center" title="Acceso para Socios">
+                        <i data-lucide="star" class="w-4 h-4 text-white"></i>
+                    </div>
+                    <div id="insignia-fundador" class="bg-xul_terra border-2 border-[#D4A017] p-1.5 shadow-[3px_3px_0px_#D4A017] hidden flex items-center justify-center" title="Acceso para Fundadores">
+                        <i data-lucide="crown" class="w-4 h-4 text-white"></i>
+                    </div>
+                </div>
+                <script>
+                    if (typeof CONFIG_ACCESO !== 'undefined') {
+                        if (CONFIG_ACCESO.SOCIO) document.getElementById('insignia-socio').classList.remove('hidden');
+                        if (CONFIG_ACCESO.FUNDADOR) document.getElementById('insignia-fundador').classList.remove('hidden');
+                    }
+                </script>
+
+                <h1 class="xul-title text-5xl md:text-7xl font-black tracking-tighter mb-2" style="color: #E8D5A3; text-shadow: 3px 3px 0px #3B5B8A;">
+                    LA LOTERÍA
+                </h1>
+                <h2 class="xul-title text-4xl md:text-5xl font-bold leading-none mb-6" style="color: #D4A017;">
+                    de los Jardines
+                </h2>
+                <div class="flex flex-wrap gap-4 text-[#E8D5A3] font-sans text-sm mb-6">
+                    <span class="flex items-center gap-2"><i data-lucide="users" class="w-4 h-4" style="color:#D4A017;"></i> 2 – 4 arquitectos</span>
+                    <span class="flex items-center gap-2"><i data-lucide="clock" class="w-4 h-4" style="color:#D4A017;"></i> 15 – 20 minutos</span>
+                    <span class="flex items-center gap-2"><i data-lucide="sparkles" class="w-4 h-4" style="color:#D4A017;"></i> 8 – 10 años</span>
+                </div>
+                <blockquote class="border-l-4 pl-4 italic font-serif text-xl md:text-2xl" style="border-color: #D4A017; color: #E8D5A3;">
+                    "En Babilonia, el azar no es una casualidad; es una institución."
+                    <br><span class="text-sm font-sans font-bold not-italic uppercase tracking-widest" style="color: #D4A017;">— Jorge Luis Borges</span>
+                </blockquote>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 lg:grid-cols-4 gap-12 relative">
+
+        <!-- COLUMNA PRINCIPAL -->
+        <div class="lg:col-span-3 space-y-16">
+
+            <!-- 1. OBJETIVO -->
+            <section id="objetivo" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 flex items-center justify-center shadow-[4px_4px_0px_#D4A017]" style="background:#3B5B8A;">
+                        <span class="text-white font-black text-xl font-sans">1</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">El Objetivo</h3>
+                </div>
+                <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#3B5B8A]">
+                    <p class="font-serif text-xl leading-relaxed text-gray-700 first-letter:text-5xl first-letter:font-black first-letter:mr-1 mb-6" style="color: #3B5B8A;">
+                        Sé el primer arquitecto en construir tu propio <strong class="text-xul_ink">Zigurát (Jardín Colgante)</strong> bajando a la mesa los 5 componentes estructurales diferentes.
+                    </p>
+                    <p class="font-sans text-lg text-gray-700 leading-relaxed border-t-2 border-dashed border-gray-300 pt-6">
+                        Pero debes ser cauteloso: las reglas no son fijas, <strong>"La Compañía"</strong> observa y el azar dictará tu fortuna o tu ruina. El jugador que complete su Zigurát debe ponerse de pie, señalar su pirámide y gritar:
+                    </p>
+                    <div class="mt-6 border-[3px] border-xul_ink p-6 text-center" style="background: linear-gradient(135deg, #1A2940, #2A3F5F); box-shadow: 6px 6px 0px #D4A017;">
+                        <p class="xul-title text-3xl md:text-4xl font-black" style="color: #D4A017;">¡La Lotería ha hablado!</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. COMPONENTES: MAZO DE JARDÍN -->
+            <section id="mazo-jardin" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 flex items-center justify-center shadow-[4px_4px_0px_#D4A017]" style="background:#3B5B8A;">
+                        <span class="text-white font-black text-xl font-sans">2</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">El Mazo de Jardín</h3>
+                </div>
+                <p class="font-sans text-gray-600 mb-6 text-lg">50 cartas trapezoidales que apilarás en tu mesa para construir tu Zigurát. <strong>Solo puedes tener una copia de cada nivel bajada al mismo tiempo.</strong></p>
+
+                <!-- Zigurát visual -->
+                <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#2A2A2A] mb-8">
+                    <h4 class="font-sans font-black text-center uppercase tracking-widest text-xul_ink mb-8 text-sm">Tu Zigurát — Los 5 Niveles</h4>
+                    <div class="flex flex-col items-center gap-2">
+                        <!-- Nivel 5 -->
+                        <div class="zigurat-level trapezoid-card flex items-center justify-center text-center px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] w-32 hover:-translate-y-1 transition-transform cursor-default" style="background:#EBB134;">
+                            <div>
+                                <p class="font-black text-[10px] uppercase tracking-widest text-xul_ink">Nivel 5 · 4 cartas</p>
+                                <p class="xul-title text-lg font-bold text-xul_ink leading-tight">La Flor de Oro</p>
+                                <div class="flex justify-center mt-1">⚜️</div>
+                            </div>
+                        </div>
+                        <!-- Nivel 4 -->
+                        <div class="zigurat-level trapezoid-card flex items-center justify-center text-center px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] w-48 hover:-translate-y-1 transition-transform cursor-default" style="background:#75B07E;">
+                            <div>
+                                <p class="font-black text-[10px] uppercase tracking-widest text-white">Nivel 4 · 10 cartas</p>
+                                <p class="xul-title text-lg font-bold text-white leading-tight">Enredaderas de Semíramis</p>
+                            </div>
+                        </div>
+                        <!-- Nivel 3 -->
+                        <div class="zigurat-level trapezoid-card flex items-center justify-center text-center px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] w-64 hover:-translate-y-1 transition-transform cursor-default" style="background:#5C3D1E;">
+                            <div>
+                                <p class="font-black text-[10px] uppercase tracking-widest text-[#E8D5A3]">Nivel 3 · 10 cartas</p>
+                                <p class="xul-title text-lg font-bold text-[#E8D5A3] leading-tight">Tierra Negra</p>
+                            </div>
+                        </div>
+                        <!-- Nivel 2 -->
+                        <div class="zigurat-level trapezoid-card flex items-center justify-center text-center px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] w-80 hover:-translate-y-1 transition-transform cursor-default" style="background:#3B5B8A;">
+                            <div>
+                                <p class="font-black text-[10px] uppercase tracking-widest text-[#E8D5A3]">Nivel 2 · 12 cartas</p>
+                                <p class="xul-title text-lg font-bold text-[#E8D5A3] leading-tight">Agua del Éufrates</p>
+                            </div>
+                        </div>
+                        <!-- Nivel 1 -->
+                        <div class="zigurat-level trapezoid-card flex items-center justify-center text-center px-8 py-4 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] w-full max-w-sm hover:-translate-y-1 transition-transform cursor-default" style="background:#8B6B3D;">
+                            <div>
+                                <p class="font-black text-[10px] uppercase tracking-widest text-[#E8D5A3]">Nivel 1 · 14 cartas</p>
+                                <p class="xul-title text-lg font-bold text-[#E8D5A3] leading-tight">Ladrillo de Lapislázuli</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. EDICTOS + TABLILLAS -->
+            <section id="otros-componentes" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 flex items-center justify-center shadow-[4px_4px_0px_#D4A017]" style="background:#3B5B8A;">
+                        <span class="text-white font-black text-xl font-sans">3</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Edictos y Tablillas</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Mazo Edictos -->
+                    <div class="bg-white border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#2A2A2A]">
+                        <div class="w-10 h-10 mb-4 flex items-center justify-center border-2 border-xul_ink" style="background:#D1623A;">
+                            <i data-lucide="scroll-text" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <h4 class="font-black text-xl uppercase text-xul_ink mb-2">Mazo de Edictos</h4>
+                        <p class="text-sm font-sans text-gray-500 font-bold uppercase tracking-widest mb-4">20 cartas rectangulares</p>
+                        <p class="font-sans text-gray-700 mb-4">Leyes misteriosas de <strong>"La Compañía"</strong>. Se activan cuando el dado cae en 4 o 5.</p>
+                        <ul class="space-y-2 font-sans text-sm">
+                            <li class="flex gap-2 items-start"><span class="text-xul_yellow font-black flex-shrink-0">✦</span><span><strong>Premios:</strong> Beneficios inmediatos (ej: "Capricho de los Astros": Roba 2 cartas extra).</span></li>
+                            <li class="flex gap-2 items-start"><span class="text-xul_terra font-black flex-shrink-0">✦</span><span><strong>Prendas:</strong> Desafíos físicos en la mesa (ej: "El Aliento de Pazuzu": Sopla el jardín de un rival).</span></li>
+                            <li class="flex gap-2 items-start"><span class="text-bab_lapis font-black flex-shrink-0">✦</span><span><strong>Reglas de Caos:</strong> Leyes que cambian el juego para todos hasta nuevo aviso.</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Tablillas del Destino -->
+                    <div class="bg-white border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#2A2A2A]">
+                        <div class="w-10 h-10 mb-4 flex items-center justify-center border-2 border-xul_ink" style="background:#1A2940;">
+                            <i data-lucide="circle-dashed" class="w-5 h-5 text-[#D4A017]"></i>
+                        </div>
+                        <h4 class="font-black text-xl uppercase text-xul_ink mb-2">Tablillas del Destino</h4>
+                        <p class="text-sm font-sans text-gray-500 font-bold uppercase tracking-widest mb-4">10 fichas en una bolsa oscura</p>
+                        <ul class="space-y-3 font-sans text-sm">
+                            <li class="flex gap-3 items-start p-2 border-l-4" style="border-color:#D4A017; background:#FDF8ED;">
+                                <span class="font-black" style="color:#D4A017;">×2</span>
+                                <div><strong>Diez Camellos Negros</strong><br><span class="text-gray-600">Fortuna Absoluta. Construye el componente que te falte, gratis.</span></div>
+                            </li>
+                            <li class="flex gap-3 items-start p-2 border-l-4 border-xul_terra bg-red-50">
+                                <span class="font-black text-xul_terra">×3</span>
+                                <div><strong>El Viento del Verdugo</strong><br><span class="text-gray-600">Ruina Total. Tu jardín en la mesa vuelve al descarte.</span></div>
+                            </li>
+                            <li class="flex gap-3 items-start p-2 border-l-4 border-bab_lapis bg-blue-50">
+                                <span class="font-black text-bab_lapis">×3</span>
+                                <div><strong>El Sello del Visir</strong><br><span class="text-gray-600">Inmunidad. Guárdalo para cancelar cualquier ataque en tu contra.</span></div>
+                            </li>
+                            <li class="flex gap-3 items-start p-2 border-l-4 border-xul_pink bg-pink-50">
+                                <span class="font-black text-xul_pink">×2</span>
+                                <div><strong>Los Espejos Confundidos</strong><br><span class="text-gray-600">Intercambia tu asiento y jardín completo con el jugador que va ganando.</span></div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. PREPARACIÓN -->
+            <section id="preparacion" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 flex items-center justify-center shadow-[4px_4px_0px_#D4A017]" style="background:#3B5B8A;">
+                        <span class="text-white font-black text-xl font-sans">4</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Preparación</h3>
+                </div>
+                <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#2A2A2A] space-y-4">
+                    <div class="flex gap-4 items-start">
+                        <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center font-black text-white text-sm border-2 border-xul_ink" style="background:#3B5B8A;">1</div>
+                        <p class="font-sans text-gray-700">Baraja el <strong>Mazo de Jardín</strong> y reparte <strong>3 cartas</strong> a cada jugador. Coloca el resto boca abajo en el centro.</p>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center font-black text-white text-sm border-2 border-xul_ink" style="background:#D1623A;">2</div>
+                        <p class="font-sans text-gray-700">Baraja el <strong>Mazo de Edictos</strong> y colócalo boca abajo al lado.</p>
+                    </div>
+                    <div class="flex gap-4 items-start">
+                        <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center font-black text-sm border-2 border-xul_ink" style="background:#EBB134; color:#2A2A2A;">3</div>
+                        <p class="font-sans text-gray-700">Pon las <strong>Tablillas del Destino</strong> dentro de la bolsa oscura (o una taza).</p>
+                    </div>
+                    <div class="flex gap-4 items-start border-t-2 border-dashed border-gray-300 pt-4">
+                        <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center font-black text-white text-sm border-2 border-xul_ink" style="background:#75B07E;">★</div>
+                        <p class="font-sans text-gray-700"><strong>El primer jugador</strong> es quien haya regado una planta más recientemente. El juego avanza en el sentido de las agujas del reloj.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. EL TURNO -->
+            <section id="turno" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 flex items-center justify-center shadow-[4px_4px_0px_#D4A017]" style="background:#3B5B8A;">
+                        <span class="text-white font-black text-xl font-sans">5</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">El Turno de Juego</h3>
+                </div>
+                <p class="font-sans text-gray-600 mb-6 text-lg">En tu turno debes elegir entre dos caminos. Solo uno.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <!-- Camino Prudente -->
+                    <div class="bg-white border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#3B5B8A] relative">
+                        <div class="absolute -left-3 -top-3 w-10 h-10 flex items-center justify-center border-[3px] border-xul_ink" style="background:#3B5B8A;">
+                            <i data-lucide="dice-5" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <div class="mb-4 pl-6">
+                            <span class="font-sans font-bold text-sm uppercase tracking-widest" style="color:#3B5B8A;">Opción A</span>
+                            <h4 class="font-black text-2xl uppercase text-xul_ink">El Camino Prudente</h4>
+                        </div>
+                        <p class="font-sans text-gray-600 mb-4 text-sm">Toma el Dado del Destino y lánzalo a la mesa.</p>
+                        <ul class="space-y-3 font-sans text-sm">
+                            <li class="flex gap-3 items-start p-3 border-2" style="border-color:#8B6B3D; background:#FDF8ED;">
+                                <span class="font-black text-lg leading-none" style="color:#8B6B3D;">🧱</span>
+                                <div><strong>1, 2 o 3 — Ladrillo:</strong><br>Roba 1 carta del Mazo de Jardín.</div>
+                            </li>
+                            <li class="flex gap-3 items-start p-3 border-2 border-xul_terra bg-orange-50">
+                                <span class="font-black text-lg leading-none">👁️</span>
+                                <div><strong>4 o 5 — El Ojo:</strong><br>Roba 1 carta de Edictos. Lee en voz alta y cumple la instrucción.</div>
+                            </li>
+                            <li class="flex gap-3 items-start p-3 border-2 bg-yellow-50" style="border-color:#D4A017;">
+                                <span class="font-black text-lg leading-none">👑</span>
+                                <div><strong>6 — La Corona Real:</strong><br>¡Sorteo Extremo! Mete la mano en la bolsa oscura.</div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Camino Ambicioso -->
+                    <div class="border-[3px] border-xul_ink p-6 shadow-[8px_8px_0px_#D4A017] relative" style="background: linear-gradient(135deg, #1A2940, #2A3F5F);">
+                        <div class="absolute -left-3 -top-3 w-10 h-10 flex items-center justify-center border-[3px] border-xul_ink" style="background:#D4A017;">
+                            <i data-lucide="hand" class="w-5 h-5 text-xul_ink"></i>
+                        </div>
+                        <div class="mb-4 pl-6">
+                            <span class="font-sans font-bold text-sm uppercase tracking-widest" style="color:#D4A017;">Opción B</span>
+                            <h4 class="font-black text-2xl uppercase" style="color:#E8D5A3;">El Camino Ambicioso</h4>
+                        </div>
+                        <p class="font-sans mb-4 text-sm" style="color:#E8D5A3;">No tiras el dado. Anuncias en voz alta:</p>
+                        <div class="border-2 p-4 text-center mb-4" style="border-color:#D4A017; background: rgba(212,160,23,0.1);">
+                            <p class="xul-title text-2xl italic font-bold" style="color:#D4A017;">"Invoco la Lotería del Rey"</p>
+                        </div>
+                        <p class="font-sans text-sm" style="color:#E8D5A3;">Metes la mano en la bolsa oscura y sacas una Tablilla del Destino. Es un riesgo gigante: puedes ganar los <strong style="color:#D4A017;">Camellos Negros</strong> y acercarte a la victoria, o sacar el <strong style="color:#D1623A;">Viento del Verdugo</strong> y perderlo todo.</p>
+                    </div>
+                </div>
+
+                <!-- Fase de Construcción -->
+                <div class="border-[3px] border-xul_ink p-6" style="background:#E8D5A3; box-shadow: 8px 8px 0px #3B5B8A;">
+                    <div class="flex gap-3 items-center mb-3">
+                        <i data-lucide="layers" class="w-6 h-6 text-xul_ink flex-shrink-0"></i>
+                        <h4 class="font-black text-xl uppercase text-xul_ink">Fase de Construcción</h4>
+                        <span class="font-sans font-bold text-sm uppercase tracking-widest text-gray-600">(al final de tu turno)</span>
+                    </div>
+                    <p class="font-sans text-gray-700">Después de resolver tu tirada o tablilla, revisa tu mano. Puedes bajar a tu mesa <strong>las cartas de Jardín que quieras</strong>, con una sola regla: <strong class="text-xul_terra">solo puedes tener una copia de cada componente bajada en tu Zigurát.</strong></p>
+                    <p class="font-sans text-gray-500 text-sm mt-3 italic">Ej: No puedes tener dos "Aguas del Éufrates" bajadas al mismo tiempo.</p>
+                </div>
+            </section>
+
+            <!-- 6. SIMULADORES -->
+            <section id="simuladores" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 flex items-center justify-center shadow-[4px_4px_0px_#D4A017]" style="background:#3B5B8A;">
+                        <span class="text-white font-black text-xl font-sans">6</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Simuladores de Mesa</h3>
+                </div>
+                <p class="font-sans text-gray-600 mb-8 text-lg">Usa estas herramientas durante tu partida física para simular el dado, la bolsa oscura y los edictos.</p>
+
+                <div class="space-y-8">
+
+                    <!-- DADO DEL DESTINO -->
+                    <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#3B5B8A]">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 flex items-center justify-center border-2 border-xul_ink" style="background:#3B5B8A;">
+                                <i data-lucide="dice-5" class="w-4 h-4 text-white"></i>
+                            </div>
+                            <h4 class="font-black text-xl uppercase text-xul_ink">El Dado del Destino</h4>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <!-- Die visual -->
+                            <div class="flex flex-col items-center gap-4">
+                                <div id="die-face" class="w-28 h-28 border-[4px] border-xul_ink flex items-center justify-center text-5xl shadow-[6px_6px_0px_#3B5B8A] cursor-pointer select-none" style="background:#FDF8ED; border-radius: 16px;">
+                                    🎲
+                                </div>
+                                <button id="btn-roll-die" onclick="rollDie()" class="font-black text-sm uppercase tracking-widest px-8 py-3 border-[3px] border-xul_ink text-white shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all active:translate-y-0 active:shadow-none" style="background:#3B5B8A;">
+                                    Lanzar el Dado
+                                </button>
+                            </div>
+
+                            <!-- Die result -->
+                            <div id="die-result" class="flex-1 border-[3px] border-dashed border-gray-300 p-6 text-center min-h-[120px] flex items-center justify-center">
+                                <p class="font-sans text-gray-400 text-lg">Lanza el dado para ver el resultado...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BOLSA OSCURA -->
+                    <div class="border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#D4A017]" style="background: linear-gradient(135deg, #0D1B2A, #1A2940);">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 flex items-center justify-center border-2" style="background:#D4A017; border-color:#D4A017;">
+                                <i data-lucide="circle-dashed" class="w-4 h-4 text-xul_ink"></i>
+                            </div>
+                            <h4 class="font-black text-xl uppercase" style="color:#E8D5A3;">La Bolsa Oscura</h4>
+                            <span class="font-sans text-sm font-bold uppercase tracking-widest" style="color:#D4A017;">Lotería del Rey</span>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <!-- Bag visual -->
+                            <div class="flex flex-col items-center gap-4">
+                                <div id="bag-icon" class="w-28 h-28 flex items-center justify-center cursor-pointer text-6xl select-none" style="filter: drop-shadow(4px 4px 0px #D4A017);">
+                                    🎒
+                                </div>
+                                <button id="btn-draw-tablet" onclick="drawTablet()" class="font-black text-sm uppercase tracking-widest px-8 py-3 border-[3px] text-xul_ink shadow-[4px_4px_0px_#D4A017] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#D4A017] transition-all active:translate-y-0 active:shadow-none" style="background:#D4A017; border-color:#D4A017;">
+                                    Meter la Mano
+                                </button>
+                                <p id="bag-count" class="font-sans text-xs font-bold uppercase tracking-widest" style="color:#E8D5A3;">10 tablillas restantes</p>
+                            </div>
+
+                            <!-- Tablet result -->
+                            <div id="tablet-result" class="flex-1 border-[3px] border-dashed p-6 text-center min-h-[120px] flex items-center justify-center" style="border-color: rgba(212,160,23,0.4);">
+                                <p class="font-sans text-lg" style="color: rgba(232,213,163,0.5);">Mete la mano en la bolsa para extraer una tablilla...</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end mt-4">
+                            <button onclick="resetBag()" class="font-sans text-xs font-bold uppercase tracking-widest border px-4 py-2 transition-colors" style="color:#E8D5A3; border-color:rgba(232,213,163,0.3);" onmouseover="this.style.background='rgba(232,213,163,0.1)'" onmouseout="this.style.background='transparent'">
+                                ↺ Volver a llenar la bolsa
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MAZO DE EDICTOS -->
+                    <div class="bg-white border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#D1623A]">
+                        <div class="flex items-center gap-3 mb-6">
+                            <div class="w-8 h-8 flex items-center justify-center border-2 border-xul_ink" style="background:#D1623A;">
+                                <i data-lucide="scroll-text" class="w-4 h-4 text-white"></i>
+                            </div>
+                            <h4 class="font-black text-xl uppercase text-xul_ink">Mazo de Edictos</h4>
+                            <span class="font-sans text-sm font-bold uppercase tracking-widest text-gray-500">La Compañía ordena</span>
+                        </div>
+
+                        <div class="flex flex-col md:flex-row items-center gap-8">
+                            <!-- Card stack visual -->
+                            <div class="flex flex-col items-center gap-4">
+                                <div class="relative w-28 h-36 cursor-pointer" onclick="drawEdict()">
+                                    <div class="absolute top-2 left-2 w-full h-full border-[3px] border-xul_ink" style="background:#D1623A; opacity:0.3;"></div>
+                                    <div class="absolute top-1 left-1 w-full h-full border-[3px] border-xul_ink" style="background:#D1623A; opacity:0.5;"></div>
+                                    <div id="edict-card-back" class="absolute inset-0 border-[3px] border-xul_ink flex flex-col items-center justify-center gap-2 text-white shadow-[4px_4px_0px_#2A2A2A]" style="background:#D1623A;">
+                                        <i data-lucide="scroll-text" class="w-8 h-8"></i>
+                                        <p class="font-black text-[9px] uppercase tracking-widest text-center px-2">La Compañía</p>
+                                    </div>
+                                </div>
+                                <button id="btn-draw-edict" onclick="drawEdict()" class="font-black text-sm uppercase tracking-widest px-6 py-3 border-[3px] border-xul_ink text-white shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all active:translate-y-0 active:shadow-none" style="background:#D1623A;">
+                                    Revelar Edicto
+                                </button>
+                                <p id="edict-count" class="font-sans text-xs font-bold uppercase tracking-widest text-gray-400">20 edictos restantes</p>
+                            </div>
+
+                            <!-- Edict result -->
+                            <div id="edict-result" class="flex-1 border-[3px] border-dashed border-gray-300 p-6 text-center min-h-[140px] flex items-center justify-center">
+                                <p class="font-sans text-gray-400 text-lg">Roba una carta para conocer la voluntad de La Compañía...</p>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end mt-4">
+                            <button onclick="resetEdicts()" class="font-sans text-xs font-bold uppercase tracking-widest text-gray-400 border border-gray-200 px-4 py-2 hover:bg-gray-50 transition-colors">
+                                ↺ Volver a barajar
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- 7. FIN DEL JUEGO -->
+            <section id="victoria" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 flex items-center justify-center shadow-[4px_4px_0px_#D4A017]" style="background:#3B5B8A;">
+                        <span class="text-white font-black text-xl font-sans">7</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">La Victoria</h3>
+                </div>
+                <div class="border-[3px] border-xul_ink p-8 shadow-[12px_12px_0px_#D4A017]" style="background: linear-gradient(135deg, #1A2940, #2A3F5F);">
+                    <p class="font-sans text-lg mb-6 leading-relaxed" style="color:#E8D5A3;">
+                        La partida termina <strong style="color:#D4A017;">inmediatamente</strong> cuando un jugador logra bajar a su mesa los <strong style="color:#D4A017;">5 componentes diferentes</strong>:
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-3 mb-8">
+                        <span class="border-2 px-4 py-2 font-black text-sm" style="border-color:#8B6B3D; background:rgba(139,107,61,0.2); color:#E8D5A3;">🧱 Ladrillo</span>
+                        <span class="border-2 px-4 py-2 font-black text-sm" style="border-color:#3B5B8A; background:rgba(59,91,138,0.2); color:#E8D5A3;">💧 Agua</span>
+                        <span class="border-2 px-4 py-2 font-black text-sm" style="border-color:#5C3D1E; background:rgba(92,61,30,0.2); color:#E8D5A3;">🌑 Tierra</span>
+                        <span class="border-2 px-4 py-2 font-black text-sm" style="border-color:#75B07E; background:rgba(117,176,126,0.2); color:#E8D5A3;">🌿 Enredadera</span>
+                        <span class="border-2 px-4 py-2 font-black text-sm" style="border-color:#D4A017; background:rgba(212,160,23,0.2); color:#D4A017;">⚜️ Flor de Oro</span>
+                    </div>
+                    <div class="border-2 p-6 text-center" style="border-color:#D4A017; background: rgba(212,160,23,0.05);">
+                        <p class="font-sans mb-2 text-sm uppercase tracking-widest font-bold" style="color:#D4A017;">El jugador debe:</p>
+                        <p class="xul-title text-3xl md:text-4xl font-black" style="color:#D4A017;">
+                            Ponerse de pie · Señalar su pirámide · Gritar
+                        </p>
+                        <p class="xul-title text-4xl md:text-5xl font-black mt-4" style="color:#E8D5A3; text-shadow: 3px 3px 0px #D4A017;">
+                            "¡La Lotería ha hablado!"
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. EL ÁGORA (COMENTARIOS) -->
+            <section id="comentarios" class="scroll-mt-32">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 flex items-center justify-center shadow-[4px_4px_0px_#D4A017]" style="background:#3B5B8A;">
+                        <span class="text-white font-black text-xl font-sans">8</span>
+                    </div>
+                    <h3 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">El Ágora</h3>
+                </div>
+
+                <div class="bg-xul_paper border-[3px] border-xul_ink p-6 md:p-8 shadow-[8px_8px_0px_#EBB134] mb-10">
+                    <h4 class="font-sans font-black text-xl uppercase text-xul_ink mb-4 border-b-2 border-xul_ink pb-2">¿Qué pasó en tu mesa babilónica?</h4>
+                    <form id="comment-form" class="space-y-4">
+                        <textarea id="comment-input" required rows="3" class="w-full border-2 border-xul_ink bg-white p-4 font-sans text-base focus:outline-none focus:border-bab_lapis transition-all" placeholder="¿Quién invocó la Lotería del Rey y sobrevivió? ¿Alguien sacó el Viento del Verdugo en el peor momento? Comparte tu historia..."></textarea>
+                        <div class="flex justify-end">
+                            <button type="submit" id="submit-comment" class="bg-xul_ink text-white font-black text-sm py-3 px-6 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] flex items-center gap-2">
+                                <i data-lucide="send" class="w-4 h-4"></i> Publicar en el Ágora
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="space-y-6">
+                    <h4 class="font-sans font-black text-xl uppercase text-xul_ink border-b-2 border-xul_ink pb-2">Comunidad Ludosofía</h4>
+                    <div id="comments-list" class="space-y-5">
+                        <div class="flex items-center justify-center p-8">
+                            <i data-lucide="loader-2" class="w-8 h-8 text-bab_lapis animate-spin"></i>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- COLUMNA LATERAL -->
+        <div class="lg:col-span-1 hidden lg:block">
+            <div class="sticky top-28 flex flex-col gap-6">
+                <div class="bg-white border-[3px] border-xul_ink shadow-[8px_8px_0px_#3B5B8A] p-6">
+                    <h4 class="font-sans font-black text-xl uppercase tracking-widest text-xul_ink border-b-2 border-xul_ink pb-3 mb-4">Índice</h4>
+                    <nav class="space-y-3 font-sans font-bold text-gray-600 text-sm">
+                        <a href="#objetivo" class="block hover:text-xul_terra transition-colors">1. El Objetivo</a>
+                        <a href="#mazo-jardin" class="block hover:text-xul_terra transition-colors">2. Mazo de Jardín</a>
+                        <a href="#otros-componentes" class="block hover:text-xul_terra transition-colors">3. Edictos y Tablillas</a>
+                        <a href="#preparacion" class="block hover:text-xul_terra transition-colors">4. Preparación</a>
+                        <a href="#turno" class="block hover:text-xul_terra transition-colors">5. El Turno</a>
+                        <a href="#simuladores" class="block hover:text-xul_terra transition-colors font-black" style="color:#3B5B8A;">6. 🎲 Simuladores</a>
+                        <div class="pl-4 border-l-2 border-gray-200 space-y-1 font-normal text-xs uppercase tracking-wider">
+                            <a href="#simuladores" class="block hover:text-bab_lapis transition-colors">• Dado del Destino</a>
+                            <a href="#simuladores" class="block transition-colors" style="color:#D4A017;">• Bolsa Oscura</a>
+                            <a href="#simuladores" class="block hover:text-xul_terra transition-colors">• Mazo de Edictos</a>
+                        </div>
+                        <a href="#victoria" class="block hover:text-xul_terra transition-colors">7. La Victoria</a>
+                        <a href="#comentarios" class="block hover:text-xul_terra transition-colors">8. El Ágora</a>
+                    </nav>
+                </div>
+
+                <!-- Quick Reference Card -->
+                <div class="border-[3px] border-xul_ink p-5 shadow-[6px_6px_0px_#D4A017]" style="background:#1A2940;">
+                    <h5 class="font-black text-sm uppercase tracking-widest mb-3" style="color:#D4A017;">Dado — Referencia</h5>
+                    <div class="space-y-2 font-sans text-xs" style="color:#E8D5A3;">
+                        <div class="flex gap-2 items-start">
+                            <span class="font-black w-6 flex-shrink-0" style="color:#8B6B3D;">1-3</span>
+                            <span>Roba 1 carta de Jardín 🧱</span>
+                        </div>
+                        <div class="flex gap-2 items-start">
+                            <span class="font-black w-6 flex-shrink-0" style="color:#D1623A;">4-5</span>
+                            <span>Roba 1 Edicto. Lee en voz alta 👁️</span>
+                        </div>
+                        <div class="flex gap-2 items-start">
+                            <span class="font-black w-6 flex-shrink-0" style="color:#D4A017;">6</span>
+                            <span>Sorteo Extremo. Mete la mano en la bolsa 👑</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Banner → Ágora -->
+                <a href="#comentarios" class="block border-[3px] border-xul_ink p-6 text-center text-white relative overflow-hidden group hover:shadow-[6px_6px_0px_#EBB134] transition-all" style="background:#2A2A2A;">
+                    <div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                        <i data-lucide="message-circle" class="w-32 h-32"></i>
+                    </div>
+                    <h5 class="xul-title font-bold text-2xl mb-2 relative z-10">El Ágora</h5>
+                    <p class="font-sans text-xs text-gray-300 mb-4 relative z-10">Comparte tus historias de azar, ruina y victoria.</p>
+                    <span class="inline-block bg-transparent border-2 border-white px-6 py-2 font-bold text-[10px] uppercase tracking-widest group-hover:bg-white group-hover:text-xul_ink transition-colors relative z-10">Ir a Comentarios</span>
+                </a>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODAL DE PERFIL -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#3B5B8A] text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <div class="w-16 h-16 border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]" style="background:#3B5B8A;">
+                <i data-lucide="user" class="w-8 h-8 text-white"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía Actual</p>
+                <p id="profile-role" class="font-black text-xl text-xul_terra uppercase tracking-wider"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
+
+    <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-xul_ink mt-12">
+        <div class="max-w-6xl mx-auto text-center">
+            <span class="font-sans font-black tracking-widest text-lg">LUDOSOFÍA &copy; 2026</span>
+        </div>
+    </footer>
+
+    <!-- SIMULADORES JAVASCRIPT -->
+    <script>
+        // ─── DADO DEL DESTINO ───────────────────────────────────────────────
+
+        const DIE_RESULTS = {
+            1: { emoji: '1️⃣', label: 'Ladrillo', color: '#8B6B3D', bg: '#FDF8ED', icon: '🧱', text: 'Roba 1 carta del <strong>Mazo de Jardín</strong> y ponla en tu mano.', border: '#8B6B3D' },
+            2: { emoji: '2️⃣', label: 'Ladrillo', color: '#8B6B3D', bg: '#FDF8ED', icon: '🧱', text: 'Roba 1 carta del <strong>Mazo de Jardín</strong> y ponla en tu mano.', border: '#8B6B3D' },
+            3: { emoji: '3️⃣', label: 'Ladrillo', color: '#8B6B3D', bg: '#FDF8ED', icon: '🧱', text: 'Roba 1 carta del <strong>Mazo de Jardín</strong> y ponla en tu mano.', border: '#8B6B3D' },
+            4: { emoji: '4️⃣', label: 'El Ojo', color: '#D1623A', bg: '#FFF5F0', icon: '👁️', text: 'Roba 1 carta del <strong>Mazo de Edictos</strong> y léela en voz alta. Cumple la instrucción inmediatamente.', border: '#D1623A' },
+            5: { emoji: '5️⃣', label: 'El Ojo', color: '#D1623A', bg: '#FFF5F0', icon: '👁️', text: 'Roba 1 carta del <strong>Mazo de Edictos</strong> y léela en voz alta. Cumple la instrucción inmediatamente.', border: '#D1623A' },
+            6: { emoji: '👑', label: 'La Corona Real', color: '#D4A017', bg: '#1A2940', icon: '🎒', text: '¡Sorteo Extremo! Estás obligado a meter la mano en la <strong>Bolsa Oscura</strong> y sacar una Tablilla del Destino.', border: '#D4A017', dark: true }
+        };
+
+        let isRolling = false;
+        function rollDie() {
+            if (isRolling) return;
+            isRolling = true;
+            const btn = document.getElementById('btn-roll-die');
+            const face = document.getElementById('die-face');
+            const result = document.getElementById('die-result');
+
+            btn.disabled = true;
+            face.classList.add('die-rolling');
+            result.innerHTML = '<div class="flex items-center gap-2 text-gray-400"><span class="animate-spin inline-block text-2xl">🎲</span><span class="font-sans">Lanzando...</span></div>';
+
+            setTimeout(() => {
+                const roll = Math.ceil(Math.random() * 6);
+                const r = DIE_RESULTS[roll];
+                face.classList.remove('die-rolling');
+                face.textContent = roll === 6 ? '👑' : roll;
+                face.style.background = r.dark ? '#1A2940' : r.bg;
+                face.style.borderColor = r.border;
+                face.style.color = r.color;
+                face.style.fontSize = '2.5rem';
+
+                result.innerHTML = `
+                    <div class="w-full border-[3px] p-6 text-left" style="border-color:${r.border}; background:${r.bg};">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-4xl">${r.icon}</span>
+                            <div>
+                                <p class="font-black text-2xl" style="color:${r.color};">Cara ${roll} — ${r.label}</p>
+                            </div>
+                        </div>
+                        <p class="font-sans text-base ${r.dark ? 'text-gray-200' : 'text-gray-700'}">${r.text}</p>
+                    </div>
+                `;
+
+                btn.disabled = false;
+                isRolling = false;
+                lucide.createIcons();
+            }, 900);
+        }
+
+        // ─── BOLSA OSCURA ───────────────────────────────────────────────────
+
+        const TABLETS_POOL = [
+            { id: 'camellos', name: 'Diez Camellos Negros', count: 2, emoji: '🐪', color: '#D4A017', bg: '#1A2940', text: '<strong style="color:#D4A017;">Fortuna Absoluta.</strong> Construye el componente que te falte gratis — ponlo directamente en tu Zigurát sin necesitar tenerlo en la mano.', type: 'FORTUNA' },
+            { id: 'viento', name: 'El Viento del Verdugo', count: 3, emoji: '💀', color: '#D1623A', bg: '#3D0000', text: '<strong style="color:#ff6b6b;">Ruina Total.</strong> Todo tu jardín bajado a la mesa vuelve al descarte. Debes construir tu Zigurát desde cero.', type: 'RUINA' },
+            { id: 'sello', name: 'El Sello del Visir', count: 3, emoji: '🛡️', color: '#6BA4C4', bg: '#0D1B2A', text: '<strong style="color:#6BA4C4;">Inmunidad.</strong> Guarda esta tablilla. En cualquier momento, puedes mostrarla para cancelar cualquier efecto negativo dirigido contra ti (incluyendo el Viento del Verdugo).', type: 'DEFENSA' },
+            { id: 'espejos', name: 'Los Espejos Confundidos', count: 2, emoji: '🪞', color: '#C96B8C', bg: '#2A0A1A', text: '<strong style="color:#C96B8C;">Intercambio.</strong> Intercambia inmediatamente tu asiento y tu jardín completo (mano + Zigurát) con el jugador que en este momento vaya ganando (el que tenga más niveles bajados).', type: 'CAOS' }
+        ];
+
+        let bagPool = [];
+
+        function buildBagPool() {
+            bagPool = [];
+            TABLETS_POOL.forEach(t => {
+                for (let i = 0; i < t.count; i++) bagPool.push(t);
+            });
+            shuffleArray(bagPool);
+        }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+
+        buildBagPool();
+
+        let isBagAnimating = false;
+        function drawTablet() {
+            if (isBagAnimating) return;
+            if (bagPool.length === 0) {
+                document.getElementById('tablet-result').innerHTML = `<p class="font-sans italic" style="color:rgba(232,213,163,0.6);">La bolsa está vacía. Vuelve a llenarla para continuar.</p>`;
+                return;
+            }
+            isBagAnimating = true;
+            const btn = document.getElementById('btn-draw-tablet');
+            const bagIcon = document.getElementById('bag-icon');
+            btn.disabled = true;
+            bagIcon.classList.add('bag-shaking');
+
+            setTimeout(() => {
+                const tablet = bagPool.pop();
+                bagIcon.classList.remove('bag-shaking');
+
+                const typeColors = { 'FORTUNA': '#D4A017', 'RUINA': '#D1623A', 'DEFENSA': '#6BA4C4', 'CAOS': '#C96B8C' };
+                const typeColor = typeColors[tablet.type] || '#E8D5A3';
+
+                document.getElementById('tablet-result').innerHTML = `
+                    <div class="w-full border-[3px] p-6 text-left" style="border-color:${typeColor}; background:${tablet.bg};">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-4xl">${tablet.emoji}</span>
+                            <div>
+                                <p class="font-black text-xs uppercase tracking-widest mb-1" style="color:${typeColor};">${tablet.type}</p>
+                                <p class="font-black text-xl" style="color:#E8D5A3;">${tablet.name}</p>
+                            </div>
+                        </div>
+                        <p class="font-sans text-base text-gray-300">${tablet.text}</p>
+                    </div>
+                `;
+                document.getElementById('bag-count').textContent = `${bagPool.length} tablilla${bagPool.length !== 1 ? 's' : ''} restante${bagPool.length !== 1 ? 's' : ''}`;
+
+                btn.disabled = false;
+                isBagAnimating = false;
+            }, 800);
+        }
+
+        function resetBag() {
+            buildBagPool();
+            document.getElementById('bag-count').textContent = '10 tablillas restantes';
+            document.getElementById('tablet-result').innerHTML = `<p class="font-sans text-lg" style="color: rgba(232,213,163,0.5);">Bolsa rellenada. Mete la mano para extraer una tablilla...</p>`;
+        }
+
+        // ─── MAZO DE EDICTOS ─────────────────────────────────────────────────
+
+        const EDICTS = [
+            { type: 'PREMIO', emoji: '⭐', title: 'Capricho de los Astros', text: 'Roba 2 cartas extra del Mazo de Jardín ahora mismo.', color: '#EBB134', bg: '#FFFBEB' },
+            { type: 'PREMIO', emoji: '🎁', title: 'El Don de Hammurabi', text: 'Elige a otro jugador: ese jugador debe darte 1 carta de su mano (a tu elección).', color: '#EBB134', bg: '#FFFBEB' },
+            { type: 'PREMIO', emoji: '🌟', title: 'Gracia del Rey', text: 'Puedes bajar una carta adicional a tu Zigurát en este turno, aunque ya hayas bajado una de ese nivel anteriormente.', color: '#EBB134', bg: '#FFFBEB' },
+            { type: 'PREMIO', emoji: '🔄', title: 'Vientos del Cambio', text: 'Descarta tu mano completa y roba la misma cantidad de cartas del Mazo de Jardín.', color: '#EBB134', bg: '#FFFBEB' },
+            { type: 'PREMIO', emoji: '🏺', title: 'Tesoros del Palacio', text: 'Mira las 3 cartas superiores del Mazo de Jardín. Quédate 1 y devuelve las demás en cualquier orden.', color: '#EBB134', bg: '#FFFBEB' },
+            { type: 'PRENDA', emoji: '💨', title: 'El Aliento de Pazuzu', text: 'Sopla con fuerza sobre el Zigurát del jugador que va ganando. Si una carta cae, ese jugador la pierde por este turno.', color: '#D1623A', bg: '#FFF5F0' },
+            { type: 'PRENDA', emoji: '🤫', title: 'El Voto de Silencio', text: 'Durante el siguiente turno completo no puedes hablar. Si hablas, robas una carta de tu Zigurát y la devuelves al descarte.', color: '#D1623A', bg: '#FFF5F0' },
+            { type: 'PRENDA', emoji: '🙈', title: 'La Mirada Ciega', text: 'Tu próxima acción de robar carta (de cualquier mazo) debes hacerla con los ojos cerrados.', color: '#D1623A', bg: '#FFF5F0' },
+            { type: 'PRENDA', emoji: '🦅', title: 'La Prueba del Halcón', text: 'Nombra en voz alta 3 civilizaciones antiguas en menos de 10 segundos. Si no puedes, pierdes tu turno de construcción.', color: '#D1623A', bg: '#FFF5F0' },
+            { type: 'PRENDA', emoji: '🪄', title: 'El Encantamiento de Marduk', text: 'Sólo puedes usar tu mano no dominante durante el resto de este turno (para tomar cartas, bajar al Zigurát, etc).', color: '#D1623A', bg: '#FFF5F0' },
+            { type: 'CAOS', emoji: '🔀', title: 'El Gran Intercambio', text: 'REGLA DE CAOS: Todos los jugadores pasan su mano completa al jugador de su izquierda. Rige hasta el próximo Edicto.', color: '#3B5B8A', bg: '#EFF6FF' },
+            { type: 'CAOS', emoji: '⏪', title: 'El Decreto Invertido', text: 'REGLA DE CAOS: El orden de juego se invierte (ahora va en sentido contrario a las agujas del reloj). Rige hasta el próximo Edicto de Caos.', color: '#3B5B8A', bg: '#EFF6FF' },
+            { type: 'CAOS', emoji: '🎭', title: 'La Máscara del Destino', text: 'REGLA DE CAOS: Por esta ronda, todos los jugadores deben elegir el Camino Ambicioso en su turno (invocar la Lotería del Rey obligatoriamente).', color: '#3B5B8A', bg: '#EFF6FF' },
+            { type: 'CAOS', emoji: '🌪️', title: 'La Tormenta de Babilonia', text: 'REGLA DE CAOS: Nadie puede usar el Camino Ambicioso durante la próxima vuelta completa. La Lotería del Rey queda suspendida.', color: '#3B5B8A', bg: '#EFF6FF' },
+            { type: 'CAOS', emoji: '🤝', title: 'La Alianza Obligada', text: 'REGLA DE CAOS: El jugador con más cartas en la mano debe ceder 1 carta a cada jugador que tenga menos cartas que él. Aplica ahora.', color: '#3B5B8A', bg: '#EFF6FF' },
+            { type: 'PREMIO', emoji: '💎', title: 'El Lapislázuli Sagrado', text: 'Puedes bajar inmediatamente cualquier carta de tu mano a tu Zigurát fuera de tu fase de construcción habitual.', color: '#EBB134', bg: '#FFFBEB' },
+            { type: 'PRENDA', emoji: '⏱️', title: 'El Reloj de Agua', text: 'Tu próximo turno de construcción tiene un límite de 10 segundos. Lo que no hayas bajado en ese tiempo no puedes bajarlo.', color: '#D1623A', bg: '#FFF5F0' },
+            { type: 'PREMIO', emoji: '👁️', title: 'El Ojo Omnisciente', text: 'Puedes ver la mano completa de cualquier jugador. No se la muestres al resto.', color: '#EBB134', bg: '#FFFBEB' },
+            { type: 'CAOS', emoji: '🔁', title: 'La Ley de los Espejos', text: 'REGLA DE CAOS: Los resultados del dado se invierten esta ronda: 1-2 = El Ojo, 3-4-5 = Ladrillo, 6 = Corona Real.', color: '#3B5B8A', bg: '#EFF6FF' },
+            { type: 'PRENDA', emoji: '🐫', title: 'La Deuda del Camellero', text: 'Debes devolver al Mazo de Jardín 1 carta que tengas en la mano (a tu elección). Baraja el mazo.', color: '#D1623A', bg: '#FFF5F0' },
+        ];
+
+        let edictsPool = [];
+        function buildEdictsPool() {
+            edictsPool = [...EDICTS];
+            shuffleArray(edictsPool);
+        }
+        buildEdictsPool();
+
+        let isEdictAnimating = false;
+        function drawEdict() {
+            if (isEdictAnimating) return;
+            if (edictsPool.length === 0) {
+                document.getElementById('edict-result').innerHTML = `<p class="font-sans text-gray-400 italic">El mazo está vacío. Baraja de nuevo para continuar.</p>`;
+                return;
+            }
+            isEdictAnimating = true;
+            const btn = document.getElementById('btn-draw-edict');
+            const cardBack = document.getElementById('edict-card-back');
+            btn.disabled = true;
+            cardBack.classList.add('card-flipping');
+
+            setTimeout(() => {
+                const edict = edictsPool.pop();
+                cardBack.classList.remove('card-flipping');
+
+                const typeLabels = { 'PREMIO': 'Premio', 'PRENDA': 'Prenda', 'CAOS': 'Regla de Caos' };
+
+                document.getElementById('edict-result').innerHTML = `
+                    <div class="w-full border-[3px] p-6 text-left" style="border-color:${edict.color}; background:${edict.bg};">
+                        <div class="flex items-center gap-3 mb-3">
+                            <span class="text-4xl">${edict.emoji}</span>
+                            <div>
+                                <p class="font-black text-xs uppercase tracking-widest mb-1" style="color:${edict.color};">La Compañía Ordena — ${typeLabels[edict.type]}</p>
+                                <p class="font-black text-xl text-xul_ink">${edict.title}</p>
+                            </div>
+                        </div>
+                        <p class="font-sans text-base text-gray-700">${edict.text}</p>
+                    </div>
+                `;
+                document.getElementById('edict-count').textContent = `${edictsPool.length} edicto${edictsPool.length !== 1 ? 's' : ''} restante${edictsPool.length !== 1 ? 's' : ''}`;
+
+                btn.disabled = false;
+                isEdictAnimating = false;
+            }, 700);
+        }
+
+        function resetEdicts() {
+            buildEdictsPool();
+            document.getElementById('edict-count').textContent = '20 edictos restantes';
+            document.getElementById('edict-result').innerHTML = `<p class="font-sans text-gray-400 text-lg">Mazo barajado. Roba una carta para conocer la voluntad de La Compañía...</p>`;
+        }
+    </script>
+
+    <script>lucide.createIcons();</script>
+</body>
+</html>

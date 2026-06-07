@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Manual de Reglas — La Lotería de los Jardines</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ── VARIABLES ───────────────────────────────────────── */
+        :root {
+            --ink:    #1A1A1A;
+            --paper:  #FDF8ED;
+            --lapis:  #3B5B8A;
+            --gold:   #C8920A;
+            --terra:  #C1562E;
+            --green:  #4A8C55;
+            --brown:  #7A5230;
+            --night:  #0D1B2A;
+            --sand:   #E8D5A3;
+            --muted:  #888;
+        }
+
+        /* ── RESET / BASE ────────────────────────────────────── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            font-size: 10pt;
+            background: #d6cfc0;
+            color: var(--ink);
+            line-height: 1.55;
+        }
+
+        /* ── PANTALLA: CONTROLES ─────────────────────────────── */
+        .screen-bar {
+            background: var(--night);
+            color: var(--sand);
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 9pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .screen-bar span { color: var(--gold); }
+        .print-btn {
+            background: var(--gold);
+            color: var(--ink);
+            border: none;
+            padding: 8px 20px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 9pt;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+        }
+        .print-btn:hover { background: var(--terra); color: white; }
+
+        /* ── PÁGINA ──────────────────────────────────────────── */
+        .page {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            background: var(--paper);
+            padding: 18mm 16mm 14mm;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── PORTADA ─────────────────────────────────────────── */
+        .cover {
+            align-items: center;
+            justify-content: flex-end;
+            overflow: hidden;
+        }
+        .cover-bg {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(160deg, #0D1B2A 0%, #1E3351 55%, #2A1A08 100%);
+        }
+        .cover-grid {
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(200,146,10,0.08) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(200,146,10,0.08) 1px, transparent 1px);
+            background-size: 12mm 12mm;
+        }
+        .cover-content {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            padding-bottom: 20mm;
+        }
+        .cover-subtitle {
+            font-size: 8pt;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--gold);
+            margin-bottom: 4mm;
+        }
+        .cover-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 52pt;
+            font-weight: 700;
+            line-height: 0.9;
+            color: var(--sand);
+            margin-bottom: 3mm;
+        }
+        .cover-title span { color: var(--gold); display: block; }
+        .cover-rule { border: none; border-top: 2px solid var(--gold); margin: 5mm 0; width: 40mm; }
+        .cover-quote {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 12pt;
+            color: rgba(232,213,163,0.75);
+            line-height: 1.5;
+            max-width: 120mm;
+        }
+        .cover-quote cite {
+            display: block;
+            font-style: normal;
+            font-size: 8pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            margin-top: 3mm;
+        }
+        .cover-meta {
+            margin-top: 12mm;
+            display: flex;
+            gap: 8mm;
+        }
+        .cover-pill {
+            border: 1.5px solid rgba(200,146,10,0.5);
+            padding: 2mm 4mm;
+            font-size: 7.5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--sand);
+        }
+        .cover-pill strong { color: var(--gold); }
+
+        /* Zigurát en portada */
+        .cover-ziggurat {
+            position: absolute;
+            right: 12mm;
+            top: 50%;
+            transform: translateY(-60%);
+            opacity: 0.25;
+        }
+
+        /* ── ENCABEZADO DE PÁGINA INTERIOR ──────────────────── */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-bottom: 0.5pt solid rgba(0,0,0,0.2);
+            padding-bottom: 3mm;
+            margin-bottom: 8mm;
+        }
+        .page-header .title-left {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 8pt;
+            font-style: italic;
+            color: var(--muted);
+        }
+        .page-header .title-right {
+            font-size: 7pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--muted);
+        }
+
+        /* ── PIE DE PÁGINA ───────────────────────────────────── */
+        .page-footer {
+            margin-top: auto;
+            padding-top: 4mm;
+            border-top: 0.5pt solid rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .page-footer span {
+            font-size: 7pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--muted);
+        }
+        .page-num {
+            width: 7mm; height: 7mm;
+            background: var(--ink);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 8pt; font-weight: 900;
+        }
+
+        /* ── TIPOGRAFÍA DE CONTENIDO ─────────────────────────── */
+        .section-label {
+            font-size: 7pt;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--gold);
+            margin-bottom: 1.5mm;
+        }
+        h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 26pt;
+            font-weight: 700;
+            line-height: 1;
+            color: var(--ink);
+            margin-bottom: 5mm;
+        }
+        h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16pt;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 3mm;
+            border-bottom: 1.5px solid var(--ink);
+            padding-bottom: 1.5mm;
+        }
+        h4 {
+            font-size: 9pt;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--lapis);
+            margin-bottom: 2mm;
+        }
+        p { margin-bottom: 3mm; }
+        p.lead {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13pt;
+            line-height: 1.6;
+            color: #333;
+        }
+        p.lead::first-letter {
+            font-size: 36pt;
+            font-weight: 700;
+            float: left;
+            line-height: 0.75;
+            margin-right: 2mm;
+            margin-top: 1mm;
+            color: var(--terra);
+        }
+        strong { font-weight: 700; }
+        em { font-style: italic; }
+
+        /* ── RECUADROS ───────────────────────────────────────── */
+        .box {
+            border: 1.5px solid var(--ink);
+            padding: 4mm 5mm;
+            margin: 4mm 0;
+            position: relative;
+        }
+        .box.gold  { border-color: var(--gold); background: rgba(200,146,10,0.04); }
+        .box.lapis { border-color: var(--lapis); background: rgba(59,91,138,0.04); }
+        .box.terra { border-color: var(--terra); background: rgba(193,86,46,0.05); }
+        .box.night { background: var(--night); color: var(--sand); border-color: var(--gold); }
+        .box.night p, .box.night li { color: var(--sand); }
+        .box.night strong { color: var(--gold); }
+        .box-label {
+            position: absolute;
+            top: -3mm;
+            left: 4mm;
+            background: var(--paper);
+            padding: 0 2mm;
+            font-size: 6.5pt;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+        }
+        .box.night .box-label { background: var(--night); }
+
+        /* ── REGLAS / LISTAS ─────────────────────────────────── */
+        .rule-list { list-style: none; }
+        .rule-list li {
+            display: flex;
+            gap: 3mm;
+            align-items: flex-start;
+            margin-bottom: 2.5mm;
+            padding-bottom: 2.5mm;
+            border-bottom: 0.5pt solid rgba(0,0,0,0.1);
+        }
+        .rule-list li:last-child { border-bottom: none; }
+        .rule-num {
+            flex-shrink: 0;
+            width: 6mm; height: 6mm;
+            background: var(--ink);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 7.5pt;
+            font-weight: 900;
+        }
+        .rule-num.gold  { background: var(--gold); color: var(--ink); }
+        .rule-num.lapis { background: var(--lapis); }
+        .rule-num.terra { background: var(--terra); }
+        .rule-num.green { background: var(--green); }
+
+        /* ── DADO TABLE ──────────────────────────────────────── */
+        .dado-table { width: 100%; border-collapse: collapse; }
+        .dado-table th, .dado-table td {
+            padding: 2.5mm 3.5mm;
+            border: 1px solid rgba(0,0,0,0.15);
+            vertical-align: middle;
+        }
+        .dado-table thead tr { background: var(--ink); color: white; }
+        .dado-table thead th { font-size: 7.5pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
+        .dado-table tbody tr:nth-child(even) { background: rgba(0,0,0,0.03); }
+        .dado-table .cara { font-size: 14pt; font-weight: 900; text-align: center; font-family: 'Cormorant Garamond', serif; }
+        .dado-table .nombre { font-weight: 700; font-size: 9pt; }
+        .dado-table .accion { font-size: 8.5pt; }
+
+        /* ── COMPONENTES VISUALES ────────────────────────────── */
+        .component-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3mm;
+            margin: 4mm 0;
+        }
+        .component-card {
+            border: 1.5px solid var(--ink);
+            padding: 3mm 4mm;
+            display: flex;
+            gap: 3mm;
+            align-items: flex-start;
+        }
+        .comp-emoji { font-size: 16pt; line-height: 1; flex-shrink: 0; }
+        .comp-title { font-weight: 700; font-size: 8.5pt; margin-bottom: 0.5mm; }
+        .comp-desc  { font-size: 7.5pt; color: #555; line-height: 1.4; }
+        .comp-qty   { font-size: 6.5pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-top: 1mm; }
+
+        /* ── ZIGURÁT DIAGRAM ─────────────────────────────────── */
+        .ziggurat-diagram {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5mm;
+            margin: 5mm 0;
+        }
+        .zd-level {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 7.5pt;
+            font-weight: 700;
+            border: 1.5px solid var(--ink);
+            padding: 2mm 0;
+            color: white;
+        }
+        .zd-level span { color: rgba(255,255,255,0.65); font-weight: 400; margin-left: 2mm; font-size: 6.5pt; }
+
+        /* ── TABLILLAS ───────────────────────────────────────── */
+        .tablilla-list { list-style: none; }
+        .tablilla-list li {
+            display: flex;
+            gap: 3mm;
+            padding: 2.5mm 3mm;
+            margin-bottom: 2mm;
+            border: 1.5px solid var(--ink);
+            align-items: flex-start;
+        }
+        .tab-emoji { font-size: 14pt; flex-shrink: 0; line-height: 1.2; }
+        .tab-count {
+            flex-shrink: 0;
+            width: 7mm;
+            font-size: 7pt; font-weight: 900;
+            text-align: center;
+            color: var(--muted);
+            margin-top: 0.5mm;
+        }
+        .tab-name  { font-weight: 700; font-size: 9pt; margin-bottom: 0.5mm; }
+        .tab-desc  { font-size: 8pt; color: #444; line-height: 1.45; }
+        .tab-tipo  { display: inline-block; font-size: 6pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; padding: 0.5mm 2mm; margin-top: 1.5mm; }
+
+        /* ── DOS COLUMNAS ────────────────────────────────────── */
+        .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 6mm; }
+        .two-col-wide { display: grid; grid-template-columns: 3fr 2fr; gap: 6mm; }
+
+        /* ── LÍNEA DECORATIVA ────────────────────────────────── */
+        .ornament { text-align: center; color: var(--gold); font-size: 12pt; margin: 4mm 0; letter-spacing: 4mm; }
+
+        /* ── TURNO DIAGRAM ───────────────────────────────────── */
+        .turno-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin: 4mm 0; }
+        .turno-card {
+            border: 2px solid var(--ink);
+            overflow: hidden;
+        }
+        .turno-header {
+            padding: 2.5mm 4mm;
+            display: flex;
+            align-items: center;
+            gap: 2mm;
+        }
+        .turno-header .label {
+            font-size: 6.5pt; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 1.5px; opacity: 0.8;
+        }
+        .turno-header .nombre {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 13pt; font-weight: 700; line-height: 1;
+        }
+        .turno-body { padding: 3mm 4mm; }
+        .turno-body p { font-size: 8.5pt; color: #333; margin-bottom: 0; }
+
+        /* ── EDICTOS MUESTRA ─────────────────────────────────── */
+        .edict-sample {
+            border: 1.5px solid var(--terra);
+            padding: 3mm 4mm;
+            margin-bottom: 2mm;
+            display: flex;
+            gap: 3mm;
+            align-items: flex-start;
+            background: rgba(193,86,46,0.03);
+        }
+        .edict-sample.premio { border-color: var(--gold); background: rgba(200,146,10,0.03); }
+        .edict-sample.caos   { border-color: var(--lapis); background: rgba(59,91,138,0.03); }
+        .edict-emoji { font-size: 14pt; flex-shrink: 0; }
+        .edict-tipo  { font-size: 6pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); margin-bottom: 0.5mm; }
+        .edict-title { font-weight: 700; font-size: 9pt; margin-bottom: 0.5mm; }
+        .edict-text  { font-size: 7.5pt; color: #444; line-height: 1.45; }
+
+        /* ── ÍNDICE ──────────────────────────────────────────── */
+        .index-list { list-style: none; }
+        .index-list li {
+            display: flex;
+            align-items: baseline;
+            gap: 2mm;
+            padding: 2mm 0;
+            border-bottom: 0.5pt solid rgba(0,0,0,0.08);
+        }
+        .index-title { font-weight: 700; font-size: 9.5pt; }
+        .index-dots { flex: 1; border-bottom: 1pt dotted rgba(0,0,0,0.2); margin: 0 2mm; }
+        .index-page { font-size: 8.5pt; font-weight: 700; color: var(--muted); }
+        .index-section { font-size: 7.5pt; color: var(--muted); margin-left: 5mm; }
+
+        /* ── CRÉDITOS ────────────────────────────────────────── */
+        .credits { margin-top: auto; }
+        .credits-box {
+            border: 1.5px solid var(--gold);
+            padding: 5mm;
+            text-align: center;
+        }
+        .credits-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 14pt;
+            font-weight: 700;
+            color: var(--ink);
+            margin-bottom: 2mm;
+        }
+        .credits-text { font-size: 7.5pt; color: #555; line-height: 1.6; }
+
+        /* ── PRINT ───────────────────────────────────────────── */
+        @media print {
+            body { background: white; }
+            .screen-bar { display: none !important; }
+            .page {
+                margin: 0 !important;
+                page-break-after: always;
+                break-after: page;
+                box-shadow: none !important;
+            }
+            .page:last-of-type { page-break-after: auto; }
+            @page { size: A4; margin: 0; }
+        }
+
+        @media screen {
+            .page {
+                box-shadow: 4px 4px 20px rgba(0,0,0,0.2);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- BARRA PANTALLA -->
+<div class="screen-bar">
+    <span>📖 Manual de Reglas — <span>La Lotería de los Jardines</span></span>
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimir PDF</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PORTADA
+     ══════════════════════════════════════════════════════════ -->
+<div class="page cover">
+    <div class="cover-bg"></div>
+    <div class="cover-grid"></div>
+
+    <!-- Zigurát decorativo de fondo -->
+    <div class="cover-ziggurat">
+        <svg viewBox="0 0 200 240" width="180" xmlns="http://www.w3.org/2000/svg">
+            <rect x="10" y="200" width="180" height="30" fill="rgba(200,146,10,0.3)" stroke="rgba(200,146,10,0.4)" stroke-width="1"/>
+            <rect x="25" y="170" width="150" height="32" fill="rgba(200,146,10,0.25)" stroke="rgba(200,146,10,0.4)" stroke-width="1"/>
+            <rect x="44" y="138" width="112" height="34" fill="rgba(200,146,10,0.2)" stroke="rgba(200,146,10,0.4)" stroke-width="1"/>
+            <rect x="62" y="108" width="76" height="32" fill="rgba(200,146,10,0.18)" stroke="rgba(200,146,10,0.4)" stroke-width="1"/>
+            <rect x="80" y="78" width="40" height="32" fill="rgba(200,146,10,0.15)" stroke="rgba(200,146,10,0.4)" stroke-width="1"/>
+            <circle cx="100" cy="62" r="14" fill="rgba(200,146,10,0.2)" stroke="rgba(200,146,10,0.5)" stroke-width="1"/>
+            <path d="M 100 50 L 106 60 L 114 60 L 108 66 L 110 76 L 100 70 L 90 76 L 92 66 L 86 60 L 94 60 Z" fill="rgba(200,146,10,0.5)"/>
+        </svg>
+    </div>
+
+    <div class="cover-content">
+        <div class="cover-subtitle">Manual de Reglas · Ludosofía</div>
+        <div class="cover-title">
+            La Lotería
+            <span>de los Jardines</span>
+        </div>
+        <hr class="cover-rule">
+        <div class="cover-quote">
+            "En Babilonia, el azar no es una casualidad; es una institución."
+            <cite>— Jorge Luis Borges</cite>
+        </div>
+        <div class="cover-meta">
+            <div class="cover-pill"><strong>2–4</strong> Arquitectos</div>
+            <div class="cover-pill"><strong>15–20</strong> Minutos</div>
+            <div class="cover-pill"><strong>8–10</strong> Años</div>
+        </div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PÁGINA 2: ÍNDICE + PRESENTACIÓN
+     ══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-header">
+        <span class="title-left">La Lotería de los Jardines</span>
+        <span class="title-right">Índice</span>
+    </div>
+
+    <div class="two-col-wide">
+        <div>
+            <div class="section-label">En este manual</div>
+            <h2>Índice</h2>
+            <ul class="index-list">
+                <li>
+                    <span class="index-title">El Mundo del Juego</span>
+                    <span class="index-dots"></span>
+                    <span class="index-page">3</span>
+                </li>
+                <li>
+                    <span class="index-title">Objetivo</span>
+                    <span class="index-dots"></span>
+                    <span class="index-page">3</span>
+                </li>
+                <li>
+                    <span class="index-title">Componentes</span>
+                    <span class="index-dots"></span>
+                    <span class="index-page">3</span>
+                </li>
+                <li class="index-section">El Dado del Destino</li>
+                <li class="index-section">El Mazo de Jardín</li>
+                <li class="index-section">El Mazo de Edictos</li>
+                <li class="index-section">Las Tablillas del Destino</li>
+                <li>
+                    <span class="index-title">Preparación</span>
+                    <span class="index-dots"></span>
+                    <span class="index-page">4</span>
+                </li>
+                <li>
+                    <span class="index-title">El Turno de Juego</span>
+                    <span class="index-dots"></span>
+                    <span class="index-page">4–5</span>
+                </li>
+                <li class="index-section">El Camino Prudente</li>
+                <li class="index-section">El Camino Ambicioso</li>
+                <li class="index-section">Fase de Construcción</li>
+                <li>
+                    <span class="index-title">Los Edictos de La Compañía</span>
+                    <span class="index-dots"></span>
+                    <span class="index-page">5</span>
+                </li>
+                <li>
+                    <span class="index-title">La Lotería del Rey</span>
+                    <span class="index-dots"></span>
+                    <span class="index-page">5–6</span>
+                </li>
+                <li>
+                    <span class="index-title">Fin del Juego</span>
+                    <span class="index-dots"></span>
+                    <span class="index-page">6</span>
+                </li>
+                <li>
+                    <span class="index-title">Referencia Rápida</span>
+                    <span class="index-dots"></span>
+                    <span class="index-page">7</span>
+                </li>
+            </ul>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:4mm;">
+            <div class="box night">
+                <div class="box-label" style="background:var(--night);">Contenido del juego</div>
+                <p style="margin-bottom:2mm;"><strong>50</strong> Cartas de Jardín (trapezoidales)</p>
+                <p style="margin-bottom:2mm;"><strong>20</strong> Cartas de Edictos (rectangulares)</p>
+                <p style="margin-bottom:2mm;"><strong>10</strong> Tablillas del Destino (fichas)</p>
+                <p style="margin-bottom:2mm;"><strong>1</strong> Dado de 6 caras</p>
+                <p style="margin-bottom:0;"><strong>1</strong> Bolsa oscura para las Tablillas</p>
+            </div>
+
+            <div class="box gold">
+                <div class="box-label">Nota de diseño</div>
+                <p style="font-size:8pt; line-height:1.5;">Las cartas de Jardín tienen forma <strong>trapezoidal</strong> para que, al apilarlas sobre la mesa, el zigurát tome naturalmente su forma piramidal escalonada.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        <span>Ludosofía · Manual de Reglas</span>
+        <div class="page-num">2</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PÁGINA 3: EL MUNDO / OBJETIVO / COMPONENTES I
+     ══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-header">
+        <span class="title-left">La Lotería de los Jardines</span>
+        <span class="title-right">El Mundo · Objetivo · Componentes</span>
+    </div>
+
+    <div class="section-label">Ambientación</div>
+    <h2>El Mundo del Juego</h2>
+    <p class="lead">Babilonia, 600 a.C. El Rey ha convocado a sus mejores arquitectos para competir en la construcción del jardín más glorioso. Pero en Babilonia, nada se consigue sin el arbitrio del azar: <em>La Compañía</em> —esa institución omnipresente que regula la Lotería— dictará tu fortuna o tu ruina.</p>
+
+    <div class="ornament">✦ ✦ ✦</div>
+
+    <div class="two-col">
+        <div>
+            <div class="section-label">Propósito del juego</div>
+            <h3>Objetivo</h3>
+            <p>Sé el primer arquitecto en completar tu <strong>Zigurát (Jardín Colgante)</strong> bajando a la mesa los <strong>5 componentes estructurales</strong> diferentes que lo conforman.</p>
+            <p>Pero actúa con astucia: entre el dado, los edictos y la bolsa oscura, la suerte puede cambiar en cualquier momento.</p>
+            <div class="box gold" style="margin-top:3mm;">
+                <p style="font-size:8.5pt; font-weight:700; text-align:center; color:var(--ink);">
+                    El ganador se pone de pie, señala su pirámide y grita:
+                </p>
+                <p style="font-family:'Cormorant Garamond',serif; font-size:16pt; font-weight:700; text-align:center; color:var(--gold); margin:0;">
+                    "¡La Lotería ha hablado!"
+                </p>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label">El dado de 6 caras</div>
+            <h3>El Dado del Destino</h3>
+            <p>El corazón del juego. Cada cara tiene un significado preciso:</p>
+            <table class="dado-table" style="margin-top:2mm;">
+                <thead>
+                    <tr>
+                        <th>Cara</th>
+                        <th>Símbolo</th>
+                        <th>Efecto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="cara" style="color:var(--brown);">1·2·3</td>
+                        <td style="font-weight:700; font-size:8pt;">🧱 Ladrillo</td>
+                        <td style="font-size:7.5pt;">Robá 1 carta del Mazo de Jardín.</td>
+                    </tr>
+                    <tr>
+                        <td class="cara" style="color:var(--terra);">4·5</td>
+                        <td style="font-weight:700; font-size:8pt;">👁️ El Ojo</td>
+                        <td style="font-size:7.5pt;">Robá 1 carta de Edictos y cumplí la orden.</td>
+                    </tr>
+                    <tr>
+                        <td class="cara" style="color:var(--gold);">6</td>
+                        <td style="font-weight:700; font-size:8pt;">👑 Corona Real</td>
+                        <td style="font-size:7.5pt;">¡Sorteo Extremo! Metés la mano en la bolsa oscura.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        <span>Ludosofía · Manual de Reglas</span>
+        <div class="page-num">3</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PÁGINA 4: COMPONENTES II + PREPARACIÓN
+     ══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-header">
+        <span class="title-left">La Lotería de los Jardines</span>
+        <span class="title-right">Componentes · Preparación</span>
+    </div>
+
+    <div class="section-label">50 cartas trapezoidales</div>
+    <h3>El Mazo de Jardín</h3>
+    <p>Estas son las cartas que coleccionás y apilás para construir tu Zigurát. <strong>Solo podés tener una copia de cada nivel bajada en tu pirámide simultáneamente.</strong></p>
+
+    <!-- Diagrama del Zigurát -->
+    <div class="ziggurat-diagram">
+        <div class="zd-level" style="width:55mm; background:var(--gold); color:var(--ink);">⚜️ La Flor de Oro <span>Nivel 5 · 4 cartas</span></div>
+        <div class="zd-level" style="width:75mm; background:var(--green);">🌿 Enredaderas de Semíramis <span>Nivel 4 · 10 cartas</span></div>
+        <div class="zd-level" style="width:95mm; background:#3D2410; color:var(--sand);">🌑 Tierra Negra <span>Nivel 3 · 10 cartas</span></div>
+        <div class="zd-level" style="width:115mm; background:var(--lapis);">💧 Agua del Éufrates <span>Nivel 2 · 12 cartas</span></div>
+        <div class="zd-level" style="width:135mm; background:var(--brown);">🧱 Ladrillo de Lapislázuli <span>Nivel 1 · 14 cartas</span></div>
+    </div>
+
+    <div class="ornament" style="margin:3mm 0;">✦</div>
+
+    <div class="two-col">
+        <div>
+            <div class="section-label">20 cartas rectangulares</div>
+            <h3>El Mazo de Edictos</h3>
+            <p>Leyes de <em>La Compañía</em>. Se activan cuando el dado cae en 4 o 5, o cuando un jugador invoca la Lotería del Rey y ocurre cierto efecto.</p>
+            <div class="component-card" style="margin-bottom:1.5mm; border-color:var(--gold);">
+                <div class="comp-emoji">⭐</div>
+                <div><div class="comp-title" style="color:var(--gold);">Premio</div><div class="comp-desc">Beneficios inmediatos: robar cartas extra, ver manos ajenas, bajar cartas fuera de turno.</div></div>
+            </div>
+            <div class="component-card" style="margin-bottom:1.5mm; border-color:var(--terra);">
+                <div class="comp-emoji">😬</div>
+                <div><div class="comp-title" style="color:var(--terra);">Prenda</div><div class="comp-desc">Desafíos físicos: soplar el zigurát rival, guardar silencio, actuar con los ojos cerrados.</div></div>
+            </div>
+            <div class="component-card" style="border-color:var(--lapis);">
+                <div class="comp-emoji">🌀</div>
+                <div><div class="comp-title" style="color:var(--lapis);">Regla de Caos</div><div class="comp-desc">Leyes que alteran las reglas para todos los jugadores hasta el próximo Edicto de Caos.</div></div>
+            </div>
+        </div>
+
+        <div>
+            <div class="section-label">10 fichas en bolsa oscura</div>
+            <h3>Tablillas del Destino</h3>
+            <p>Se sacan en el Sorteo Extremo. Verlas requiere meter la mano a ciegas.</p>
+            <ul class="tablilla-list" style="margin-top:2mm;">
+                <li style="background:rgba(200,146,10,0.05); border-color:var(--gold);">
+                    <div class="tab-emoji">🐪</div>
+                    <div class="tab-count" style="color:var(--gold);">×2</div>
+                    <div><div class="tab-name">Diez Camellos Negros</div><div class="tab-desc">Fortuna absoluta. Construí el componente que te falte, gratis.</div></div>
+                </li>
+                <li style="background:rgba(193,86,46,0.05); border-color:var(--terra);">
+                    <div class="tab-emoji">💀</div>
+                    <div class="tab-count" style="color:var(--terra);">×3</div>
+                    <div><div class="tab-name">El Viento del Verdugo</div><div class="tab-desc">Ruina total. Tu zigurát bajado a la mesa vuelve al descarte.</div></div>
+                </li>
+                <li style="background:rgba(59,91,138,0.05); border-color:var(--lapis);">
+                    <div class="tab-emoji">🛡️</div>
+                    <div class="tab-count" style="color:var(--lapis);">×3</div>
+                    <div><div class="tab-name">El Sello del Visir</div><div class="tab-desc">Inmunidad. Guardálo para cancelar cualquier efecto negativo contra vos.</div></div>
+                </li>
+                <li style="background:rgba(155,77,122,0.05); border-color:#9B4D7A;">
+                    <div class="tab-emoji">🪞</div>
+                    <div class="tab-count" style="color:#9B4D7A;">×2</div>
+                    <div><div class="tab-name">Los Espejos Confundidos</div><div class="tab-desc">Intercambiá tu asiento y jardín completo con el jugador que va ganando.</div></div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        <span>Ludosofía · Manual de Reglas</span>
+        <div class="page-num">4</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PÁGINA 5: PREPARACIÓN + EL TURNO
+     ══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-header">
+        <span class="title-left">La Lotería de los Jardines</span>
+        <span class="title-right">Preparación · El Turno de Juego</span>
+    </div>
+
+    <div class="section-label">Antes de empezar</div>
+    <h2>Preparación</h2>
+
+    <ul class="rule-list" style="margin-bottom:5mm;">
+        <li>
+            <div class="rule-num lapis">1</div>
+            <div>Barajá el <strong>Mazo de Jardín</strong> y repartí <strong>3 cartas</strong> a cada jugador. El resto queda boca abajo en el centro de la mesa.</div>
+        </li>
+        <li>
+            <div class="rule-num terra">2</div>
+            <div>Barajá el <strong>Mazo de Edictos</strong> y colócalo boca abajo junto al de Jardín.</div>
+        </li>
+        <li>
+            <div class="rule-num" style="background:var(--night);">3</div>
+            <div>Colocá las <strong>10 Tablillas del Destino</strong> dentro de la bolsa oscura (o una taza) sin mirarlas.</div>
+        </li>
+        <li>
+            <div class="rule-num green">★</div>
+            <div>Comienza el jugador que haya <strong>regado una planta más recientemente</strong>. El juego avanza en sentido horario.</div>
+        </li>
+    </ul>
+
+    <div class="ornament">✦ ✦ ✦</div>
+
+    <div class="section-label">Mecánica central</div>
+    <h2>El Turno de Juego</h2>
+    <p>En tu turno debés elegir <em>exactamente una</em> de las dos opciones disponibles:</p>
+
+    <div class="turno-grid">
+        <!-- CAMINO A -->
+        <div class="turno-card">
+            <div class="turno-header" style="background:var(--lapis); color:white;">
+                <div>
+                    <div class="label">Opción A</div>
+                    <div class="nombre">El Camino Prudente</div>
+                </div>
+            </div>
+            <div class="turno-body">
+                <p style="margin-bottom:2mm; font-size:8pt;">Tomá el Dado del Destino y lanzálo. Aplicá el resultado según la tabla de la página 3:</p>
+                <div style="display:flex; flex-direction:column; gap:1.5mm;">
+                    <div style="display:flex; gap:2mm; align-items:center; padding:1.5mm; border-left:3px solid var(--brown); background:rgba(122,82,48,0.06); font-size:7.5pt;">
+                        <strong style="color:var(--brown); width:8mm; flex-shrink:0;">1–3</strong> Robá 1 carta del Mazo de Jardín.
+                    </div>
+                    <div style="display:flex; gap:2mm; align-items:center; padding:1.5mm; border-left:3px solid var(--terra); background:rgba(193,86,46,0.06); font-size:7.5pt;">
+                        <strong style="color:var(--terra); width:8mm; flex-shrink:0;">4–5</strong> Robá 1 Edicto y leélo en voz alta.
+                    </div>
+                    <div style="display:flex; gap:2mm; align-items:center; padding:1.5mm; border-left:3px solid var(--gold); background:rgba(200,146,10,0.06); font-size:7.5pt;">
+                        <strong style="color:var(--gold); width:8mm; flex-shrink:0;">6</strong> Sorteo Extremo en la bolsa oscura.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CAMINO B -->
+        <div class="turno-card" style="border-color:var(--gold);">
+            <div class="turno-header" style="background:var(--night);">
+                <div>
+                    <div class="label" style="color:var(--gold);">Opción B</div>
+                    <div class="nombre" style="color:var(--sand);">El Camino Ambicioso</div>
+                </div>
+            </div>
+            <div class="turno-body">
+                <p style="margin-bottom:2mm; font-size:8pt;">No tirás el dado. Anunciás en voz alta:</p>
+                <div style="border:1px solid var(--gold); padding:2.5mm; text-align:center; background:rgba(200,146,10,0.04); margin-bottom:2mm;">
+                    <span style="font-family:'Cormorant Garamond',serif; font-size:11pt; font-style:italic; font-weight:700; color:var(--gold);">"Invoco la Lotería del Rey"</span>
+                </div>
+                <p style="font-size:7.5pt; color:#444;">Metés la mano en la bolsa oscura y sacás una Tablilla. Es un riesgo enorme: podés conseguir los Camellos Negros y acercarte a la victoria, o sacar el Viento del Verdugo y perderlo todo.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FASE DE CONSTRUCCIÓN -->
+    <div class="box lapis" style="margin-top:4mm;">
+        <div class="box-label">Siempre al final del turno</div>
+        <h4 style="margin-bottom:2mm;">⚙️ Fase de Construcción</h4>
+        <p>Después de resolver tu tirada o tu tablilla, revisá tu mano. Podés <strong>bajar a la mesa las cartas de Jardín que quieras</strong>, respetando esta única regla:</p>
+        <div style="display:flex; gap:3mm; align-items:center; margin-top:2mm; padding:2mm 3mm; background:white; border:1px solid var(--lapis);">
+            <span style="font-size:14pt;">⚠️</span>
+            <p style="margin:0; font-size:8.5pt;"><strong>Solo puede haber una copia de cada componente en tu Zigurát simultáneamente.</strong> No podés tener dos "Aguas del Éufrates" bajadas al mismo tiempo.</p>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        <span>Ludosofía · Manual de Reglas</span>
+        <div class="page-num">5</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PÁGINA 6: EDICTOS + LA LOTERÍA DEL REY + FIN
+     ══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-header">
+        <span class="title-left">La Lotería de los Jardines</span>
+        <span class="title-right">Edictos · La Lotería del Rey · Fin del Juego</span>
+    </div>
+
+    <div class="two-col">
+        <div>
+            <div class="section-label">El Mazo de Edictos</div>
+            <h3>Los Edictos de La Compañía</h3>
+            <p>Cuando debés robar un Edicto (dado en 4 o 5), tomá la carta superior del Mazo de Edictos y leéla en voz alta. Cumplí la instrucción inmediatamente.</p>
+            <p>Existen tres tipos de Edictos:</p>
+
+            <div class="edict-sample premio">
+                <div class="edict-emoji">⭐</div>
+                <div>
+                    <div class="edict-tipo">Premio</div>
+                    <div class="edict-title">Capricho de los Astros</div>
+                    <div class="edict-text">Robá 2 cartas extra del Mazo de Jardín ahora mismo.</div>
+                </div>
+            </div>
+            <div class="edict-sample">
+                <div class="edict-emoji">💨</div>
+                <div>
+                    <div class="edict-tipo">Prenda</div>
+                    <div class="edict-title">El Aliento de Pazuzu</div>
+                    <div class="edict-text">Soplá con fuerza sobre el Zigurát del jugador que va ganando. Si una carta cae, ese jugador la pierde por este turno.</div>
+                </div>
+            </div>
+            <div class="edict-sample caos">
+                <div class="edict-emoji">⏪</div>
+                <div>
+                    <div class="edict-tipo">Regla de Caos</div>
+                    <div class="edict-title">El Decreto Invertido</div>
+                    <div class="edict-text">El orden de juego se invierte. Rige hasta el próximo Edicto de Caos.</div>
+                </div>
+            </div>
+
+            <p style="font-size:8pt; color:#555; margin-top:2mm; font-style:italic;">Los Edictos de Caos permanecen activos hasta que aparezca el próximo Edicto de Caos, que los reemplaza.</p>
+        </div>
+
+        <div>
+            <div class="section-label">Las Tablillas del Destino</div>
+            <h3>La Lotería del Rey</h3>
+            <p>El Sorteo Extremo ocurre en dos situaciones:</p>
+            <ul class="rule-list" style="margin-bottom:3mm;">
+                <li>
+                    <div class="rule-num" style="background:var(--brown);">A</div>
+                    <div>El dado cae en <strong>6</strong> (Corona Real) durante el Camino Prudente. Es involuntario.</div>
+                </li>
+                <li>
+                    <div class="rule-num" style="background:var(--gold); color:var(--ink);">B</div>
+                    <div>El jugador elige el <strong>Camino Ambicioso</strong> e invoca la Lotería. Es deliberado.</div>
+                </li>
+            </ul>
+            <p>En ambos casos, el jugador mete la mano a ciegas en la bolsa oscura y saca una Tablilla. El efecto es inmediato e irrevocable, <em>salvo que el jugador tenga guardado un Sello del Visir.</em></p>
+
+            <div class="box lapis" style="margin-top:3mm;">
+                <div class="box-label">El Sello del Visir</div>
+                <p style="font-size:8pt;">Si sacás una Tablilla desfavorable (o si alguien te ataca con una Tablilla que obtuvieron ellos), podés mostrar tu Sello del Visir para anular el efecto. El Sello se descarta después de usarlo.</p>
+            </div>
+
+            <div class="section-label" style="margin-top:4mm;">Victoria</div>
+            <h3>Fin del Juego</h3>
+            <p>La partida termina <strong>inmediatamente</strong> cuando un jugador baja a la mesa los <strong>5 componentes diferentes</strong> de su Zigurát.</p>
+            <div class="box night" style="margin-top:2mm;">
+                <p style="text-align:center; font-size:8pt; margin-bottom:1.5mm;">El ganador debe:</p>
+                <p style="font-family:'Cormorant Garamond',serif; font-size:13pt; font-weight:700; text-align:center; margin-bottom:0; color:var(--sand);">Ponerse de pie · Señalar su pirámide · Gritar</p>
+                <p style="font-family:'Cormorant Garamond',serif; font-size:17pt; font-weight:700; text-align:center; color:var(--gold); margin:0;">"¡La Lotería ha hablado!"</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        <span>Ludosofía · Manual de Reglas</span>
+        <div class="page-num">6</div>
+    </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     PÁGINA 7: REFERENCIA RÁPIDA + CRÉDITOS
+     ══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-header">
+        <span class="title-left">La Lotería de los Jardines</span>
+        <span class="title-right">Referencia Rápida</span>
+    </div>
+
+    <div class="section-label">Para dejar en la mesa durante el juego</div>
+    <h2>Referencia Rápida</h2>
+
+    <div class="two-col" style="margin-bottom:4mm;">
+        <div class="box night">
+            <div class="box-label" style="background:var(--night);">Estructura del turno</div>
+            <p style="font-size:7.5pt; margin-bottom:2mm; color:var(--sand);">Elegí UNA opción, luego construí.</p>
+            <ul class="rule-list" style="margin-bottom:0;">
+                <li style="border-color:rgba(255,255,255,0.1);">
+                    <div class="rule-num lapis">A</div>
+                    <div style="font-size:8pt; color:var(--sand);"><strong style="color:var(--sand);">Camino Prudente</strong> — Tirá el dado.</div>
+                </li>
+                <li style="border-color:rgba(255,255,255,0.1);">
+                    <div class="rule-num gold" style="background:var(--gold);">B</div>
+                    <div style="font-size:8pt; color:var(--sand);"><strong style="color:var(--gold);">Camino Ambicioso</strong> — Invocá la Lotería del Rey.</div>
+                </li>
+                <li style="border-color:rgba(255,255,255,0.1); margin-bottom:0; padding-bottom:0;">
+                    <div class="rule-num green">⚙</div>
+                    <div style="font-size:8pt; color:var(--sand);"><strong style="color:var(--sand);">Construcción</strong> — Bajá cartas de Jardín a tu Zigurát.</div>
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <table class="dado-table" style="width:100%;">
+                <thead>
+                    <tr>
+                        <th colspan="2">El Dado del Destino</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align:center; font-weight:900; font-size:12pt; color:var(--brown); width:15mm;">1·2·3</td>
+                        <td style="font-size:8pt;"><strong>🧱 Ladrillo</strong><br>Robá 1 carta de Jardín.</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900; font-size:12pt; color:var(--terra);">4·5</td>
+                        <td style="font-size:8pt;"><strong>👁️ El Ojo</strong><br>Robá 1 Edicto. Leélo en voz alta y cumplí.</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center; font-weight:900; font-size:14pt; color:var(--gold);">6</td>
+                        <td style="font-size:8pt;"><strong>👑 Corona Real</strong><br>Sorteo Extremo en la bolsa oscura.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="two-col">
+        <div>
+            <h4>⚠️ Regla de construcción</h4>
+            <div class="box terra">
+                <p style="font-size:8.5pt;"><strong>Solo una copia de cada nivel simultáneamente en tu Zigurát.</strong> Si querés bajar un segundo "Ladrillo", primero debés descartar el que ya tenés bajado.</p>
+            </div>
+
+            <h4 style="margin-top:3mm;">🎒 Tablillas (Bolsa Oscura)</h4>
+            <div style="font-size:8pt; line-height:1.7;">
+                <div style="display:flex; justify-content:space-between; padding:1mm 0; border-bottom:0.5pt solid rgba(0,0,0,0.1);">
+                    <span><strong>🐪 Camellos Negros</strong></span><span style="color:var(--muted);">×2 · Fortuna absoluta</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:1mm 0; border-bottom:0.5pt solid rgba(0,0,0,0.1);">
+                    <span><strong>💀 Viento del Verdugo</strong></span><span style="color:var(--muted);">×3 · Ruina total</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:1mm 0; border-bottom:0.5pt solid rgba(0,0,0,0.1);">
+                    <span><strong>🛡️ Sello del Visir</strong></span><span style="color:var(--muted);">×3 · Inmunidad</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; padding:1mm 0;">
+                    <span><strong>🪞 Espejos Confundidos</strong></span><span style="color:var(--muted);">×2 · Intercambio</span>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <h4>📐 El Zigurát (5 niveles)</h4>
+            <div class="ziggurat-diagram" style="margin:2mm 0;">
+                <div class="zd-level" style="width:38mm; background:var(--gold); color:var(--ink); font-size:7pt; padding:1.5mm 0;">⚜️ Flor de Oro <span>×4</span></div>
+                <div class="zd-level" style="width:50mm; background:var(--green); font-size:7pt; padding:1.5mm 0;">🌿 Enredaderas <span>×10</span></div>
+                <div class="zd-level" style="width:62mm; background:#3D2410; color:var(--sand); font-size:7pt; padding:1.5mm 0;">🌑 Tierra Negra <span>×10</span></div>
+                <div class="zd-level" style="width:74mm; background:var(--lapis); font-size:7pt; padding:1.5mm 0;">💧 Agua <span>×12</span></div>
+                <div class="zd-level" style="width:86mm; background:var(--brown); font-size:7pt; padding:1.5mm 0;">🧱 Ladrillo <span>×14</span></div>
+            </div>
+
+            <h4 style="margin-top:3mm;">🏆 Victoria</h4>
+            <div class="box gold">
+                <p style="font-size:8pt; text-align:center; margin:0;">Completá los <strong>5 niveles</strong> · Ponéte de pie · Señalá tu pirámide</p>
+                <p style="font-family:'Cormorant Garamond',serif; font-size:12pt; font-weight:700; text-align:center; color:var(--gold); margin:1mm 0 0;">"¡La Lotería ha hablado!"</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CRÉDITOS -->
+    <div class="credits">
+        <div class="ornament" style="margin:4mm 0 3mm;">✦ ✦ ✦</div>
+        <div class="credits-box">
+            <div class="credits-title">La Lotería de los Jardines</div>
+            <div class="credits-text">
+                Un juego de azar, riesgo y construcción babilónica.<br>
+                Diseñado y publicado por <strong>Ludosofía</strong> · 2026<br>
+                <a href="https://ludosofia.com" style="color:var(--gold);">ludosofia.com</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        <span>Ludosofía · Manual de Reglas</span>
+        <div class="page-num">7</div>
+    </div>
+</div>
+
+</body>
+</html>

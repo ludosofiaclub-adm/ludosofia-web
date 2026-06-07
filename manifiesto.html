@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manifiesto | LUDOSOFÍA</title>
+
+    <script>
+        window.CONFIG_ACCESO = { PUBLICO: true };
+    </script>
+    <script type="module" src="seguridad.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_orange: '#E87524'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDF8ED;
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-xul { text-shadow: 4px 4px 0px #6BA4C4; }
+
+        .principio-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5rem;
+            font-weight: 900;
+            line-height: 1;
+            color: #2A2A2A;
+            opacity: 0.08;
+            position: absolute;
+            top: -10px;
+            left: -8px;
+            pointer-events: none;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
+
+        .fundador-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: white;
+            border: 2px solid #2A2A2A;
+            padding: 4px 12px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 900;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            box-shadow: 3px 3px 0px #2A2A2A;
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_blue selection:text-white relative min-h-screen flex flex-col">
+
+    <!-- NAVBAR -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="schole.html" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="index.html#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="cartas1.html" class="text-xul_ink hover:text-xul_terra transition-colors">Cartas</a>
+                <span class="text-xul_terra border-b-2 border-xul_terra cursor-default">Manifiesto</span>
+
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="schole.html" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="index.html#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="cartas1.html" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
+            <span class="mobile-link text-xul_terra block">Manifiesto</span>
+
+            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
+
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <header class="pt-36 pb-20 px-6 relative border-b-[3px] border-xul_ink bg-xul_ink overflow-hidden">
+        <div class="absolute inset-0 opacity-5 pointer-events-none" style="background-image: linear-gradient(#FDF8ED 1px, transparent 1px), linear-gradient(90deg, #FDF8ED 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+        <div class="max-w-4xl mx-auto relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 bg-xul_yellow border-[3px] border-xul_yellow px-4 py-1 mb-8 shadow-[4px_4px_0px_#EBB134]">
+                <i data-lucide="scroll-text" class="w-4 h-4 text-xul_ink"></i>
+                <span class="font-sans font-black text-xs uppercase tracking-widest text-xul_ink">Documento Fundacional</span>
+            </div>
+
+            <h1 class="xul-title text-6xl md:text-9xl font-black text-white tracking-tighter mb-6 text-shadow-xul uppercase leading-none">
+                Manifiesto<br>Ludosófico
+            </h1>
+
+            <p class="font-serif text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+                Una declaración sobre por qué las ideas no deben solo leerse, sino experimentarse mecánicamente sobre un tablero.
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 py-20 space-y-24 w-full flex-grow">
+
+        <!-- DECLARACIÓN DE PRINCIPIOS -->
+        <section id="principios">
+            <div class="flex items-center gap-4 mb-12 border-b-[3px] border-xul_ink pb-4">
+                <div class="w-12 h-12 bg-xul_blue border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
+                    <i data-lucide="feather" class="w-6 h-6 text-white"></i>
+                </div>
+                <h2 class="xul-title text-4xl md:text-5xl font-black text-xul_ink tracking-tight uppercase">Declaración de Principios</h2>
+            </div>
+
+            <div class="space-y-8">
+
+                <div class="relative bg-white border-[3px] border-xul_ink p-8 shadow-[6px_6px_0px_#6BA4C4] overflow-hidden">
+                    <span class="principio-num">I</span>
+                    <h3 class="xul-title text-3xl font-bold text-xul_ink mb-3 relative z-10">El juego es pensamiento en acción</h3>
+                    <p class="font-serif text-xl text-gray-700 leading-relaxed relative z-10">
+                        Creemos que la filosofía no es un asunto de biblioteca. Las ideas tienen cuerpo: se mueven, chocan, ganan y pierden. Un tablero es un modelo del mundo, y quien juega está filosofando aunque no lo sepa.
+                    </p>
+                </div>
+
+                <div class="relative bg-white border-[3px] border-xul_ink p-8 shadow-[6px_6px_0px_#D1623A] overflow-hidden">
+                    <span class="principio-num">II</span>
+                    <h3 class="xul-title text-3xl font-bold text-xul_ink mb-3 relative z-10">Las reglas son hipótesis</h3>
+                    <p class="font-serif text-xl text-gray-700 leading-relaxed relative z-10">
+                        Toda regla de juego encarna una visión del mundo: qué es justo, qué es azar, quién puede ganar y por qué. Hackear un juego es cuestionar esa visión. Proponer reglas nuevas es hacer filosofía política en tiempo real.
+                    </p>
+                </div>
+
+                <div class="relative bg-white border-[3px] border-xul_ink p-8 shadow-[6px_6px_0px_#EBB134] overflow-hidden">
+                    <span class="principio-num">III</span>
+                    <h3 class="xul-title text-3xl font-bold text-xul_ink mb-3 relative z-10">El conocimiento se comparte jugando</h3>
+                    <p class="font-serif text-xl text-gray-700 leading-relaxed relative z-10">
+                        Rechazamos la filosofía como espectáculo. No hay conferencistas y oyentes: hay jugadores. El club existe para que cualquier persona, con o sin formación académica, pueda hacer preguntas radicales y ensayar respuestas en comunidad.
+                    </p>
+                </div>
+
+                <div class="relative bg-white border-[3px] border-xul_ink p-8 shadow-[6px_6px_0px_#75B07E] overflow-hidden">
+                    <span class="principio-num">IV</span>
+                    <h3 class="xul-title text-3xl font-bold text-xul_ink mb-3 relative z-10">La scholē es un derecho, no un privilegio</h3>
+                    <p class="font-serif text-xl text-gray-700 leading-relaxed relative z-10">
+                        Scholē, en griego, no significa "escuela" sino tiempo libre. El tiempo para pensar sin una utilidad inmediata es el lujo más democrático que podemos construir. Este club es nuestra apuesta por recuperarlo.
+                    </p>
+                </div>
+
+                <div class="relative bg-xul_ink border-[3px] border-xul_ink p-8 shadow-[6px_6px_0px_#2A2A2A] overflow-hidden">
+                    <span class="principio-num" style="color: #FDF8ED; opacity: 0.06;">V</span>
+                    <h3 class="xul-title text-3xl font-bold text-white mb-3 relative z-10">Jugar en serio</h3>
+                    <p class="font-serif text-xl text-gray-300 leading-relaxed relative z-10">
+                        La ludosofía no es entretenimiento con barniz filosófico. Es filosofía que toma el juego en serio como método, como lenguaje y como forma de vida. Jugamos para entender. Entendemos para jugar mejor.
+                    </p>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- HISTORIA Y VISIÓN -->
+        <section id="historia">
+            <div class="flex items-center gap-4 mb-12 border-b-[3px] border-xul_ink pb-4">
+                <div class="w-12 h-12 bg-xul_terra border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
+                    <i data-lucide="history" class="w-6 h-6 text-white"></i>
+                </div>
+                <h2 class="xul-title text-4xl md:text-5xl font-black text-xul_ink tracking-tight uppercase">Historia y Visión</h2>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-10 items-start">
+                <div class="space-y-6">
+                    <p class="font-serif text-xl text-gray-700 leading-relaxed">
+                        Ludosofía nació de una pregunta simple: ¿por qué la filosofía y el juego viven en mundos separados si comparten la misma obsesión por las reglas, el azar y el sentido?
+                    </p>
+                    <p class="font-serif text-xl text-gray-700 leading-relaxed">
+                        Empezamos como un grupo de lectura informal donde la consigna era traer un juego de mesa y un autor filosófico, y ver qué pasaba cuando los cruzabas. Lo que pasó fue suficientemente interesante como para convertirse en un club.
+                    </p>
+                    <p class="font-serif text-xl text-gray-700 leading-relaxed">
+                        Hoy Ludosofía es un espacio de práctica filosófica colaborativa. Tenemos seminarios, un Atelier de diseño de juegos, una biblioteca de textos y un archivo creciente de juegos hackeados.
+                    </p>
+                </div>
+
+                <div class="bg-xul_paper border-[4px] border-xul_ink p-8 shadow-[8px_8px_0px_#2A2A2A] space-y-6">
+                    <h3 class="xul-title text-3xl font-black text-xul_ink uppercase tracking-tight">Visión 2026</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start gap-3">
+                            <div class="w-6 h-6 bg-xul_blue border-2 border-xul_ink flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="chevron-right" class="w-3 h-3 text-white"></i>
+                            </div>
+                            <p class="font-sans text-gray-700">Consolidar la Scholē como el primer campus de filosofía lúdica en habla hispana.</p>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="w-6 h-6 bg-xul_terra border-2 border-xul_ink flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="chevron-right" class="w-3 h-3 text-white"></i>
+                            </div>
+                            <p class="font-sans text-gray-700">Publicar el primer catálogo de juegos hackeados con soporte teórico para docentes y facilitadores.</p>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="w-6 h-6 bg-xul_yellow border-2 border-xul_ink flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="chevron-right" class="w-3 h-3 text-white"></i>
+                            </div>
+                            <p class="font-sans text-gray-700">Hacer crecer la comunidad con cien socios activos que jueguen, propongan y diseñen.</p>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <div class="w-6 h-6 bg-xul_green border-2 border-xul_ink flex items-center justify-center flex-shrink-0 mt-0.5">
+                                <i data-lucide="chevron-right" class="w-3 h-3 text-white"></i>
+                            </div>
+                            <p class="font-sans text-gray-700">Encontrarnos en persona: primer evento presencial de hacking de juegos filosóficos.</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- FUNDADORES -->
+        <section id="fundadores">
+            <div class="flex items-center gap-4 mb-4 border-b-[3px] border-xul_ink pb-4">
+                <div class="w-12 h-12 bg-xul_yellow border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A]">
+                    <i data-lucide="star" class="w-6 h-6 text-xul_ink"></i>
+                </div>
+                <h2 class="xul-title text-4xl md:text-5xl font-black text-xul_ink tracking-tight uppercase">Socios Fundadores</h2>
+            </div>
+            <p class="font-serif text-lg text-gray-600 mb-10">
+                Estas personas creyeron en Ludosofía desde el primer momento. Su apoyo hizo posible que esto exista.
+            </p>
+
+            <!-- Lista dinámica desde Firestore -->
+            <div id="fundadores-lista" class="flex flex-wrap gap-3 mb-6">
+                <div class="fundador-chip opacity-40">
+                    <i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i>
+                    Cargando…
+                </div>
+            </div>
+
+            <!-- Fallback si no hay fundadores -->
+            <div id="fundadores-vacio" class="hidden">
+                <p class="font-serif text-gray-500 italic">Los primeros Fundadores aparecerán aquí.</p>
+            </div>
+
+            <div class="mt-10 bg-xul_yellow/20 border-[3px] border-xul_ink p-6 shadow-[4px_4px_0px_#2A2A2A] flex flex-col sm:flex-row items-center gap-6">
+                <div class="w-14 h-14 bg-xul_yellow border-[3px] border-xul_ink flex items-center justify-center flex-shrink-0 shadow-[3px_3px_0px_#2A2A2A]">
+                    <i data-lucide="crown" class="w-7 h-7 text-xul_ink"></i>
+                </div>
+                <div class="flex-1 text-center sm:text-left">
+                    <p class="font-sans font-black text-xul_ink uppercase tracking-widest text-sm mb-1">¿Querés aparecer aquí?</p>
+                    <p class="font-serif text-gray-700">Los <strong>Socios Fundadores</strong> reciben mención permanente en este Manifiesto, además de todos los beneficios del Club.</p>
+                </div>
+                <a href="suscripcion.html" class="flex-shrink-0 bg-xul_ink text-white font-black text-sm uppercase tracking-widest px-6 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] transition-all">
+                    Ser Fundador
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6 border-t-[3px] border-xul_ink mt-auto">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-700 pb-8">
+            <div class="flex items-center space-x-3">
+                <svg viewBox="0 0 100 100" class="w-8 h-8">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="currentColor" stroke-width="3"/>
+                </svg>
+                <span class="font-sans font-black tracking-widest text-lg leading-none">LUDOSOFÍA</span>
+            </div>
+            <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
+                <a href="index.html" class="hover:text-xul_yellow transition">Inicio</a>
+                <a href="schole.html" class="hover:text-xul_yellow transition">Scholē</a>
+                <a href="index.html#faqs" class="hover:text-xul_yellow transition">FAQs</a>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-6 text-center text-sm font-sans text-gray-400">
+            &copy; 2026 Ludosofía · Club de Filosofía
+        </div>
+    </footer>
+
+    <!-- MODAL PERFIL -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía</p>
+                <p id="profile-role" class="font-black text-xl text-xul_terra uppercase tracking-wider"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+
+    <!-- FIREBASE: navbar + fundadores desde Firestore -->
+    <script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, query, where, getDocs, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // ── Navbar ────────────────────────────────────────────────────────
+        const btnMenu = document.getElementById('mobile-menu-btn');
+        const menuMobile = document.getElementById('mobile-menu');
+        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+
+        const loginBtnDesktop = document.getElementById('login-btn-desktop');
+        const loginBtnMobile  = document.getElementById('login-btn-mobile');
+        const profileModal    = document.getElementById('profile-modal');
+
+        function toggleLoginModal() { window.location.href = 'login.html'; }
+        function toggleProfileModal() {
+            profileModal.classList.toggle('hidden');
+            if (menuMobile && !menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
+        }
+
+        function updateUIWithRole(rol) {
+            let r = (rol || '').toUpperCase().trim();
+            let iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+            if (r.includes('FUNDADOR')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            else if (r.includes('SOCIO')) iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            const deskBadge = document.getElementById('badge-container-desktop');
+            const mobBadge  = document.getElementById('badge-container-mobile');
+            if (deskBadge) { deskBadge.innerHTML = iconHtml; deskBadge.style.display = 'flex'; }
+            if (mobBadge)  { mobBadge.innerHTML  = iconHtml; mobBadge.style.display  = 'flex'; }
+        }
+
+        loginBtnDesktop.onclick = toggleLoginModal;
+        if (loginBtnMobile) loginBtnMobile.onclick = toggleLoginModal;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+                document.getElementById('login-text-desktop').innerText = nombre.toUpperCase();
+                if (document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = nombre.toUpperCase();
+                loginBtnDesktop.onclick = toggleProfileModal;
+                if (loginBtnMobile) loginBtnMobile.onclick = toggleProfileModal;
+                document.getElementById('profile-email').innerText = user.email;
+
+                try {
+                    const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                    if (docSnap.exists()) {
+                        const rol = (docSnap.data().rol || '').toUpperCase();
+                        document.getElementById('profile-role').innerText = rol;
+                        updateUIWithRole(rol);
+                    }
+                } catch(e) { console.error(e); }
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth).then(() => { window.location.href = 'index.html'; });
+        });
+
+        // ── Fundadores desde Firestore ────────────────────────────────────
+        async function cargarFundadores() {
+            const lista = document.getElementById('fundadores-lista');
+            const vacio = document.getElementById('fundadores-vacio');
+
+            try {
+                const q = query(collection(db, "usuarios"), where("rol", "in", ["FUNDADOR", "SOCIO_FUNDADOR"]));
+                const snap = await getDocs(q);
+
+                if (snap.empty) {
+                    lista.classList.add('hidden');
+                    vacio.classList.remove('hidden');
+                    return;
+                }
+
+                lista.innerHTML = '';
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    const nombre = data.nombre || data.displayName || data.email?.split('@')[0] || 'Fundador';
+                    const chip = document.createElement('div');
+                    chip.className = 'fundador-chip';
+                    chip.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>${nombre}`;
+                    lista.appendChild(chip);
+                });
+            } catch(e) {
+                console.error('Error cargando fundadores:', e);
+                lista.innerHTML = '';
+                vacio.classList.remove('hidden');
+            }
+        }
+
+        cargarFundadores();
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Prototipo Imprimible — La Lotería de los Jardines</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ─── VARIABLES ─────────────────────────────────────────── */
+        :root {
+            --ink:      #1A1A1A;
+            --paper:    #FDF8ED;
+            --lapis:    #3B5B8A;
+            --gold:     #C8920A;
+            --terra:    #D1623A;
+            --green:    #4A8C55;
+            --brown:    #7A5230;
+            --night:    #0D1B2A;
+            --sand:     #E8D5A3;
+
+            --card-w:   62mm;
+            --card-h:   87mm;
+            --token-d:  55mm;
+        }
+
+        /* ─── PANTALLA: instrucciones ───────────────────────────── */
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #e0d8c8;
+            color: var(--ink);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .screen-only {
+            background: white;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            padding: 40px;
+            border: 3px solid var(--ink);
+            box-shadow: 8px 8px 0 var(--ink);
+        }
+        .screen-only h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            margin: 0 0 8px;
+            color: var(--lapis);
+        }
+        .screen-only h2 { font-size: 1.1rem; margin: 0 0 24px; color: var(--terra); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+        .screen-only p  { line-height: 1.7; margin: 0 0 12px; }
+        .steps { margin: 16px 0; padding-left: 20px; }
+        .steps li { margin-bottom: 8px; line-height: 1.6; }
+        .badge { display: inline-block; padding: 3px 10px; font-weight: 900; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; border: 2px solid var(--ink); margin-right: 6px; }
+        .badge.jardin   { background: var(--lapis); color: white; }
+        .badge.edicto   { background: var(--terra); color: white; }
+        .badge.tablilla { background: var(--night); color: var(--sand); }
+        .badge.dorso    { background: var(--gold); color: var(--ink); }
+        .print-btn {
+            display: block; width: 100%; padding: 16px;
+            background: var(--lapis); color: white; border: 3px solid var(--ink);
+            font-family: 'Outfit', sans-serif; font-weight: 900; font-size: 1rem;
+            text-transform: uppercase; letter-spacing: 3px; cursor: pointer;
+            box-shadow: 5px 5px 0 var(--ink); margin-top: 24px;
+        }
+        .print-btn:hover { background: var(--terra); }
+
+        /* ─── ÁREA DE IMPRESIÓN ─────────────────────────────────── */
+        .print-area {
+            max-width: 210mm;
+            margin: 0 auto;
+        }
+
+        /* ─── PÁGINA ────────────────────────────────────────────── */
+        .page {
+            width: 190mm;
+            min-height: 270mm;
+            margin: 0 auto 20px;
+            padding: 10mm;
+            background: white;
+            position: relative;
+            box-sizing: border-box;
+        }
+        .page-label {
+            font-size: 7pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #999;
+            text-align: center;
+            margin-bottom: 6mm;
+        }
+
+        /* ─── GRILLA DE CARTAS ──────────────────────────────────── */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(3, var(--card-w));
+            gap: 3mm;
+            justify-content: center;
+        }
+        .token-grid {
+            display: grid;
+            grid-template-columns: repeat(4, var(--token-d));
+            gap: 5mm;
+            justify-content: center;
+            align-items: center;
+        }
+        .back-grid {
+            display: grid;
+            grid-template-columns: repeat(3, var(--card-w));
+            gap: 3mm;
+            justify-content: center;
+        }
+
+        /* ─── CARTA BASE ────────────────────────────────────────── */
+        .card {
+            width: var(--card-w);
+            height: var(--card-h);
+            border: 1.5px solid var(--ink);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Guía de corte trapezoidal: línea diagonal en esquinas sup */
+        .card::before,
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 7mm;
+            height: 7mm;
+            border-top: 0.5px dashed #bbb;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .card::before { left: 0; border-right: 0.5px dashed #bbb; transform-origin: top left; transform: rotate(0deg); border-top: none; border-right: none; }
+        .card::after  { right: 0; }
+
+        /* Guías de corte (líneas diagonales en las 2 esquinas superiores) */
+        .card .cut-guide {
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 8mm;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .card .cut-guide::before,
+        .card .cut-guide::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 8mm;
+            height: 8mm;
+            border: 0.4px dashed rgba(0,0,0,0.2);
+        }
+        .card .cut-guide::before { left: 0; border-top: none; border-left: none; transform: skewX(45deg); transform-origin: top left; }
+        .card .cut-guide::after  { right: 0; border-top: none; border-right: none; transform: skewX(-45deg); transform-origin: top right; }
+
+        /* ─── HEADER DE CARTA ───────────────────────────────────── */
+        .card-header {
+            padding: 2.5mm 3mm 2mm;
+            border-bottom: 1.5px solid var(--ink);
+            flex-shrink: 0;
+        }
+        .card-level {
+            font-size: 5.5pt;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            opacity: 0.75;
+            line-height: 1;
+            margin-bottom: 1mm;
+        }
+        .card-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 11pt;
+            font-weight: 700;
+            line-height: 1.15;
+        }
+
+        /* ─── CUERPO DE CARTA ───────────────────────────────────── */
+        .card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 3mm;
+        }
+        .card-icon {
+            font-size: 28pt;
+            line-height: 1;
+            margin-bottom: 2mm;
+        }
+        .card-flavor {
+            font-size: 6pt;
+            font-style: italic;
+            text-align: center;
+            line-height: 1.4;
+            opacity: 0.65;
+            padding: 0 2mm;
+        }
+
+        /* ─── FOOTER DE CARTA ───────────────────────────────────── */
+        .card-footer {
+            padding: 2mm 3mm;
+            border-top: 1px solid rgba(0,0,0,0.15);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .card-footer span {
+            font-size: 5pt;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.5;
+        }
+
+        /* ─── VARIANTES POR NIVEL ───────────────────────────────── */
+        .nivel-1 { background: #F5EDD8; }
+        .nivel-1 .card-header { background: var(--brown); color: white; border-color: var(--ink); }
+        .nivel-1 .card-body svg path, .nivel-1 .card-body svg rect { fill: var(--brown); }
+
+        .nivel-2 { background: #EDF3FA; }
+        .nivel-2 .card-header { background: var(--lapis); color: white; border-color: var(--ink); }
+
+        .nivel-3 { background: #F0EAE0; }
+        .nivel-3 .card-header { background: #3D2410; color: var(--sand); border-color: var(--ink); }
+
+        .nivel-4 { background: #EDF5EE; }
+        .nivel-4 .card-header { background: var(--green); color: white; border-color: var(--ink); }
+
+        .nivel-5 { background: #FBF5E0; }
+        .nivel-5 .card-header { background: var(--gold); color: var(--ink); border-color: var(--ink); }
+
+        /* ─── CARTA DE EDICTO ───────────────────────────────────── */
+        .card-edicto {
+            width: var(--card-w);
+            height: var(--card-h);
+            border: 1.5px solid var(--ink);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background: #FFF8F5;
+        }
+        .card-edicto .card-header { background: var(--terra); color: white; border-color: var(--ink); }
+        .card-edicto.tipo-premio .card-header { background: #B8860A; color: white; }
+        .card-edicto.tipo-caos   .card-header { background: var(--lapis); color: white; }
+        .card-edicto .edict-type {
+            font-size: 5pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1.5px; opacity: 0.8; margin-bottom: 0.5mm;
+        }
+        .card-edicto .edict-title {
+            font-family: 'Cormorant Garamond', serif; font-size: 10pt; font-weight: 700; line-height: 1.2;
+        }
+        .card-edicto .edict-emoji { font-size: 22pt; text-align: center; margin: 2mm 0 1.5mm; }
+        .card-edicto .edict-text {
+            font-size: 6.5pt; line-height: 1.5; padding: 0 3mm; text-align: center; color: #333;
+        }
+        .card-edicto .edict-company {
+            margin-top: auto; padding: 1.5mm 3mm; font-size: 5pt; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 1px; text-align: center; opacity: 0.4; border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        /* ─── FICHA / TABLILLA ──────────────────────────────────── */
+        .token {
+            width: var(--token-d);
+            height: var(--token-d);
+            border-radius: 50%;
+            border: 2px solid var(--ink);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4mm;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .token .cut-circle {
+            position: absolute; inset: -4px;
+            border-radius: 50%;
+            border: 0.5px dashed #aaa;
+            pointer-events: none;
+        }
+        .token-emoji { font-size: 20pt; line-height: 1; margin-bottom: 1.5mm; }
+        .token-name  { font-family: 'Cormorant Garamond', serif; font-size: 7pt; font-weight: 700; line-height: 1.3; }
+        .token-type  { font-size: 5pt; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; margin-top: 1mm; opacity: 0.7; }
+
+        .token.fortuna  { background: #FBF5E0; border-color: var(--gold); }
+        .token.ruina    { background: #FFF0EE; border-color: var(--terra); }
+        .token.defensa  { background: #EDF3FA; border-color: var(--lapis); }
+        .token.caos     { background: #F9EDF4; border-color: #9B4D7A; }
+
+        /* ─── DORSOS ────────────────────────────────────────────── */
+        .card-dorso-jardin {
+            width: var(--card-w);
+            height: var(--card-h);
+            border: 1.5px solid var(--ink);
+            box-sizing: border-box;
+            background: var(--night);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4mm;
+        }
+        .card-dorso-jardin .d-icon { font-size: 24pt; margin-bottom: 2mm; }
+        .card-dorso-jardin .d-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9pt; font-weight: 700; color: var(--sand); line-height: 1.3;
+        }
+        .card-dorso-jardin .d-sub {
+            font-size: 5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--gold); margin-top: 1.5mm;
+        }
+        .card-dorso-jardin .d-border {
+            border: 1px solid rgba(200,146,10,0.4);
+            padding: 4mm 5mm;
+            width: 100%; box-sizing: border-box;
+        }
+
+        .card-dorso-edicto {
+            width: var(--card-w);
+            height: var(--card-h);
+            border: 1.5px solid var(--ink);
+            box-sizing: border-box;
+            background: #3D1005;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 4mm;
+        }
+        .card-dorso-edicto .d-icon { font-size: 22pt; margin-bottom: 2mm; }
+        .card-dorso-edicto .d-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 9pt; font-weight: 700; color: #F5D080; line-height: 1.3;
+        }
+        .card-dorso-edicto .d-sub {
+            font-size: 5pt; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #F5D080; margin-top: 1.5mm; opacity: 0.7;
+        }
+
+        /* ─── PÁGINA DE REGLA RÁPIDA ────────────────────────────── */
+        .quickref {
+            width: 190mm;
+            min-height: 270mm;
+            margin: 0 auto 20px;
+            padding: 12mm;
+            background: white;
+            box-sizing: border-box;
+        }
+        .quickref h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 28pt; font-weight: 700; text-align: center;
+            color: var(--lapis); margin: 0 0 1mm;
+        }
+        .quickref h2 {
+            font-size: 8pt; font-weight: 900; text-transform: uppercase;
+            letter-spacing: 3px; text-align: center; color: var(--gold); margin: 0 0 6mm;
+        }
+        .qr-box {
+            border: 2px solid var(--ink); padding: 4mm 5mm; margin-bottom: 4mm;
+        }
+        .qr-title { font-size: 7pt; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 2mm; }
+        .qr-row { display: flex; gap: 3mm; align-items: flex-start; margin-bottom: 1.5mm; }
+        .qr-badge {
+            flex-shrink: 0; width: 8mm; height: 8mm;
+            display: flex; align-items: center; justify-content: center;
+            border: 1.5px solid var(--ink); font-size: 8pt; font-weight: 900;
+        }
+        .qr-text { font-size: 7pt; line-height: 1.5; }
+        .qr-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; }
+
+        /* ─── PRINT ─────────────────────────────────────────────── */
+        @media print {
+            body { background: white; padding: 0; margin: 0; }
+            .screen-only { display: none !important; }
+            .page, .quickref {
+                margin: 0 !important;
+                box-shadow: none !important;
+                page-break-after: always;
+                break-after: page;
+            }
+            .page:last-of-type, .quickref:last-of-type { page-break-after: auto; break-after: auto; }
+            @page { size: A4; margin: 10mm; }
+        }
+
+        @media screen {
+            .page, .quickref {
+                border: 1px solid #ccc;
+                box-shadow: 4px 4px 0 #bbb;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── INSTRUCCIONES EN PANTALLA ─────────────────────────── -->
+<div class="screen-only">
+    <h1>La Lotería de los Jardines</h1>
+    <h2>Prototipo Imprimible — Instrucciones</h2>
+
+    <p>Este archivo contiene <strong>todos los componentes</strong> necesarios para armar el juego físico. Imprimilo en papel blanco común (80g) o en cartulina fina (120g) para mejor resultado.</p>
+
+    <p><strong>Contenido del archivo:</strong></p>
+    <ul class="steps">
+        <li><span class="badge jardin">Jardín</span> <strong>6 páginas</strong> — 50 cartas trapezoidales (14 Ladrillo · 12 Agua · 10 Tierra · 10 Enredadera · 4 Flor de Oro)</li>
+        <li><span class="badge edicto">Edictos</span> <strong>3 páginas</strong> — 20 cartas de La Compañía (Premios, Prendas, Reglas de Caos)</li>
+        <li><span class="badge tablilla">Tablillas</span> <strong>1 página</strong> — 10 fichas de la Bolsa Oscura (recortar y pegar en cartón)</li>
+        <li><span class="badge dorso">Dorsos</span> <strong>1 página</strong> — Dorsos para las dos mazos</li>
+        <li>📋 <strong>1 página</strong> — Regla rápida de referencia para la mesa</li>
+    </ul>
+
+    <p><strong>Cómo armar las cartas:</strong></p>
+    <ol class="steps">
+        <li>Imprimí las páginas de cartas y los dorsos correspondientes.</li>
+        <li>Pegá cada hoja de frente con su hoja de dorso (usando pegamento en barra o cinta doble faz).</li>
+        <li>Recortá por las líneas sólidas. <em>Las líneas punteadas en las esquinas superiores indican el corte diagonal para dar la forma trapezoidal.</em></li>
+        <li>Para las <strong>Tablillas</strong>: recortá los círculos y pegálos sobre cartón grueso (caja de cereales o similar).</li>
+        <li>Guardá las Tablillas en una bolsita opaca o taza para el sorteo.</li>
+    </ol>
+
+    <p><strong>Dado:</strong> Usá cualquier dado de 6 caras que tengas. El reglamento define qué significa cada cara.</p>
+
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimir prototipo completo</button>
+</div>
+
+<div class="print-area">
+
+<!-- ══════════════════════════════════════════════════════════
+     MAZO DE JARDÍN — Páginas 1-6
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- JARDÍN P.1: 9 cartas (Ladrillo ×9) -->
+<div class="page">
+    <div class="page-label">Mazo de Jardín — Hoja 1/6 — Ladrillo de Lapislázuli ×9 de 14</div>
+    <div class="card-grid" id="jardin-grid-1"></div>
+</div>
+
+<!-- JARDÍN P.2: Ladrillo ×5 + Agua ×4 -->
+<div class="page">
+    <div class="page-label">Mazo de Jardín — Hoja 2/6 — Ladrillo ×5 · Agua del Éufrates ×4</div>
+    <div class="card-grid" id="jardin-grid-2"></div>
+</div>
+
+<!-- JARDÍN P.3: Agua ×8 -->
+<div class="page">
+    <div class="page-label">Mazo de Jardín — Hoja 3/6 — Agua del Éufrates ×8</div>
+    <div class="card-grid" id="jardin-grid-3"></div>
+</div>
+
+<!-- JARDÍN P.4: Tierra ×9 -->
+<div class="page">
+    <div class="page-label">Mazo de Jardín — Hoja 4/6 — Tierra Negra ×9 de 10</div>
+    <div class="card-grid" id="jardin-grid-4"></div>
+</div>
+
+<!-- JARDÍN P.5: Tierra ×1 + Enredadera ×8 -->
+<div class="page">
+    <div class="page-label">Mazo de Jardín — Hoja 5/6 — Tierra ×1 · Enredaderas de Semíramis ×8</div>
+    <div class="card-grid" id="jardin-grid-5"></div>
+</div>
+
+<!-- JARDÍN P.6: Enredadera ×2 + Flor de Oro ×4 -->
+<div class="page">
+    <div class="page-label">Mazo de Jardín — Hoja 6/6 — Enredadera ×2 · Flor de Oro ×4</div>
+    <div class="card-grid" id="jardin-grid-6"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     MAZO DE EDICTOS — Páginas 7-9
+     ══════════════════════════════════════════════════════════ -->
+
+<!-- EDICTOS P.1: 9 cartas -->
+<div class="page">
+    <div class="page-label">Mazo de Edictos — Hoja 1/3 — Edictos #1 a #9</div>
+    <div class="card-grid" id="edicto-grid-1"></div>
+</div>
+
+<!-- EDICTOS P.2: 9 cartas -->
+<div class="page">
+    <div class="page-label">Mazo de Edictos — Hoja 2/3 — Edictos #10 a #18</div>
+    <div class="card-grid" id="edicto-grid-2"></div>
+</div>
+
+<!-- EDICTOS P.3: 2 cartas restantes -->
+<div class="page">
+    <div class="page-label">Mazo de Edictos — Hoja 3/3 — Edictos #19 a #20</div>
+    <div class="card-grid" id="edicto-grid-3"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     TABLILLAS DEL DESTINO — Página 10
+     ══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-label">Tablillas del Destino — Recortá los 10 círculos y pegálos en cartón</div>
+    <div class="token-grid" id="token-grid"></div>
+    <p style="margin-top:8mm; font-size:7pt; text-align:center; color:#888; font-style:italic;">
+        Recortá siguiendo la línea punteada · Pegá sobre cartón · Guardá en bolsa oscura
+    </p>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     DORSOS — Página 11
+     ══════════════════════════════════════════════════════════ -->
+<div class="page">
+    <div class="page-label">Dorsos — Imprimí esta hoja, pegá con el frente correspondiente y recortá</div>
+    <div style="margin-bottom:4mm; font-size:7pt; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:#666;">Dorso Mazo de Jardín (copiar 6 veces) + Dorso Mazo de Edictos (copiar 3 veces)</div>
+    <div class="back-grid" id="dorso-grid"></div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     REGLA RÁPIDA — Página 12
+     ══════════════════════════════════════════════════════════ -->
+<div class="quickref">
+    <h1>La Lotería de los Jardines</h1>
+    <h2>Regla Rápida · Referencia de Mesa</h2>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:4mm; margin-bottom:4mm;">
+        <div class="qr-box" style="grid-column:1/-1; background:#0D1B2A; color:#E8D5A3; border-color:#C8920A;">
+            <div class="qr-title" style="color:#C8920A;">🎯 Objetivo</div>
+            <div style="font-size:8pt; line-height:1.6;">Sé el primero en bajar a la mesa los <strong>5 componentes diferentes</strong> de tu Zigurát. Al lograrlo, ponete de pie y gritá: <em style="color:#C8920A;">"¡La Lotería ha hablado!"</em></div>
+        </div>
+    </div>
+
+    <div class="qr-cols">
+
+        <div>
+            <div class="qr-box">
+                <div class="qr-title" style="color:#3B5B8A;">🎲 Dado del Destino</div>
+                <div class="qr-row">
+                    <div class="qr-badge" style="background:#7A5230;color:white;">1-3</div>
+                    <div class="qr-text"><strong>Ladrillo</strong><br>Robá 1 carta del Mazo de Jardín.</div>
+                </div>
+                <div class="qr-row">
+                    <div class="qr-badge" style="background:#D1623A;color:white;">4-5</div>
+                    <div class="qr-text"><strong>El Ojo</strong><br>Robá 1 carta de Edictos. Leéla en voz alta y cumplí.</div>
+                </div>
+                <div class="qr-row">
+                    <div class="qr-badge" style="background:#C8920A;color:#1A1A1A;">6</div>
+                    <div class="qr-text"><strong>La Corona Real</strong><br>¡Sorteo Extremo! Metés la mano en la bolsa oscura.</div>
+                </div>
+            </div>
+
+            <div class="qr-box">
+                <div class="qr-title" style="color:#0D1B2A;">👑 Camino Ambicioso</div>
+                <div style="font-size:7pt; line-height:1.5;">No tirás el dado. Anunciás en voz alta <em>"Invoco la Lotería del Rey"</em> y metés la mano en la bolsa oscura directamente.</div>
+            </div>
+
+            <div class="qr-box">
+                <div class="qr-title" style="color:#4A8C55;">🏗️ Fase de Construcción</div>
+                <div style="font-size:7pt; line-height:1.5;">Al final de tu turno podés bajar las cartas de Jardín que quieras. <strong>Solo una copia de cada nivel simultáneamente en tu Zigurát.</strong></div>
+            </div>
+        </div>
+
+        <div>
+            <div class="qr-box">
+                <div class="qr-title" style="color:#1A1A1A;">🎒 Tablillas del Destino</div>
+                <div class="qr-row">
+                    <div class="qr-badge" style="background:#C8920A;color:#1A1A1A;font-size:7pt;">×2</div>
+                    <div class="qr-text"><strong>Camellos Negros</strong><br>Fortuna: construí gratis el componente que te falte.</div>
+                </div>
+                <div class="qr-row">
+                    <div class="qr-badge" style="background:#D1623A;color:white;font-size:7pt;">×3</div>
+                    <div class="qr-text"><strong>Viento del Verdugo</strong><br>Ruina: tu jardín bajado vuelve al descarte.</div>
+                </div>
+                <div class="qr-row">
+                    <div class="qr-badge" style="background:#3B5B8A;color:white;font-size:7pt;">×3</div>
+                    <div class="qr-text"><strong>Sello del Visir</strong><br>Inmunidad: guardálo, cancelá cualquier ataque.</div>
+                </div>
+                <div class="qr-row">
+                    <div class="qr-badge" style="background:#9B4D7A;color:white;font-size:7pt;">×2</div>
+                    <div class="qr-text"><strong>Espejos Confundidos</strong><br>Intercambiá asiento y jardín con el que va ganando.</div>
+                </div>
+            </div>
+
+            <div class="qr-box">
+                <div class="qr-title">📐 Tu Zigurát (5 niveles)</div>
+                <div style="font-size:6.5pt; line-height:1.7;">
+                    <div style="display:flex;justify-content:space-between;"><span>⚜️ <strong>Flor de Oro</strong></span><span style="color:#888;">Nivel 5 · 4 cartas</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🌿 <strong>Enredaderas</strong></span><span style="color:#888;">Nivel 4 · 10 cartas</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🌑 <strong>Tierra Negra</strong></span><span style="color:#888;">Nivel 3 · 10 cartas</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>💧 <strong>Agua del Éufrates</strong></span><span style="color:#888;">Nivel 2 · 12 cartas</span></div>
+                    <div style="display:flex;justify-content:space-between;"><span>🧱 <strong>Ladrillo</strong></span><span style="color:#888;">Nivel 1 · 14 cartas</span></div>
+                </div>
+            </div>
+
+            <div class="qr-box" style="background:#0D1B2A; border-color:#C8920A;">
+                <div class="qr-title" style="color:#C8920A;">🌿 Inicio</div>
+                <div style="font-size:7pt; line-height:1.5; color:#E8D5A3;">Repartí <strong>3 cartas</strong> a cada jugador. Comienza quien haya regado una planta más recientemente. Sentido horario.</div>
+            </div>
+        </div>
+
+    </div>
+
+    <div style="margin-top:auto; text-align:center; font-size:6pt; color:#aaa; padding-top:4mm; border-top:1px solid #eee;">
+        LUDOSOFÍA · La Lotería de los Jardines · ludosofia.com
+    </div>
+</div>
+
+</div><!-- /print-area -->
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────────────────
+
+const JARDIN_CARDS = [
+    // Nivel 1: Ladrillo de Lapislázuli (14)
+    ...Array(14).fill(null).map((_, i) => ({
+        nivel: 1, clase: 'nivel-1',
+        nombre: 'Ladrillo de Lapislázuli',
+        emoji: '🧱',
+        flavor: 'La base de todo zigurát comienza con un ladrillo cocido en el sol de Mesopotamia.',
+        num: `${i+1}/14`
+    })),
+    // Nivel 2: Agua del Éufrates (12)
+    ...Array(12).fill(null).map((_, i) => ({
+        nivel: 2, clase: 'nivel-2',
+        nombre: 'Agua del Éufrates',
+        emoji: '💧',
+        flavor: 'El río que dio vida a Babilonia irriga los jardines suspendidos en el aire.',
+        num: `${i+1}/12`
+    })),
+    // Nivel 3: Tierra Negra (10)
+    ...Array(10).fill(null).map((_, i) => ({
+        nivel: 3, clase: 'nivel-3',
+        nombre: 'Tierra Negra',
+        emoji: '🌑',
+        flavor: 'La tierra fértil del aluvión, oscura y rica, sostiene las raíces de Semíramis.',
+        num: `${i+1}/10`
+    })),
+    // Nivel 4: Enredaderas (10)
+    ...Array(10).fill(null).map((_, i) => ({
+        nivel: 4, clase: 'nivel-4',
+        nombre: 'Enredaderas de Semíramis',
+        emoji: '🌿',
+        flavor: 'La reina mandó tejer jardines en el aire. Las plantas obedecieron.',
+        num: `${i+1}/10`
+    })),
+    // Nivel 5: Flor de Oro (4)
+    ...Array(4).fill(null).map((_, i) => ({
+        nivel: 5, clase: 'nivel-5',
+        nombre: 'La Flor de Oro',
+        emoji: '⚜️',
+        flavor: 'La cima del zigurát. Quien la alcance habrá conquistado el favor del Rey.',
+        num: `${i+1}/4`
+    })),
+];
+
+const EDICTOS = [
+    { tipo:'PREMIO', emoji:'⭐', titulo:'Capricho de los Astros',    texto:'Robá 2 cartas extra del Mazo de Jardín ahora mismo.' },
+    { tipo:'PREMIO', emoji:'🎁', titulo:'El Don de Hammurabi',       texto:'Elegí a otro jugador: ese jugador debe darte 1 carta de su mano a tu elección.' },
+    { tipo:'PREMIO', emoji:'🌟', titulo:'Gracia del Rey',            texto:'Podés bajar una carta adicional a tu Zigurát en este turno, aunque ya hayas bajado una de ese nivel.' },
+    { tipo:'PREMIO', emoji:'🔄', titulo:'Vientos del Cambio',        texto:'Descartá tu mano completa y robá la misma cantidad de cartas del Mazo de Jardín.' },
+    { tipo:'PREMIO', emoji:'🏺', titulo:'Tesoros del Palacio',       texto:'Mirá las 3 cartas superiores del Mazo de Jardín. Quedáte 1 y devolvé las demás en cualquier orden.' },
+    { tipo:'PREMIO', emoji:'💎', titulo:'El Lapislázuli Sagrado',    texto:'Podés bajar inmediatamente cualquier carta de tu mano a tu Zigurát fuera de tu fase de construcción habitual.' },
+    { tipo:'PREMIO', emoji:'👁️', titulo:'El Ojo Omnisciente',       texto:'Podés ver la mano completa de cualquier jugador. No se la muestres al resto.' },
+    { tipo:'PRENDA', emoji:'💨', titulo:'El Aliento de Pazuzu',      texto:'Soplá con fuerza sobre el Zigurát del jugador que va ganando. Si una carta cae, ese jugador la pierde por este turno.' },
+    { tipo:'PRENDA', emoji:'🤫', titulo:'El Voto de Silencio',       texto:'Durante el siguiente turno completo no podés hablar. Si hablás, devolvé 1 carta de tu Zigurát al descarte.' },
+    { tipo:'PRENDA', emoji:'🙈', titulo:'La Mirada Ciega',           texto:'Tu próxima acción de robar carta (de cualquier mazo) debés hacerla con los ojos cerrados.' },
+    { tipo:'PRENDA', emoji:'🦅', titulo:'La Prueba del Halcón',      texto:'Nombrá en voz alta 3 civilizaciones antiguas en menos de 10 segundos. Si no podés, perdés tu turno de construcción.' },
+    { tipo:'PRENDA', emoji:'🪄', titulo:'El Encantamiento de Marduk',texto:'Solo podés usar tu mano no dominante durante el resto de este turno para tomar cartas y bajar al Zigurát.' },
+    { tipo:'PRENDA', emoji:'⏱️', titulo:'El Reloj de Agua',          texto:'Tu próximo turno de construcción tiene un límite de 10 segundos. Lo que no hayas bajado en ese tiempo queda en la mano.' },
+    { tipo:'PRENDA', emoji:'🐫', titulo:'La Deuda del Camellero',    texto:'Devolvé al Mazo de Jardín 1 carta de tu mano a elección. Barajá el mazo.' },
+    { tipo:'CAOS',   emoji:'🔀', titulo:'El Gran Intercambio',       texto:'CAOS: Todos pasan su mano completa al jugador de su izquierda. Rige hasta el próximo Edicto.' },
+    { tipo:'CAOS',   emoji:'⏪', titulo:'El Decreto Invertido',      texto:'CAOS: El orden de juego se invierte (sentido antihorario). Rige hasta el próximo Edicto de Caos.' },
+    { tipo:'CAOS',   emoji:'🎭', titulo:'La Máscara del Destino',    texto:'CAOS: Por esta ronda, todos deben elegir el Camino Ambicioso (invocar la Lotería del Rey obligatoriamente).' },
+    { tipo:'CAOS',   emoji:'🌪️', titulo:'La Tormenta de Babilonia', texto:'CAOS: Nadie puede usar el Camino Ambicioso durante la próxima vuelta completa. La Lotería del Rey queda suspendida.' },
+    { tipo:'CAOS',   emoji:'🤝', titulo:'La Alianza Obligada',       texto:'CAOS: El jugador con más cartas en la mano debe ceder 1 carta a cada jugador que tenga menos. Aplica ahora.' },
+    { tipo:'CAOS',   emoji:'🔁', titulo:'La Ley de los Espejos',     texto:'CAOS: Los resultados del dado se invierten esta ronda: 1-2 = El Ojo, 3-4-5 = Ladrillo, 6 = Corona Real.' },
+];
+
+const TABLILLAS = [
+    { clase:'fortuna', emoji:'🐪', nombre:'Diez Camellos Negros',    tipo:'FORTUNA', count:2 },
+    { clase:'ruina',   emoji:'💀', nombre:'El Viento del Verdugo',   tipo:'RUINA',   count:3 },
+    { clase:'defensa', emoji:'🛡️', nombre:'El Sello del Visir',      tipo:'DEFENSA', count:3 },
+    { clase:'caos',    emoji:'🪞', nombre:'Los Espejos Confundidos', tipo:'CAOS',    count:2 },
+];
+
+// ─── CARD FACTORY ──────────────────────────────────────────────────────────
+
+function makeJardinCard(c) {
+    return `
+    <div class="card ${c.clase}">
+        <div class="cut-guide"></div>
+        <div class="card-header">
+            <div class="card-level">Nivel ${c.nivel} · Mazo de Jardín</div>
+            <div class="card-name">${c.nombre}</div>
+        </div>
+        <div class="card-body">
+            <div class="card-icon">${c.emoji}</div>
+            <div class="card-flavor">${c.flavor}</div>
+        </div>
+        <div class="card-footer">
+            <span>LUDOSOFÍA</span>
+            <span>${c.num}</span>
+        </div>
+    </div>`;
+}
+
+function makeEdictoCard(e, n) {
+    const tipoCls = e.tipo === 'PREMIO' ? 'tipo-premio' : e.tipo === 'CAOS' ? 'tipo-caos' : '';
+    const tipoLabel = e.tipo === 'PREMIO' ? 'Premio' : e.tipo === 'CAOS' ? 'Regla de Caos' : 'Prenda';
+    return `
+    <div class="card-edicto ${tipoCls}">
+        <div class="card-header">
+            <div class="edict-type">La Compañía · ${tipoLabel}</div>
+            <div class="edict-title">${e.titulo}</div>
+        </div>
+        <div class="edict-emoji">${e.emoji}</div>
+        <div class="edict-text">${e.texto}</div>
+        <div class="edict-company">Edicto #${n} · La Lotería de los Jardines</div>
+    </div>`;
+}
+
+function makeToken(t) {
+    return `
+    <div class="token ${t.clase}">
+        <div class="cut-circle"></div>
+        <div class="token-emoji">${t.emoji}</div>
+        <div class="token-name">${t.nombre}</div>
+        <div class="token-type">${t.tipo}</div>
+    </div>`;
+}
+
+function makeDorsoJardin() {
+    return `
+    <div class="card-dorso-jardin">
+        <div class="d-border">
+            <div class="d-icon">🌿</div>
+            <div class="d-title">Mazo de Jardín<br>La Lotería de los Jardines</div>
+            <div class="d-sub">LUDOSOFÍA</div>
+        </div>
+    </div>`;
+}
+
+function makeDorsoEdicto() {
+    return `
+    <div class="card-dorso-edicto">
+        <div class="d-icon">📜</div>
+        <div class="d-title">La Compañía<br>Edictos del Destino</div>
+        <div class="d-sub">La Lotería de los Jardines</div>
+    </div>`;
+}
+
+// ─── RENDER ────────────────────────────────────────────────────────────────
+
+function renderGrid(containerId, htmlArray) {
+    document.getElementById(containerId).innerHTML = htmlArray.join('');
+}
+
+// Jardín: 50 cartas en 6 páginas
+const jardinPages = [
+    JARDIN_CARDS.slice(0, 9),
+    JARDIN_CARDS.slice(9, 18),
+    JARDIN_CARDS.slice(18, 27),
+    JARDIN_CARDS.slice(27, 36),
+    JARDIN_CARDS.slice(36, 45),
+    JARDIN_CARDS.slice(45, 50),
+];
+jardinPages.forEach((page, i) => {
+    renderGrid(`jardin-grid-${i+1}`, page.map(makeJardinCard));
+});
+
+// Edictos: 20 en 3 páginas
+renderGrid('edicto-grid-1', EDICTOS.slice(0,9).map((e,i)  => makeEdictoCard(e, i+1)));
+renderGrid('edicto-grid-2', EDICTOS.slice(9,18).map((e,i) => makeEdictoCard(e, i+10)));
+renderGrid('edicto-grid-3', EDICTOS.slice(18).map((e,i)   => makeEdictoCard(e, i+19)));
+
+// Tablillas
+const tokens = [];
+TABLILLAS.forEach(t => { for(let i=0;i<t.count;i++) tokens.push(makeToken(t)); });
+document.getElementById('token-grid').innerHTML = tokens.join('');
+
+// Dorsos: 6 Jardín + 3 Edicto = 9
+const dorsos = [
+    ...Array(6).fill(null).map(makeDorsoJardin),
+    ...Array(3).fill(null).map(makeDorsoEdicto),
+];
+document.getElementById('dorso-grid').innerHTML = dorsos.join('');
+</script>
+</body>
+</html>

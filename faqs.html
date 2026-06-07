@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQs | LUDOSOFÍA</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_orange: '#E87524'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDF8ED;
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
+    </style>
+</head>
+<body class="antialiased selection:bg-xul_yellow selection:text-xul_ink">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="index.html#schole" class="hover:text-xul_terra transition">Scholē</a>
+                <a href="index.html#ludoteca" class="hover:text-xul_terra transition">Ludoteca</a>
+                <span class="text-xul_terra border-b-2 border-xul_terra">FAQs</span>
+
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="index.html#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="index.html#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <span class="mobile-link text-xul_terra block">FAQs</span>
+
+            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
+
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="pt-36 pb-16 px-6 border-b-[3px] border-xul_ink bg-white relative">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#2A2A2A 1px, transparent 1px), linear-gradient(90deg, #2A2A2A 1px, transparent 1px); background-size: 30px 30px;"></div>
+        <div class="max-w-4xl mx-auto relative z-10 text-center">
+            <h2 class="font-sans font-black text-xul_terra uppercase tracking-widest text-sm mb-2 border-b-2 border-xul_terra inline-block pb-1">Preguntas frecuentes</h2>
+            <h1 class="xul-title text-5xl md:text-6xl font-bold text-xul_ink mt-4">FAQs</h1>
+            <p class="font-serif text-xl text-gray-600 mt-4 max-w-xl mx-auto">Todo lo que necesitás saber antes de tirar los dados.</p>
+        </div>
+    </header>
+
+    <!-- CONTENIDO FAQs -->
+    <main class="py-20 px-6">
+        <div class="max-w-4xl mx-auto space-y-4">
+
+            <!-- CATEGORÍA: El Club -->
+            <p class="font-sans font-black text-xs uppercase tracking-widest text-gray-400 pt-4 pb-2">El Club</p>
+
+            <div class="faq-item bg-white border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] overflow-hidden">
+                <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-sans font-black text-lg text-xul_ink hover:bg-xul_yellow transition-colors" aria-expanded="false">
+                    <span>¿Qué es Ludosofía?</span>
+                    <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0 transition-transform duration-200"></i>
+                </button>
+                <div class="faq-body hidden px-6 pb-6 border-t-2 border-xul_ink">
+                    <p class="font-serif text-lg text-gray-700 leading-relaxed pt-4">Ludosofía es un club de filosofía que usa el juego como herramienta de pensamiento. Organizamos sesiones semanales con dinámicas originales, juegos hackeados con contenido filosófico, cursos interactivos y talleres de diseño lúdico.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] overflow-hidden">
+                <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-sans font-black text-lg text-xul_ink hover:bg-xul_yellow transition-colors" aria-expanded="false">
+                    <span>¿Necesito saber filosofía para participar?</span>
+                    <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0 transition-transform duration-200"></i>
+                </button>
+                <div class="faq-body hidden px-6 pb-6 border-t-2 border-xul_ink">
+                    <p class="font-serif text-lg text-gray-700 leading-relaxed pt-4">No. Ludosofía está diseñado para todo tipo de participantes, desde curiosos sin experiencia previa hasta docentes y académicos. El juego es el punto de entrada: las ideas emergen naturalmente durante la dinámica.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] overflow-hidden">
+                <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-sans font-black text-lg text-xul_ink hover:bg-xul_yellow transition-colors" aria-expanded="false">
+                    <span>¿Las sesiones son presenciales o virtuales?</span>
+                    <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0 transition-transform duration-200"></i>
+                </button>
+                <div class="faq-body hidden px-6 pb-6 border-t-2 border-xul_ink">
+                    <p class="font-serif text-lg text-gray-700 leading-relaxed pt-4">Actualmente operamos de forma híbrida. Las sesiones semanales y el atelier se realizan en formato presencial en Buenos Aires. Los cursos de la Scholē y los juegos hackeados de la plataforma son 100% online y accesibles desde cualquier lugar.</p>
+                </div>
+            </div>
+
+            <!-- CATEGORÍA: Membresías -->
+            <p class="font-sans font-black text-xs uppercase tracking-widest text-gray-400 pt-8 pb-2">Membresías</p>
+
+            <div class="faq-item bg-white border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] overflow-hidden">
+                <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-sans font-black text-lg text-xul_ink hover:bg-xul_yellow transition-colors" aria-expanded="false">
+                    <span>¿Cuál es la diferencia entre Socio y Fundador?</span>
+                    <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0 transition-transform duration-200"></i>
+                </button>
+                <div class="faq-body hidden px-6 pb-6 border-t-2 border-xul_ink">
+                    <p class="font-serif text-lg text-gray-700 leading-relaxed pt-4">El <strong>Socio</strong> (USD 5/mes) accede al catálogo de juegos, los clásicos hackeados, descuentos del 40% en cursos y al atelier mensual. El <strong>Fundador</strong> (USD 50/año) suma cursos gratuitos, consultoría mensual incluida y participación en los focus groups de creación de nuevos juegos. Los cupos Fundador son limitados.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] overflow-hidden">
+                <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-sans font-black text-lg text-xul_ink hover:bg-xul_yellow transition-colors" aria-expanded="false">
+                    <span>¿Puedo cancelar mi membresía en cualquier momento?</span>
+                    <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0 transition-transform duration-200"></i>
+                </button>
+                <div class="faq-body hidden px-6 pb-6 border-t-2 border-xul_ink">
+                    <p class="font-serif text-lg text-gray-700 leading-relaxed pt-4">Sí. La membresía Socio es mensual y podés cancelarla cuando quieras desde tu cuenta. La membresía Fundador es anual y no tiene reembolso una vez acreditada, pero podés no renovarla al vencimiento.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] overflow-hidden">
+                <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-sans font-black text-lg text-xul_ink hover:bg-xul_yellow transition-colors" aria-expanded="false">
+                    <span>¿Cómo me registro?</span>
+                    <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0 transition-transform duration-200"></i>
+                </button>
+                <div class="faq-body hidden px-6 pb-6 border-t-2 border-xul_ink">
+                    <p class="font-serif text-lg text-gray-700 leading-relaxed pt-4">Podés crear una cuenta gratuita desde el botón "Ingresar" en la navbar, o directamente desde la <a href="suscripcion.html" class="font-bold underline text-xul_terra hover:text-xul_ink transition-colors">página de suscripción</a>. Aceptamos pago con tarjeta y PayPal.</p>
+                </div>
+            </div>
+
+            <!-- CATEGORÍA: Consultoría -->
+            <p class="font-sans font-black text-xs uppercase tracking-widest text-gray-400 pt-8 pb-2">Consultoría e Instituciones</p>
+
+            <div class="faq-item bg-white border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] overflow-hidden">
+                <button class="faq-btn w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-sans font-black text-lg text-xul_ink hover:bg-xul_yellow transition-colors" aria-expanded="false">
+                    <span>¿Puedo solicitar una capacitación para mi escuela u organización?</span>
+                    <i data-lucide="plus" class="faq-icon w-5 h-5 flex-shrink-0 transition-transform duration-200"></i>
+                </button>
+                <div class="faq-body hidden px-6 pb-6 border-t-2 border-xul_ink">
+                    <p class="font-serif text-lg text-gray-700 leading-relaxed pt-4">Sí. A través de <strong>Ludens Praxis</strong>, el área institucional de Ludosofía, ofrecemos capacitaciones para escuelas, equipos directivos y organizaciones. Podés ver el detalle de propuestas y enviar una consulta en <a href="consultor.html" class="font-bold underline text-xul_terra hover:text-xul_ink transition-colors">nuestra página de consultoría</a>.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- CTA al pie -->
+        <div class="max-w-4xl mx-auto mt-16 bg-xul_ink border-[3px] border-xul_ink p-8 shadow-[8px_8px_0px_#D1623A] text-center">
+            <p class="font-serif text-xl text-[#FDF8ED] mb-6">¿No encontraste lo que buscabas? Escribinos.</p>
+            <a href="consultor.html#contacto" class="inline-block bg-xul_yellow border-[3px] border-xul_ink text-xul_ink font-black uppercase tracking-widest px-8 py-3 shadow-[4px_4px_0px_#FDF8ED] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#FDF8ED] transition-all">
+                Contactar →
+            </a>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-xul_ink text-[#FDF8ED] py-12 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 border-b border-gray-700 pb-8">
+            <div class="flex items-center space-x-3">
+                <svg viewBox="0 0 100 100" class="w-8 h-8">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="none" stroke="currentColor" stroke-width="3"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="none" stroke="currentColor" stroke-width="3"/>
+                </svg>
+                <span class="font-sans font-black tracking-widest text-lg">LUDOSOFÍA</span>
+            </div>
+            <div class="flex flex-wrap justify-center space-x-6 font-serif text-lg">
+                <a href="index.html" class="hover:text-xul_yellow transition">Inicio</a>
+                <a href="index.html#schole" class="hover:text-xul_yellow transition">Scholē</a>
+                <span class="text-xul_yellow">FAQs</span>
+                <a href="manifiesto.html" class="hover:text-xul_yellow transition">Manifiesto</a>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-6 text-center text-sm font-sans text-gray-400">
+            &copy; 2026 Ludosofía - Club de Filosofía. El juego infinito del pensamiento.
+        </div>
+    </footer>
+
+    <!-- Modal de perfil -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía Actual</p>
+                <p id="profile-role" class="font-black text-xl text-xul_terra uppercase tracking-wider"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">
+                Cerrar Sesión
+            </button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        lucide.createIcons();
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        function getIconByRole(role) {
+            const r = (role || '').toUpperCase().trim();
+            if (r.includes('FUNDADOR')) return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            if (r.includes('SOCIO')) return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            return '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+        }
+
+        const loginBtnDesktop = document.getElementById('login-btn-desktop');
+        const loginBtnMobile = document.getElementById('login-btn-mobile');
+        const profileModal = document.getElementById('profile-modal');
+
+        loginBtnDesktop.onclick = () => window.location.href = 'login.html';
+        loginBtnMobile.onclick = () => window.location.href = 'login.html';
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+                document.getElementById('login-text-desktop').innerText = `HOLA, ${nombre.toUpperCase()}`;
+                document.getElementById('login-text-mobile').innerText = `HOLA, ${nombre.toUpperCase()}`;
+                loginBtnDesktop.onclick = () => profileModal.classList.toggle('hidden');
+                loginBtnMobile.onclick = () => profileModal.classList.toggle('hidden');
+                document.getElementById('profile-email').innerText = user.email;
+
+                try {
+                    const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                    if (docSnap.exists()) {
+                        const rol = docSnap.data().rol;
+                        document.getElementById('profile-role').innerText = rol;
+                        const iconHtml = getIconByRole(rol);
+                        document.getElementById('badge-container-desktop').innerHTML = iconHtml;
+                        document.getElementById('badge-container-mobile').innerHTML = iconHtml;
+                        document.getElementById('badge-container-desktop').style.display = 'flex';
+                        document.getElementById('badge-container-mobile').style.display = 'flex';
+                    }
+                } catch(e) { console.error(e); }
+            }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth).then(() => {
+                profileModal.classList.add('hidden');
+                window.location.reload();
+            });
+        });
+
+        // Acordeón
+        document.querySelectorAll('.faq-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const body = btn.closest('.faq-item').querySelector('.faq-body');
+                const icon = btn.querySelector('.faq-icon');
+                const isOpen = !body.classList.contains('hidden');
+                document.querySelectorAll('.faq-body').forEach(b => b.classList.add('hidden'));
+                document.querySelectorAll('.faq-icon').forEach(i => i.style.transform = '');
+                document.querySelectorAll('.faq-btn').forEach(b => b.setAttribute('aria-expanded', 'false'));
+                if (!isOpen) {
+                    body.classList.remove('hidden');
+                    icon.style.transform = 'rotate(45deg)';
+                    btn.setAttribute('aria-expanded', 'true');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
