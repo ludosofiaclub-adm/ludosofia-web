@@ -14,6 +14,9 @@
     </script>
     <script type="module" src="seguridad.js"></script>
 
+    <!-- EmailJS SDK (inscripción al Tribunal → ludosofiaclub@gmail.com) -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -350,9 +353,33 @@
                 </li>
             </ul>
             
-            <a id="btn-confirmar-inscripcion" href="mailto:rol@ludosofiaclub.ar?subject=Inscripción:%20El%20Criminal%20Predestinado&body=Hola!%20Acepto%20las%20condiciones%20(cámara%20encendida,%20Zoom)%20y%20quiero%20inscribirme%20en%20el%20juicio.%20Espero%20mi%20máscara." class="block w-full bg-xul_ink text-white text-center font-black py-4 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">
-                Acepto el desafío
-            </a>
+            <form id="inscripcion-form" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label for="insc-nombre" class="block text-xs font-black uppercase tracking-widest text-xul_ink mb-1">Nombre</label>
+                        <input id="insc-nombre" type="text" required autocomplete="given-name" class="w-full border-[3px] border-xul_ink px-3 py-2 font-sans text-sm focus:outline-none focus:border-xul_terra" />
+                    </div>
+                    <div>
+                        <label for="insc-apellido" class="block text-xs font-black uppercase tracking-widest text-xul_ink mb-1">Apellido</label>
+                        <input id="insc-apellido" type="text" required autocomplete="family-name" class="w-full border-[3px] border-xul_ink px-3 py-2 font-sans text-sm focus:outline-none focus:border-xul_terra" />
+                    </div>
+                </div>
+                <div>
+                    <label for="insc-email" class="block text-xs font-black uppercase tracking-widest text-xul_ink mb-1">Email</label>
+                    <input id="insc-email" type="email" required autocomplete="email" class="w-full border-[3px] border-xul_ink px-3 py-2 font-sans text-sm focus:outline-none focus:border-xul_terra" />
+                </div>
+                <div id="insc-mascara-wrap" class="hidden">
+                    <label for="insc-mascara" class="block text-xs font-black uppercase tracking-widest text-xul_ink mb-1">
+                        Elegí tu máscara <span class="text-xul_terra">· exclusivo Fundadores</span>
+                    </label>
+                    <select id="insc-mascara" class="w-full border-[3px] border-xul_ink px-3 py-2 font-sans text-sm bg-white focus:outline-none focus:border-xul_terra">
+                        <option value="">— Que me la asignen —</option>
+                    </select>
+                </div>
+                <button id="insc-submit" type="submit" class="block w-full bg-xul_ink text-white text-center font-black py-4 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">
+                    Acepto el desafío
+                </button>
+            </form>
         </div>
     </div>
 
@@ -452,11 +479,86 @@
         const errorMsg = document.getElementById('error-msg');
         
         // Buttons
-        document.getElementById('btn-inscribirse').onclick = () => modalConditions.classList.remove('hidden');
-        
-        document.getElementById('btn-confirmar-inscripcion').onclick = () => {
-            modalConditions.classList.add('hidden');
+        const mascaraWrap   = document.getElementById('insc-mascara-wrap');
+        const mascaraSelect = document.getElementById('insc-mascara');
+
+        // Poblar el selector de máscaras desde masksData (solo lo ven los Fundadores)
+        Object.keys(masksData).forEach((key) => {
+            const m = masksData[key];
+            const opt = document.createElement('option');
+            opt.value = `${m.name} — ${m.subtitle}`;
+            opt.textContent = `${m.name} — ${m.subtitle}`;
+            mascaraSelect.appendChild(opt);
+        });
+
+        // Abrir el formulario solo para Socios y Fundadores
+        document.getElementById('btn-inscribirse').onclick = () => {
+            const u = window._ludoUser || { logged: false };
+
+            if (!u.logged) {
+                window.showAlert('Para inscribirte al Tribunal necesitás iniciar sesión como Socio o Fundador.', 'Acceso restringido');
+                return;
+            }
+            if (!u.esSocio && !u.esFundador) {
+                window.showAlert('La inscripción al Tribunal es exclusiva para Socios y Fundadores. Sumate al Club para participar.', 'Solo Socios y Fundadores');
+                return;
+            }
+
+            // Prellenar con los datos del usuario
+            document.getElementById('insc-nombre').value   = u.nombre   || '';
+            document.getElementById('insc-apellido').value = u.apellido || '';
+            document.getElementById('insc-email').value    = u.email    || '';
+
+            // La máscara solo la eligen los Fundadores
+            if (u.esFundador) {
+                mascaraWrap.classList.remove('hidden');
+            } else {
+                mascaraWrap.classList.add('hidden');
+                mascaraSelect.value = '';
+            }
+
+            modalConditions.classList.remove('hidden');
         };
+
+        // Envío de la inscripción por EmailJS → ludosofiaclub@gmail.com
+        document.getElementById('inscripcion-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const u = window._ludoUser || {};
+            const nombre   = document.getElementById('insc-nombre').value.trim();
+            const apellido = document.getElementById('insc-apellido').value.trim();
+            const email    = document.getElementById('insc-email').value.trim();
+            const mascara  = u.esFundador ? (mascaraSelect.value || 'Que se la asignen') : 'No aplica (Socio)';
+            const btn      = document.getElementById('insc-submit');
+
+            if (!nombre || !apellido || !email) {
+                window.showAlert('Completá nombre, apellido y email para inscribirte.', 'Faltan datos');
+                return;
+            }
+
+            btn.disabled    = true;
+            btn.textContent = 'Enviando...';
+
+            emailjs.init({ publicKey: 'J5WWC_8Dhts0-y3JX' });
+            emailjs.send('service_ludosofia', 'template_inscripcion', {
+                nombre,
+                apellido,
+                email,
+                rol:       u.rol || '',
+                mascara,
+                actividad: 'El Criminal Predestinado — Tribunal Preventivo',
+                to_email:  'ludosofiaclub@gmail.com'
+            }).then(() => {
+                modalConditions.classList.add('hidden');
+                window.showAlert('¡Inscripción enviada! Te esperamos en el Tribunal. Te contactamos con los detalles del Zoom.', 'Inscripción confirmada');
+                document.getElementById('inscripcion-form').reset();
+            }).catch((err) => {
+                console.error('EmailJS error:', err);
+                window.showAlert('No se pudo enviar la inscripción. Probá de nuevo en un momento.', 'Error al enviar');
+            }).finally(() => {
+                btn.disabled    = false;
+                btn.textContent = 'Acepto el desafío';
+            });
+        });
 
         document.getElementById('btn-tengo-clave').onclick = () => {
             sectionIntro.classList.add('hidden');
@@ -585,17 +687,33 @@
 
                 try {
                     const docSnap = await getDoc(doc(db, 'usuarios', user.uid));
-                    if (docSnap.exists() && docSnap.data().rol) {
-                        const rol = docSnap.data().rol;
+                    const datos = docSnap.exists() ? docSnap.data() : {};
+                    const rol = datos.rol || '';
+                    if (rol) {
                         document.getElementById('profile-role').innerText = rol;
                         updateUIWithRole(rol);
                     } else {
                         updateUIWithRole('EXPLORADOR');
                     }
+                    // Exponer datos del usuario para el formulario de inscripción
+                    const rolUp = rol.toString().toUpperCase().trim();
+                    const fullName = (datos.nombre || user.displayName || '').trim();
+                    const partes = fullName ? fullName.split(/\s+/) : [];
+                    window._ludoUser = {
+                        logged: true,
+                        rol: rolUp,
+                        esSocio: rolUp === 'SOCIO',
+                        esFundador: rolUp === 'FUNDADOR',
+                        nombre: partes[0] || '',
+                        apellido: partes.slice(1).join(' '),
+                        email: user.email || ''
+                    };
                 } catch (error) {
                     updateUIWithRole('EXPLORADOR');
+                    window._ludoUser = { logged: true, rol: '', esSocio: false, esFundador: false, nombre: '', apellido: '', email: user.email || '' };
                 }
             } else {
+                window._ludoUser = { logged: false };
                 document.getElementById('login-text-desktop').innerText = 'INGRESAR';
                 if (document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = 'INGRESAR';
 
