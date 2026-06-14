@@ -33,8 +33,10 @@ onAuthStateChanged(auth, async (user) => {
         if (docSnap.exists()) {
             const rol = (docSnap.data().rol || '').toUpperCase();
 
-            const esSocio = rol.includes('SOCIO') || rol === 'FUNDADOR';
-            const esFundador = rol.includes('FUNDADOR');
+            // Acceso solo con rol pago ACTIVO. Excluye *_pendiente y *_cancelado:
+            // antes 'SOCIO_CANCELADO'.includes('SOCIO') daba acceso a cancelados.
+            const esSocio = rol === 'SOCIO' || rol === 'FUNDADOR';
+            const esFundador = rol === 'FUNDADOR';
 
             let tieneAcceso = false;
 

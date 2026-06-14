@@ -191,7 +191,7 @@
                 if (docSnap.exists()) {
                     const datos = docSnap.data();
                     const rol = (datos.rol || '').toUpperCase().trim();
-                    const tieneAcceso = rol.includes('SOCIO') || rol.includes('FUNDADOR');
+                    const tieneAcceso = rol === 'SOCIO' || rol === 'FUNDADOR';
                     if (!tieneAcceso) {
                         localStorage.setItem('destino_post_login', rutaActual);
                         window.location.replace('login.html');

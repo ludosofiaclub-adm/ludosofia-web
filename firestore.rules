@@ -1,0 +1,75 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Reglas de seguridad de Firestore — Ludosofía
+//
+// Estas reglas corren en los servidores de Google y NO se pueden saltear desde
+// el navegador (a diferencia del guardián JS de las páginas, que es solo visual).
+//
+// Principio clave: el ROL (publico / socio / fundador) es decidido SOLO por los
+// webhooks de pago (PayPal y MercadoPago), que usan el Admin SDK y por diseño
+// IGNORAN estas reglas. El cliente (navegador) nunca puede asignarse un rol pago.
+//
+// Cómo desplegar: copiar este contenido en
+//   Firebase Console → Firestore Database → pestaña "Reglas" → Publicar.
+// ─────────────────────────────────────────────────────────────────────────────
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function loggedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(uid) {
+      return loggedIn() && request.auth.uid == uid;
+    }
+
+    // Roles que el CLIENTE tiene permitido escribir en su propio perfil.
+    // Nunca un rol pago "limpio" (socio / fundador): esos solo los pone el webhook.
+    function rolPermitidoCliente(rol) {
+      return rol == null
+          || rol == 'publico'
+          || rol.matches('.*_pendiente');
+    }
+
+    // ── Perfiles de usuario ──────────────────────────────────────────────────
+    // Cada usuario solo ve y edita SU propio documento.
+    match /usuarios/{uid} {
+      allow read: if isOwner(uid);
+
+      // Crear el propio perfil, pero sin auto-asignarse un rol pago.
+      allow create: if isOwner(uid)
+                    && rolPermitidoCliente(request.resource.data.rol);
+
+      // Actualizar el propio perfil SIN cambiar el rol a uno pago:
+      // o el rol queda igual, o pasa a uno permitido (publico / *_pendiente).
+      allow update: if isOwner(uid)
+                    && ( request.resource.data.rol == resource.data.rol
+                         || rolPermitidoCliente(request.resource.data.rol) );
+
+      allow delete: if false;
+    }
+
+    // ── Comentarios públicos por juego (El Ágora) ────────────────────────────
+    // Cualquier usuario logueado lee; solo puede crear comentarios a su nombre.
+    // Nadie edita ni borra comentarios desde el cliente.
+    match /artifacts/{appId}/public/data/comentarios/{commentId} {
+      allow read: if loggedIn();
+      allow create: if loggedIn()
+                    && request.resource.data.authorId == request.auth.uid;
+      allow update, delete: if false;
+    }
+
+    // ── Votos del Oráculo (rol.html) ─────────────────────────────────────────
+    match /public/oraculo_votes {
+      allow read: if loggedIn();
+      allow write: if loggedIn();
+    }
+
+    // ── Todo lo demás: denegado por defecto ──────────────────────────────────
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
