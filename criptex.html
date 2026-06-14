@@ -70,13 +70,21 @@
         .verse-container:active { transform: translate(0, 0); box-shadow: 2px 2px 0px #2A2A2A; }
 
         .verse-text {
-            transition: opacity 0.4s ease, transform 0.4s ease;
             display: block;
         }
-        .verse-fade-out {
-            opacity: 0;
-            transform: translateY(8px);
+        /* Letras revueltas mientras el verso se descifra */
+        .scramble-ghost {
+            color: #D1623A;
+            font-style: italic;
+            opacity: 0.85;
         }
+        /* Destello del recuadro al permutar */
+        @keyframes permute-flash {
+            0%   { border-color: #2A2A2A; background-color: #FDF8ED; }
+            45%  { border-color: #D1623A; background-color: #FBEAE2; }
+            100% { border-color: #2A2A2A; background-color: #FDF8ED; }
+        }
+        .verse-permuting { animation: permute-flash 0.65s ease; }
 
         /* Pulso al fusionar/inscribir */
         @keyframes pulse-border {
@@ -340,18 +348,70 @@
             document.getElementById('alert-modal').classList.add('hidden');
         }
 
+        // ---- Motor de animación: descifrado de letras ----
+        const GLIFOS = 'αβγδεζηθικλμνξοπρστυφχψωABCDEFGHIJKLMNOPQRSTUVWXYZ✦⟡◇†';
+        const glifoAlAzar = () => GLIFOS[Math.floor(Math.random() * GLIFOS.length)];
+
+        // Revuelve el texto actual de `el` y lo resuelve hacia `textoFinal`.
+        // Basado en tiempo real (no en frames): siempre resuelve en DURACION ms,
+        // aunque la pestaña esté en segundo plano.
+        const DURACION_SCRAMBLE = 850; // ms
+        function scrambleText(el, textoFinal) {
+            const textoViejo = el.innerText;
+            const largo = Math.max(textoViejo.length, textoFinal.length);
+            const cola = [];
+            for (let i = 0; i < largo; i++) {
+                // Cada letra se revela en cascada de izquierda a derecha
+                const inicio = largo > 1 ? (i / largo) * 0.6 : 0; // fracción 0..0.6
+                const fin = Math.min(1, inicio + 0.4);
+                cola.push({ desde: textoViejo[i] || '', hasta: textoFinal[i] || '', inicio, fin, char: null });
+            }
+
+            // Token para cancelar una animación previa sobre el mismo verso
+            const token = (parseInt(el.dataset.animToken || '0', 10) + 1);
+            el.dataset.animToken = token;
+
+            const t0 = performance.now();
+            const timer = setInterval(() => {
+                if (parseInt(el.dataset.animToken, 10) !== token) { clearInterval(timer); return; }
+                const t = Math.min(1, (performance.now() - t0) / DURACION_SCRAMBLE);
+                let salida = '';
+                for (let i = 0; i < cola.length; i++) {
+                    const item = cola[i];
+                    if (t >= item.fin) {
+                        salida += item.hasta;
+                    } else if (t >= item.inicio) {
+                        if (item.char === null || Math.random() < 0.5) item.char = glifoAlAzar();
+                        salida += `<span class="scramble-ghost">${item.char}</span>`;
+                    } else {
+                        salida += item.desde;
+                    }
+                }
+                el.innerHTML = salida;
+                if (t >= 1) {
+                    clearInterval(timer);
+                    el.innerText = textoFinal; // limpia los spans
+                }
+            }, 30);
+        }
+
+        // Destello del recuadro del verso al permutar
+        function flashVerse(el) {
+            const box = el.closest('.verse-container');
+            if (!box) return;
+            box.classList.remove('verse-permuting');
+            void box.offsetWidth; // reinicia la animación
+            box.classList.add('verse-permuting');
+            setTimeout(() => box.classList.remove('verse-permuting'), 700);
+        }
+
         // Rotar los versos
         function cambiarVerso(numLinea) {
             const el = document.getElementById(`linea${numLinea}`);
             const array = versos[numLinea];
-
-            el.classList.add('verse-fade-out');
-
-            setTimeout(() => {
-                estado[numLinea] = (estado[numLinea] + 1) % array.length;
-                el.innerText = array[estado[numLinea]];
-                el.classList.remove('verse-fade-out');
-            }, 400);
+            estado[numLinea] = (estado[numLinea] + 1) % array.length;
+            flashVerse(el);
+            scrambleText(el, array[estado[numLinea]]);
         }
 
         // Intercambiar Origen (1) y Fin (3)
@@ -359,24 +419,18 @@
             const l1 = document.getElementById('linea1');
             const l3 = document.getElementById('linea3');
 
-            l1.classList.add('verse-fade-out');
-            l3.classList.add('verse-fade-out');
+            const tempArray = versos[1];
+            versos[1] = versos[3];
+            versos[3] = tempArray;
 
-            setTimeout(() => {
-                const tempArray = versos[1];
-                versos[1] = versos[3];
-                versos[3] = tempArray;
+            const tempEstado = estado[1];
+            estado[1] = estado[3];
+            estado[3] = tempEstado;
 
-                const tempEstado = estado[1];
-                estado[1] = estado[3];
-                estado[3] = tempEstado;
-
-                l1.innerText = versos[1][estado[1]];
-                l3.innerText = versos[3][estado[3]];
-
-                l1.classList.remove('verse-fade-out');
-                l3.classList.remove('verse-fade-out');
-            }, 400);
+            flashVerse(l1);
+            flashVerse(l3);
+            scrambleText(l1, versos[1][estado[1]]);
+            scrambleText(l3, versos[3][estado[3]]);
         }
 
         // Inscribir el poema y la pregunta
@@ -423,18 +477,14 @@
         function randomizarVersos() {
             [1, 2, 3].forEach(num => {
                 const el = document.getElementById(`linea${num}`);
-                el.classList.add('verse-fade-out');
+                const max = versos[num].length;
+                let nuevoIdx;
+                do { nuevoIdx = Math.floor(Math.random() * max); }
+                while (nuevoIdx === estado[num] && max > 1);
 
-                setTimeout(() => {
-                    const max = versos[num].length;
-                    let nuevoIdx;
-                    do { nuevoIdx = Math.floor(Math.random() * max); }
-                    while (nuevoIdx === estado[num] && max > 1);
-
-                    estado[num] = nuevoIdx;
-                    el.innerText = versos[num][estado[num]];
-                    el.classList.remove('verse-fade-out');
-                }, 400);
+                estado[num] = nuevoIdx;
+                flashVerse(el);
+                scrambleText(el, versos[num][estado[num]]);
             });
         }
 
