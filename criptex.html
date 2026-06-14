@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Criptex de Praga | LUDOSOFÍA</title>
+
+    <!-- ========================================== -->
+    <!-- CONFIGURACIÓN DE ACCESO PARA ESTA PÁGINA   -->
+    <!-- ========================================== -->
+    <script>
+        window.CONFIG_ACCESO = {
+            PUBLICO: true,
+            SOCIO: true,
+            SOCIO_FUNDADOR: true
+        };
+    </script>
+    <script type="module" src="seguridad.js"></script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDF8ED;
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-xul { text-shadow: 4px 4px 0px #2A2A2A; }
+
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #FDF8ED; border-left: 1px solid #2A2A2A; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #2A2A2A; }
+
+        /* Verso clicable estilo Xul */
+        .verse-container {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+        }
+        .verse-container:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0px #2A2A2A;
+        }
+        .verse-container:active { transform: translate(0, 0); box-shadow: 2px 2px 0px #2A2A2A; }
+
+        .verse-text {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            display: block;
+        }
+        .verse-fade-out {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+
+        /* Pulso al fusionar/inscribir */
+        @keyframes pulse-border {
+            0%   { border-color: #2A2A2A; }
+            50%  { border-color: #D1623A; box-shadow: 0 0 18px #D1623A; }
+            100% { border-color: #2A2A2A; }
+        }
+        .fusing { animation: pulse-border 1s 1; }
+
+        .board-entry {
+            animation: slideIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateX(-15px);
+        }
+        @keyframes slideIn { to { opacity: 1; transform: translateX(0); } }
+    </style>
+</head>
+
+<body class="antialiased selection:bg-xul_yellow selection:text-xul_ink relative overflow-x-hidden">
+
+    <!-- Navbar Unificado -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="index.html#schole" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="index.html#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="alquimia.html" class="text-xul_ink hover:text-xul_terra transition-colors">Alquimia</a>
+                <span class="text-xul_terra border-b-2 border-xul_terra cursor-default">Criptex</span>
+
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="focus:outline-none active:scale-95 transition-transform p-2">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="index.html#schole" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="index.html#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="alquimia.html" class="mobile-link hover:text-xul_terra transition block">Alquimia</a>
+            <span class="mobile-link text-xul_terra block">Criptex</span>
+
+            <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
+
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HEADER / HERO -->
+    <header class="pt-32 pb-16 px-6 relative border-b-[3px] border-xul_ink bg-[#6BA4C4] overflow-hidden">
+        <div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(#2A2A2A 2px, transparent 2px); background-size: 30px 30px;"></div>
+
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-10">
+            <div class="text-center md:text-left flex-1">
+                <div class="inline-block bg-white border-[3px] border-xul_ink px-4 py-1 mb-6 shadow-[4px_4px_0px_#2A2A2A]">
+                    <span class="font-sans font-black text-xs md:text-sm uppercase tracking-widest text-xul_ink">El Permutador Poético</span>
+                </div>
+
+                <h1 class="xul-title text-5xl md:text-7xl font-black text-white tracking-tighter mb-4 text-shadow-xul uppercase">
+                    El Criptex de Praga
+                </h1>
+
+                <p class="font-serif text-xl md:text-2xl text-xul_ink max-w-2xl font-semibold leading-relaxed bg-white/40 p-4 border-l-[4px] border-xul_ink backdrop-blur-sm shadow-[4px_4px_0px_rgba(42,42,42,0.3)]">
+                    Permuta la materia de los versos para armar tu haiku del Nombre. Luego formula una pregunta al abismo y déjala inscrita.
+                </p>
+            </div>
+
+            <!-- Arte Xul Solar: el Golem / Criptex -->
+            <div class="w-64 h-64 relative flex items-center justify-center transform hover:scale-105 transition-transform duration-500 hidden md:flex">
+                <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[8px_8px_0px_#2A2A2A]">
+                    <rect x="35" y="20" width="30" height="60" rx="4" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="3"/>
+                    <rect x="38" y="30" width="24" height="8" fill="#EBB134" stroke="#2A2A2A" stroke-width="1.5"/>
+                    <rect x="38" y="44" width="24" height="8" fill="#D1623A" stroke="#2A2A2A" stroke-width="1.5"/>
+                    <rect x="38" y="58" width="24" height="8" fill="#C96B8C" stroke="#2A2A2A" stroke-width="1.5"/>
+                    <circle cx="50" cy="14" r="8" fill="#75B07E" stroke="#2A2A2A" stroke-width="3"/>
+                    <circle cx="50" cy="14" r="2.5" fill="#2A2A2A"/>
+                    <line x1="50" y1="80" x2="50" y2="92" stroke="#2A2A2A" stroke-width="3"/>
+                    <circle cx="50" cy="92" r="4" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                </svg>
+            </div>
+        </div>
+    </header>
+
+    <!-- CUERPO PRINCIPAL -->
+    <main class="max-w-7xl mx-auto px-4 py-16 w-full">
+
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
+
+            <!-- ZONA DE CREACIÓN -->
+            <section class="lg:col-span-3 flex flex-col">
+
+                <div class="flex items-center gap-4 mb-8 border-b-[3px] border-xul_ink pb-4">
+                    <div class="w-12 h-12 bg-xul_yellow border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] shrink-0">
+                        <i data-lucide="dices" class="w-6 h-6 text-xul_ink"></i>
+                    </div>
+                    <h2 class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase">El Verbo Mudo</h2>
+                </div>
+
+                <!-- Constructor del Haiku -->
+                <div id="crucible" class="bg-white border-[3px] border-xul_ink p-6 md:p-10 shadow-[12px_12px_0px_#D1623A] flex flex-col">
+
+                    <p class="text-center font-sans font-bold text-[10px] md:text-xs uppercase tracking-widest text-gray-400 mb-8">
+                        <i data-lucide="mouse-pointer-click" class="w-3.5 h-3.5 inline-block -mt-0.5"></i>
+                        Haz clic en cada verso para permutarlo
+                    </p>
+
+                    <!-- Línea 1 -->
+                    <div class="text-center mb-5">
+                        <div class="inline-block bg-xul_yellow border-2 border-xul_ink text-[9px] font-black uppercase tracking-widest px-2 py-0.5 mb-2">5 Sílabas</div>
+                        <div class="verse-container bg-xul_paper border-[3px] border-xul_ink p-4" onclick="cambiarVerso(1)">
+                            <span id="linea1" class="verse-text xul-title italic text-2xl md:text-4xl font-bold text-xul_ink">La identidad</span>
+                        </div>
+                    </div>
+
+                    <!-- Línea 2 -->
+                    <div class="text-center mb-5">
+                        <div class="inline-block bg-xul_terra border-2 border-xul_ink text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 mb-2">7 Sílabas</div>
+                        <div class="verse-container bg-xul_paper border-[3px] border-xul_ink p-4" onclick="cambiarVerso(2)">
+                            <span id="linea2" class="verse-text xul-title text-2xl md:text-4xl font-bold text-xul_ink">busca significado,</span>
+                        </div>
+                    </div>
+
+                    <!-- Línea 3 -->
+                    <div class="text-center mb-8">
+                        <div class="inline-block bg-xul_pink border-2 border-xul_ink text-white text-[9px] font-black uppercase tracking-widest px-2 py-0.5 mb-2">5 Sílabas</div>
+                        <div class="verse-container bg-xul_paper border-[3px] border-xul_ink p-4" onclick="cambiarVerso(3)">
+                            <span id="linea3" class="verse-text xul-title italic text-2xl md:text-4xl font-bold text-xul_ink">al expresarte.</span>
+                        </div>
+                    </div>
+
+                    <!-- BOTÓN DE INTERCAMBIO ALFA/OMEGA -->
+                    <div class="text-center mb-8">
+                        <button onclick="invertirAlfaOmega()" class="bg-white border-[3px] border-xul_ink px-6 py-3 shadow-[4px_4px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[6px_6px_0px_#2A2A2A] active:translate-y-0 active:shadow-[2px_2px_0px_#2A2A2A] transition-all font-sans font-black text-xs uppercase tracking-widest text-xul_ink inline-flex items-center justify-center gap-2">
+                            <i data-lucide="repeat" class="swap-icon w-4 h-4"></i>
+                            Invertir Origen y Fin
+                        </button>
+                    </div>
+
+                    <!-- Zona de Pregunta y Envío -->
+                    <div class="border-t-[3px] border-xul_ink pt-8">
+                        <label for="pregunta" class="block font-bold text-xs uppercase tracking-widest text-xul_ink mb-3 text-center">
+                            Al observar tu creación, ¿qué te preguntas?
+                        </label>
+                        <form id="pregunta-form" onsubmit="inscribirEnPizarra(event)" class="flex flex-col sm:flex-row gap-4 items-stretch">
+                            <input type="text" id="pregunta" required autocomplete="off"
+                                   placeholder="Ej: ¿El lenguaje descubre o inventa mi identidad?"
+                                   class="w-full border-[3px] border-xul_ink bg-white p-3 font-serif text-lg focus:outline-none focus:border-xul_terra focus:shadow-[4px_4px_0px_#D1623A] transition-all">
+                            <button type="submit" class="bg-xul_ink text-white font-black text-sm uppercase tracking-widest px-8 py-3 border-[3px] border-xul_ink shadow-[6px_6px_0px_#6BA4C4] hover:-translate-y-1 hover:shadow-[8px_8px_0px_#6BA4C4] transition-all shrink-0 flex items-center justify-center gap-2">
+                                <i data-lucide="feather" class="w-4 h-4"></i> Inscribir
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ZONA DE PIZARRA -->
+            <section class="lg:col-span-2 flex flex-col h-full">
+
+                <div class="flex items-center gap-4 mb-8 border-b-[3px] border-xul_ink pb-4">
+                    <div class="w-12 h-12 bg-xul_blue border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] shrink-0">
+                        <i data-lucide="scroll-text" class="w-6 h-6 text-white"></i>
+                    </div>
+                    <h2 class="xul-title text-3xl md:text-4xl font-black text-xul_ink tracking-tight uppercase">Vestigios del Nombre</h2>
+                </div>
+
+                <!-- Contenedor scrolleable -->
+                <div id="pizarra-container" class="space-y-6 overflow-y-auto max-h-[640px] pr-2 custom-scrollbar flex-grow">
+                    <!-- Entrada de ejemplo -->
+                    <div class="board-entry bg-white border-l-[6px] border-y-[3px] border-r-[3px] border-l-xul_blue border-y-xul_ink border-r-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A]">
+                        <div class="xul-title text-lg italic text-gray-600 mb-3 leading-tight">
+                            El nombre oculto<br>
+                            la palabra es la cosa<br>
+                            ciega palabra.
+                        </div>
+                        <p class="font-serif text-lg font-semibold text-xul_ink leading-relaxed italic border-t-2 border-dashed border-gray-200 pt-3">
+                            "¿Y si nombrar algo es la forma más rápida de destruirlo?"
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- MODAL DE ALERTA -->
+    <div id="alert-modal" class="hidden fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm cursor-pointer" onclick="closeCustomAlert()"></div>
+        <div class="relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#D1623A] text-center">
+            <div class="w-12 h-12 bg-xul_terra border-[3px] border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] mx-auto mb-4">
+                <i data-lucide="alert-circle" class="w-6 h-6 text-white"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink tracking-tight uppercase mb-2">Aviso</h3>
+            <p id="alert-message" class="font-sans text-gray-700 mb-6 font-medium">Mensaje de alerta.</p>
+            <button onclick="closeCustomAlert()" class="w-full bg-xul_ink text-white font-black py-3 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A]">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+        // Objeto principal de versos (Puede ser mutado por el botón de intercambio)
+        let versos = {
+            1: [
+                "La identidad", "Una palabra", "El nombre oculto", "No significa",
+                "Solo al decir", "Si el verbo es Dios", "No expresa nada",
+                "Tu identidad", "Dar nombre al barro", "Verbo hecho barro"
+            ],
+            2: [
+                "busca significado,", "no expresa lo que siente,", "dale nombre a la rosa,",
+                "la palabra es la cosa,", "si decir es crearlo,", "pierde su identidad,",
+                "el verbo se hace carne,", "solo quiere expresar,", "nombramos el vacío,",
+                "la palabra se rompe,", "duele no significar,", "nombre que nadie dijo,",
+                "no sabe qué decirte,", "pierde toda palabra,", "busca una voz ajena,"
+            ],
+            3: [
+                "al expresarte.", "mi identidad.", "muerte al decir.", "nombre de barro.",
+                "cruda palabra.", "qué significa.", "puede expresarlo.", "verbo perdido.",
+                "duele decirlo.", "ciega palabra."
+            ]
+        };
+
+        // Estado actual de los índices
+        let estado = { 1: 0, 2: 0, 3: 0 };
+
+        // Inicializar
+        function initCriptex() {
+            lucide.createIcons();
+        }
+
+        // Utilidad de Menú Móvil
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        // Alerta Personalizada
+        function showCustomAlert(message) {
+            document.getElementById('alert-message').innerText = message;
+            document.getElementById('alert-modal').classList.remove('hidden');
+        }
+        function closeCustomAlert() {
+            document.getElementById('alert-modal').classList.add('hidden');
+        }
+
+        // Rotar los versos
+        function cambiarVerso(numLinea) {
+            const el = document.getElementById(`linea${numLinea}`);
+            const array = versos[numLinea];
+
+            el.classList.add('verse-fade-out');
+
+            setTimeout(() => {
+                estado[numLinea] = (estado[numLinea] + 1) % array.length;
+                el.innerText = array[estado[numLinea]];
+                el.classList.remove('verse-fade-out');
+            }, 400);
+        }
+
+        // Intercambiar Origen (1) y Fin (3)
+        function invertirAlfaOmega() {
+            const l1 = document.getElementById('linea1');
+            const l3 = document.getElementById('linea3');
+
+            l1.classList.add('verse-fade-out');
+            l3.classList.add('verse-fade-out');
+
+            setTimeout(() => {
+                const tempArray = versos[1];
+                versos[1] = versos[3];
+                versos[3] = tempArray;
+
+                const tempEstado = estado[1];
+                estado[1] = estado[3];
+                estado[3] = tempEstado;
+
+                l1.innerText = versos[1][estado[1]];
+                l3.innerText = versos[3][estado[3]];
+
+                l1.classList.remove('verse-fade-out');
+                l3.classList.remove('verse-fade-out');
+            }, 400);
+        }
+
+        // Inscribir el poema y la pregunta
+        function inscribirEnPizarra(event) {
+            event.preventDefault();
+
+            const inputPregunta = document.getElementById('pregunta');
+            const textoPregunta = inputPregunta.value.trim();
+
+            if (!textoPregunta) {
+                return showCustomAlert("El abismo aguarda una pregunta. Escribe algo antes de inscribir.");
+            }
+
+            const v1 = versos[1][estado[1]];
+            const v2 = versos[2][estado[2]];
+            const v3 = versos[3][estado[3]];
+
+            const container = document.getElementById('pizarra-container');
+            const entry = document.createElement('div');
+            entry.className = 'board-entry bg-white border-l-[6px] border-y-[3px] border-r-[3px] border-l-xul_blue border-y-xul_ink border-r-xul_ink p-5 shadow-[4px_4px_0px_#2A2A2A]';
+
+            entry.innerHTML = `
+                <div class="xul-title text-lg italic text-gray-600 mb-3 leading-tight">
+                    ${v1}<br>${v2}<br>${v3}
+                </div>
+                <p class="font-serif text-lg font-semibold text-xul_ink leading-relaxed italic border-t-2 border-dashed border-gray-200 pt-3">
+                    "${textoPregunta}"
+                </p>
+            `;
+
+            container.insertBefore(entry, container.firstChild);
+
+            // Pulso de fusión en el crisol
+            const crucible = document.getElementById('crucible');
+            crucible.classList.add('fusing');
+            setTimeout(() => crucible.classList.remove('fusing'), 1000);
+
+            inputPregunta.value = '';
+            inputPregunta.blur();
+
+            setTimeout(() => randomizarVersos(), 300);
+        }
+
+        function randomizarVersos() {
+            [1, 2, 3].forEach(num => {
+                const el = document.getElementById(`linea${num}`);
+                el.classList.add('verse-fade-out');
+
+                setTimeout(() => {
+                    const max = versos[num].length;
+                    let nuevoIdx;
+                    do { nuevoIdx = Math.floor(Math.random() * max); }
+                    while (nuevoIdx === estado[num] && max > 1);
+
+                    estado[num] = nuevoIdx;
+                    el.innerText = versos[num][estado[num]];
+                    el.classList.remove('verse-fade-out');
+                }, 400);
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', initCriptex);
+    </script>
+</body>
+</html>

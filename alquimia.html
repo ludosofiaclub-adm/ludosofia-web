@@ -93,7 +93,7 @@
                 <a href="#schole" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
                 <a href="#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
                 <span class="text-xul_terra border-b-2 border-xul_terra cursor-default">Alquimia</span>
-                
+
                 <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] hover:-translate-y-0.5 transition-transform" title="Tu Membresía"></div>
 
                 <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[3px_3px_0px_#2A2A2A] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#2A2A2A] transition-all uppercase flex items-center justify-center gap-2">
@@ -113,7 +113,7 @@
             <a href="#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
             <a href="#cartas" class="mobile-link hover:text-xul_terra transition block">Cartas</a>
             <span class="mobile-link text-xul_terra block">Alquimia</span>
-            
+
             <div id="badge-container-mobile" style="display: none;" class="items-center justify-center w-12 h-12 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A] mx-auto hover:-translate-y-0.5 transition-transform mb-2"></div>
 
             <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 shadow-[3px_3px_0px_#2A2A2A] text-center w-full uppercase flex items-center justify-center gap-2">
@@ -161,12 +161,15 @@
         
         <!-- SELECTOR DE MODOS -->
         <div class="flex flex-col md:flex-row justify-center gap-4 mb-10">
-            <button id="mode-neologismo" onclick="setMode('neologismo')" class="mode-btn active bg-xul_ink text-white font-black uppercase tracking-widest px-8 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#D1623A] transition-all flex items-center justify-center gap-2">
+            <button id="mode-neologismo" onclick="setMode('neologismo')" class="mode-btn bg-white text-xul_ink font-black uppercase tracking-widest px-8 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
                 <i data-lucide="test-tube-2" class="w-5 h-5"></i> Fusión de Neologismos
             </button>
             <button id="mode-binomio" onclick="setMode('binomio')" class="mode-btn bg-white text-xul_ink font-black uppercase tracking-widest px-8 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] hover:bg-gray-50 transition-all flex items-center justify-center gap-2">
                 <i data-lucide="zap" class="w-5 h-5"></i> Binomio Fantástico
             </button>
+            <a href="criptex.html" class="bg-white text-xul_ink font-black uppercase tracking-widest px-8 py-3 border-[3px] border-xul_ink shadow-[4px_4px_0px_#75B07E] hover:bg-gray-50 hover:-translate-y-1 hover:shadow-[6px_6px_0px_#75B07E] transition-all flex items-center justify-center gap-2">
+                <i data-lucide="scroll-text" class="w-5 h-5"></i> El Criptex <i data-lucide="arrow-up-right" class="w-4 h-4 text-gray-400"></i>
+            </a>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -181,7 +184,10 @@
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar" id="listA-container">
-                    <!-- Dinámico -->
+                    <div class="col-span-2 border-[3px] border-dashed border-gray-300 p-6 text-center">
+                        <i data-lucide="arrow-up" class="w-6 h-6 mx-auto text-gray-400 mb-2"></i>
+                        <p class="font-sans font-bold uppercase tracking-widest text-gray-400 text-xs">Elige un modo<br>para comenzar</p>
+                    </div>
                 </div>
             </div>
 
@@ -230,7 +236,10 @@
                 </div>
                 
                 <div class="grid grid-cols-2 gap-3 overflow-y-auto max-h-[400px] pr-2 custom-scrollbar" id="listB-container">
-                    <!-- Dinámico -->
+                    <div class="col-span-2 border-[3px] border-dashed border-gray-300 p-6 text-center">
+                        <i data-lucide="arrow-up" class="w-6 h-6 mx-auto text-gray-400 mb-2"></i>
+                        <p class="font-sans font-bold uppercase tracking-widest text-gray-400 text-xs">Elige un modo<br>para comenzar</p>
+                    </div>
                 </div>
             </div>
 
@@ -368,7 +377,7 @@
             preposiciones: ["contra", "sobre", "sin", "hacia", "bajo", "ante", "tras", "desde"]
         };
 
-        let currentMode = 'neologismo'; // 'neologismo' o 'binomio'
+        let currentMode = null; // null = ninguno seleccionado | 'neologismo' | 'binomio'
         let selectedA = null;
         let selectedB = null;
         let selectedPreposition = "contra";
@@ -380,7 +389,6 @@
         // Inicializar
         function initAlquimia() {
             lucide.createIcons();
-            setMode('neologismo');
             renderGrimoire();
             renderQuestions();
             updateAlambiqueSelect();
