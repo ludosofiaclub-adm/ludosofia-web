@@ -804,6 +804,7 @@
             if (nivelRequerido === 'fundadores' && esFundador) tieneAcceso = true;
 
             if (tieneAcceso) {
+                if (vista === 'agendas') { window.location.href = 'ejercicios.html'; return; }
                 activarHerramienta(vista);
             } else {
                 var msg = nivelRequerido === 'socios'
@@ -845,7 +846,7 @@
             var esFundador = rol.includes('FUNDADOR');
 
             document.querySelectorAll('.icon-lock-socios').forEach(el => el.setAttribute('data-lucide', esSocio ? 'unlock' : 'lock'));
-            document.querySelectorAll('.btn-text-socios').forEach(el => el.innerText = esSocio ? 'Abrir Agenda' : 'Desbloquear');
+            document.querySelectorAll('.btn-text-socios').forEach(el => el.innerText = esSocio ? 'Descubrir ejercicios' : 'Desbloquear');
             document.querySelectorAll('.icon-lock-fundadores').forEach(el => el.setAttribute('data-lucide', esFundador ? 'unlock' : 'lock'));
             document.querySelectorAll('.btn-text-fundadores').forEach(el => el.innerText = esFundador ? 'Ir al Laboratorio' : 'Solicitar Mentoría');
 
