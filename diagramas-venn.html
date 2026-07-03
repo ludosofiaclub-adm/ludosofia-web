@@ -240,12 +240,33 @@
                         <div class="bg-white border-[3px] border-xul_ink p-4 shadow-[4px_4px_0px_#2A2A2A] mb-4">
                             <p id="res-ejemplo" class="text-sm font-serif text-black font-bold italic border-l-4 border-xul_yellow pl-3"></p>
                         </div>
-                        <div class="bg-white border-[3px] border-xul_ink p-4 shadow-[4px_4px_0px_#2A2A2A]">
-                            <label class="block font-bold text-[10px] uppercase tracking-widest text-black mb-2">Construye la Oración (Propuesta)</label>
+
+                        <!-- Bloque PREGUNTA: solo aparece con Variantes I / O -->
+                        <div id="bloque-pregunta" class="hidden bg-white border-[3px] border-xul_ink p-4 shadow-[4px_4px_0px_#2A2A2A] mb-4">
+                            <label class="block font-bold text-[10px] uppercase tracking-widest text-black mb-2">¿Qué pregunta te hacés?</label>
                             <textarea id="ludico-input" rows="2" class="w-full border-2 border-xul_ink bg-xul_paper p-2 font-sans text-sm focus:outline-none resize-none mb-3 text-black font-bold"></textarea>
-                            
-                            <label class="block font-bold text-[10px] uppercase tracking-widest text-xul_terra mb-2">Desafío: Contraejemplo</label>
-                            <textarea id="contra-input" rows="2" placeholder="¿Alguien puede refutarlo?" class="w-full border-2 border-xul_terra bg-red-50 p-2 font-sans text-sm focus:outline-none resize-none text-black font-bold"></textarea>
+                            <button onclick="enviarMural('pregunta')" class="w-full bg-xul_blue text-white font-black py-2 uppercase tracking-widest border-2 border-xul_ink hover:-translate-y-1 transition-all text-[10px]">
+                                Compartir en el Mural
+                            </button>
+                        </div>
+
+                        <!-- Bloque CONTRAEJEMPLO: solo aparece con Variantes A / E -->
+                        <div id="bloque-contraejemplo" class="hidden bg-white border-[3px] border-xul_ink p-4 shadow-[4px_4px_0px_#2A2A2A]">
+                            <label class="block font-bold text-[10px] uppercase tracking-widest text-xul_terra mb-2">¿Te animás a encontrar un contraejemplo?</label>
+                            <textarea id="contra-input" rows="2" placeholder="¿Alguien puede refutarlo?" class="w-full border-2 border-xul_terra bg-red-50 p-2 font-sans text-sm focus:outline-none resize-none mb-3 text-black font-bold"></textarea>
+                            <button onclick="enviarMural('contraejemplo')" class="w-full bg-xul_terra text-white font-black py-2 uppercase tracking-widest border-2 border-xul_ink hover:-translate-y-1 transition-all text-[10px]">
+                                Compartir en el Mural
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- MURAL HISTÓRICO (últimas 10 respuestas, con nombre de usuario) -->
+                    <div class="mt-6 bg-white border-[3px] border-xul_ink p-4 shadow-[4px_4px_0px_#2A2A2A]">
+                        <h3 class="font-black text-black uppercase tracking-widest text-xs mb-3 flex items-center gap-2">
+                            <i data-lucide="history" class="w-4 h-4 text-black"></i> Mural Histórico
+                        </h3>
+                        <div id="mural-list" class="space-y-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar">
+                            <p class="text-xs text-gray-500 italic">Aún no hay respuestas. ¡Sé el primero!</p>
                         </div>
                     </div>
                 </div>
@@ -439,6 +460,7 @@
             girandoDado: false,
             anguloRuleta: 0
         };
+        window.state = state;
 
         const oraciones = {
             A: {
@@ -533,6 +555,10 @@
             });
             document.querySelectorAll('.svg-text-s').forEach(el => el.textContent = state.sujeto.toUpperCase());
             document.querySelectorAll('.svg-text-p').forEach(el => el.textContent = state.predicado.toUpperCase());
+
+            const esIO = (state.tipoOracion === 'I' || state.tipoOracion === 'O');
+            document.getElementById('bloque-pregunta').classList.toggle('hidden', !esIO);
+            document.getElementById('bloque-contraejemplo').classList.toggle('hidden', esIO);
 
             const refBox = document.getElementById('reflection-box');
             if (state.preguntaReflexion) {
@@ -645,6 +671,92 @@
             });
 
             renderUI();
+        };
+    </script>
+
+    <!-- MURAL HISTÓRICO: lectura/escritura en Firestore, con nombre de usuario -->
+    <script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const muralCollection = collection(db, 'artifacts', 'ludosofia-diagramas-venn', 'public', 'data', 'comentarios');
+
+        let currentUser = null;
+        onAuthStateChanged(auth, (user) => { currentUser = user; });
+
+        function renderMural(items) {
+            const list = document.getElementById('mural-list');
+            if (!list) return;
+            if (items.length === 0) {
+                list.innerHTML = '<p class="text-xs text-gray-500 italic">Aún no hay respuestas. ¡Sé el primero!</p>';
+                return;
+            }
+            const escapeHtml = (str) => (str || '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+            list.innerHTML = items.map(it => {
+                const esPregunta = it.tipo === 'pregunta';
+                const etiqueta = esPregunta ? 'Pregunta' : 'Contraejemplo';
+                const colorTexto = esPregunta ? 'text-xul_blue' : 'text-xul_terra';
+                const colorBorde = esPregunta ? 'border-xul_blue' : 'border-xul_terra';
+                const fecha = it.timestamp ? new Date(it.timestamp).toLocaleDateString() : '';
+                return `
+                    <div class="bg-xul_paper border-2 border-xul_ink p-3">
+                        <div class="flex justify-between items-center mb-1 gap-2">
+                            <span class="font-black text-[10px] uppercase tracking-widest ${colorTexto} border-l-4 ${colorBorde} pl-2">${etiqueta} · Tipo ${it.tipoOracion || '?'}</span>
+                            <span class="text-[10px] font-bold text-gray-400 uppercase whitespace-nowrap">${fecha}</span>
+                        </div>
+                        <p class="text-sm text-black font-sans mb-1 whitespace-pre-wrap">${escapeHtml(it.text)}</p>
+                        <p class="text-[10px] font-black text-gray-500 uppercase tracking-widest">— ${escapeHtml(it.authorName) || 'Anónimo'}</p>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        onSnapshot(muralCollection, (snapshot) => {
+            let items = [];
+            snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
+            items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+            renderMural(items.slice(0, 10));
+        }, (error) => console.error('Error cargando el mural:', error));
+
+        window.enviarMural = async function (tipo) {
+            if (!currentUser) return;
+            const inputId = tipo === 'pregunta' ? 'ludico-input' : 'contra-input';
+            const input = document.getElementById(inputId);
+            const text = input.value.trim();
+            if (!text) return;
+
+            const nombre = currentUser.displayName
+                ? currentUser.displayName.split(' ')[0]
+                : currentUser.email.split('@')[0];
+            const s = window.state || {};
+
+            try {
+                await addDoc(muralCollection, {
+                    text,
+                    tipo,
+                    tipoOracion: s.tipoOracion || null,
+                    tema: (s.temaActual && s.temaActual.tema) || null,
+                    sujeto: s.sujeto || null,
+                    predicado: s.predicado || null,
+                    authorId: currentUser.uid,
+                    authorName: nombre,
+                    timestamp: Date.now()
+                });
+                input.value = '';
+            } catch (error) {
+                console.error('Error publicando en el mural:', error);
+            }
         };
     </script>
 </body>
