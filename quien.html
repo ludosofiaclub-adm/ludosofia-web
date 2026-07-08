@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Oráculo | LUDOSOFÍA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_purple: '#8C6BC9'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDF8ED;
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-border { border: 3px solid #2A2A2A; box-shadow: 4px 4px 0px #2A2A2A; transition: all 0.2s ease; }
+        .xul-border:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px #2A2A2A; }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-xul { text-shadow: 2px 2px 0px #6BA4C4; }
+        @keyframes modalFadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
+        @keyframes pulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .pulse-soft { animation: pulseSoft 1.6s ease-in-out infinite; }
+    </style>
+
+    <script>
+        window.CONFIG_ACCESO = {
+            PUBLICO: false,
+            SOCIO: true,
+            SOCIO_FUNDADOR: true
+        };
+    </script>
+    <script type="module" src="seguridad.js"></script>
+</head>
+<body class="antialiased selection:bg-xul_blue selection:text-white relative overflow-x-hidden">
+
+    <!-- Navbar Unificado -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="schole.html" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="index.html#ludoteca" class="text-xul_ink hover:text-xul_terra transition-colors">Ludoteca</a>
+                <a href="index_hack.html" class="text-xul_ink hover:text-xul_terra transition-colors">Hackeados</a>
+
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A]" title="Tu Membresía"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[2px_2px_0px_#2A2A2A] hover:translate-y-[-1px] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="schole.html" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="index.html#ludoteca" class="mobile-link hover:text-xul_terra transition block">Ludoteca</a>
+            <a href="index_hack.html" class="mobile-link hover:text-xul_terra transition block">Hackeados</a>
+
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HEADER DE LA HERRAMIENTA -->
+    <header class="pt-32 pb-10 px-6 border-b-[3px] border-xul_ink bg-white relative overflow-hidden">
+        <svg class="absolute top-0 right-0 w-64 h-64 opacity-10 transform translate-x-1/4 -translate-y-1/4 pointer-events-none" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#2A2A2A" stroke-width="2"/>
+            <path d="M50 20 L50 80 M20 50 L80 50" stroke="#2A2A2A" stroke-width="1"/>
+        </svg>
+
+        <div class="max-w-6xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+            <div class="flex items-center gap-6">
+                <div class="w-16 h-16 bg-xul_terra border-[3px] border-xul_ink flex-shrink-0 flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] transform -rotate-3">
+                    <i data-lucide="sparkles" class="w-8 h-8 text-white"></i>
+                </div>
+                <div>
+                    <div class="inline-block bg-xul_paper border-2 border-xul_ink px-3 py-1 mb-2">
+                        <span class="font-sans font-black text-[10px] uppercase tracking-widest text-black">Lógica Deductiva · Motor Mayéutico</span>
+                    </div>
+                    <h1 class="xul-title text-4xl md:text-5xl font-black text-black tracking-tight mb-1 text-shadow-xul uppercase">
+                        El Oráculo
+                    </h1>
+                    <p class="font-serif text-lg text-gray-600">Adivina por deducción, con las menos preguntas posibles.</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL DEL JUEGO -->
+    <main class="flex-grow py-12 px-6 max-w-6xl mx-auto w-full">
+        <div id="juego-root"></div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-xul_ink text-[#FDF8ED] py-8 px-6 mt-12 border-t-[3px] border-xul_ink">
+        <div class="max-w-6xl mx-auto flex justify-between items-center text-sm font-sans">
+            <span class="font-bold tracking-widest uppercase">La Scholē de Ludosofía</span>
+            <span class="text-gray-400">&copy; 2026. El Oráculo.</span>
+        </div>
+    </footer>
+
+    <!-- MODAL DE PERFIL -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía</p>
+                <p id="profile-role" class="font-black text-xl text-xul_terra uppercase tracking-wider"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════ -->
+    <!-- LÓGICA DEL JUEGO (VANILLA JS)                            -->
+    <!-- ══════════════════════════════════════════════════════ -->
+    <script>
+        lucide.createIcons();
+
+        // 1. BASES DE DATOS (TAXONOMÍAS)
+        const DATA_ANIMALES = {
+            titulo: "El Oráculo Animal",
+            subtitulo: "Modo Práctica: Biología",
+            colorHeader: "bg-xul_yellow",
+            colorSombra: "#EBB134",
+            icono: "paw-print",
+            preguntas: [
+                { clave: 'mamifero', texto: '¿Tiene pelos o toma leche de bebé? (Mamífero)' },
+                { clave: 'vuela', texto: '¿Puede volar?' },
+                { clave: 'nada', texto: '¿Vive en el agua o es gran nadador?' },
+                { clave: 'carnivoro', texto: '¿Come carne?' },
+                { clave: 'domestico', texto: '¿Puede vivir en una casa o granja? (Doméstico)' },
+                { clave: 'patas', texto: '¿Tiene patas para caminar?' },
+                { clave: 'escamas_plumas', texto: '¿Tiene escamas o plumas?' }
+            ],
+            items: [
+                { id: 1, nombre: 'León', mamifero: true, vuela: false, nada: false, carnivoro: true, domestico: false, patas: true, escamas_plumas: false },
+                { id: 2, nombre: 'Perro', mamifero: true, vuela: false, nada: false, carnivoro: true, domestico: true, patas: true, escamas_plumas: false },
+                { id: 3, nombre: 'Delfín', mamifero: true, vuela: false, nada: true, carnivoro: true, domestico: false, patas: false, escamas_plumas: false },
+                { id: 4, nombre: 'Vaca', mamifero: true, vuela: false, nada: false, carnivoro: false, domestico: true, patas: true, escamas_plumas: false },
+                { id: 5, nombre: 'Murciélago', mamifero: true, vuela: true, nada: false, carnivoro: false, domestico: false, patas: true, escamas_plumas: false },
+                { id: 6, nombre: 'Pingüino', mamifero: false, vuela: false, nada: true, carnivoro: true, domestico: false, patas: true, escamas_plumas: true },
+                { id: 7, nombre: 'Águila', mamifero: false, vuela: true, nada: false, carnivoro: true, domestico: false, patas: true, escamas_plumas: true },
+                { id: 8, nombre: 'Loro', mamifero: false, vuela: true, nada: false, carnivoro: false, domestico: true, patas: true, escamas_plumas: true },
+                { id: 9, nombre: 'Cocodrilo', mamifero: false, vuela: false, nada: true, carnivoro: true, domestico: false, patas: true, escamas_plumas: true },
+                { id: 10, nombre: 'Iguana', mamifero: false, vuela: false, nada: false, carnivoro: false, domestico: false, patas: true, escamas_plumas: true },
+                { id: 11, nombre: 'Rana', mamifero: false, vuela: false, nada: true, carnivoro: true, domestico: false, patas: true, escamas_plumas: false },
+                { id: 12, nombre: 'Tiburón', mamifero: false, vuela: false, nada: true, carnivoro: true, domestico: false, patas: false, escamas_plumas: true },
+                { id: 13, nombre: 'Salmón', mamifero: false, vuela: false, nada: true, carnivoro: false, domestico: false, patas: false, escamas_plumas: true },
+                { id: 14, nombre: 'Caballo', mamifero: true, vuela: false, nada: false, carnivoro: false, domestico: true, patas: true, escamas_plumas: false },
+                { id: 15, nombre: 'Gato', mamifero: true, vuela: false, nada: false, carnivoro: true, domestico: true, patas: true, escamas_plumas: false },
+                { id: 16, nombre: 'Serpiente', mamifero: false, vuela: false, nada: false, carnivoro: true, domestico: false, patas: false, escamas_plumas: true },
+            ]
+        };
+
+        const DATA_VALORES = {
+            titulo: "El Oráculo Filosófico",
+            subtitulo: "Modo Mayéutica: Valores Éticos",
+            colorHeader: "bg-xul_purple",
+            colorSombra: "#8C6BC9",
+            icono: "scale",
+            preguntas: [
+                { clave: 'interpersonal', texto: '¿Requiere necesariamente de otra persona para ponerse en práctica? (Dimensión social)' },
+                { clave: 'reparador', texto: '¿Surge como respuesta a un daño, conflicto, peligro o dificultad previa? (Dimensión reactiva)' },
+                { clave: 'institucional', texto: '¿Es un pilar organizativo del Estado, la política o las leyes? (Dimensión institucional)' },
+                { clave: 'afectivo', texto: '¿Nace principalmente de un sentimiento, emoción o conexión con el otro? (Dimensión afectiva)' },
+                { clave: 'autocontrol', texto: '¿Implica frenar un impulso, contener el propio ego o dominar un miedo? (Dimensión de templanza)' },
+                { clave: 'accion_material', texto: '¿Se demuestra principalmente entregando algo material o asumiendo una carga concreta? (Dimensión material)' },
+                { clave: 'verdad', texto: '¿Está directamente ligado a decir la verdad o aceptar la realidad tal como es? (Dimensión de verdad)' }
+            ],
+            items: [
+                { id: 1, nombre: 'Justicia', interpersonal: true, reparador: true, institucional: true, afectivo: false, autocontrol: false, accion_material: false, verdad: false },
+                { id: 2, nombre: 'Libertad', interpersonal: false, reparador: false, institucional: true, afectivo: false, autocontrol: false, accion_material: false, verdad: false },
+                { id: 3, nombre: 'Igualdad', interpersonal: true, reparador: false, institucional: true, afectivo: false, autocontrol: false, accion_material: false, verdad: false },
+                { id: 4, nombre: 'Paz', interpersonal: true, reparador: true, institucional: true, afectivo: true, autocontrol: true, accion_material: false, verdad: false },
+                { id: 5, nombre: 'Empatía', interpersonal: true, reparador: false, institucional: false, afectivo: true, autocontrol: false, accion_material: false, verdad: false },
+                { id: 6, nombre: 'Solidaridad', interpersonal: true, reparador: true, institucional: false, afectivo: true, autocontrol: false, accion_material: true, verdad: false },
+                { id: 7, nombre: 'Gratitud', interpersonal: true, reparador: false, institucional: false, afectivo: true, autocontrol: false, accion_material: false, verdad: true },
+                { id: 8, nombre: 'Lealtad', interpersonal: true, reparador: false, institucional: false, afectivo: true, autocontrol: true, accion_material: false, verdad: false },
+                { id: 9, nombre: 'Perdón', interpersonal: true, reparador: true, institucional: false, afectivo: true, autocontrol: true, accion_material: false, verdad: false },
+                { id: 10, nombre: 'Tolerancia', interpersonal: true, reparador: true, institucional: false, afectivo: false, autocontrol: true, accion_material: false, verdad: false },
+                { id: 11, nombre: 'Respeto', interpersonal: true, reparador: false, institucional: false, afectivo: false, autocontrol: true, accion_material: false, verdad: false },
+                { id: 12, nombre: 'Honestidad', interpersonal: true, reparador: false, institucional: false, afectivo: false, autocontrol: false, accion_material: false, verdad: true },
+                { id: 13, nombre: 'Humildad', interpersonal: false, reparador: false, institucional: false, afectivo: false, autocontrol: true, accion_material: false, verdad: true },
+                { id: 14, nombre: 'Prudencia', interpersonal: false, reparador: false, institucional: false, afectivo: false, autocontrol: true, accion_material: false, verdad: false },
+                { id: 15, nombre: 'Valentía', interpersonal: false, reparador: true, institucional: false, afectivo: false, autocontrol: true, accion_material: false, verdad: false },
+                { id: 16, nombre: 'Responsabilidad', interpersonal: false, reparador: false, institucional: false, afectivo: false, autocontrol: false, accion_material: true, verdad: false },
+            ]
+        };
+
+        const NIVELES = {
+            explorador: { nombre: 'Explorador', limite: 999, desc: 'Preguntas ilimitadas' },
+            estratega: { nombre: 'Estratega', limite: 5, desc: '5 preguntas' },
+            taxonomo: { nombre: 'Filósofo Rey', limite: 4, desc: '4 preguntas (el mínimo teórico)' }
+        };
+
+        // 2. ESTADO GLOBAL
+        const s = {
+            modoJuego: null,
+            nivelActivo: null,
+            incognitaSecreta: null,
+            preguntasHechas: [],
+            intentosRestantes: 0,
+            estadoJuego: 'seleccion_modo',
+            itemsTachados: [],
+            modoArriesgar: false
+        };
+
+        function datosActivos() { return s.modoJuego === 'animales' ? DATA_ANIMALES : DATA_VALORES; }
+
+        function seleccionarModo(modo) {
+            s.modoJuego = modo;
+            s.estadoJuego = 'inicio';
+            render();
+        }
+
+        function iniciarJuego(nivel) {
+            const elementos = datosActivos().items;
+            s.incognitaSecreta = elementos[Math.floor(Math.random() * elementos.length)];
+            s.nivelActivo = nivel;
+            s.intentosRestantes = NIVELES[nivel].limite;
+            s.preguntasHechas = [];
+            s.itemsTachados = [];
+            s.modoArriesgar = false;
+            s.estadoJuego = 'jugando';
+            render();
+        }
+
+        function hacerPregunta(clave, texto) {
+            if (s.estadoJuego !== 'jugando') return;
+            if (s.preguntasHechas.some(p => p.texto === texto)) return;
+            const respuesta = s.incognitaSecreta[clave] ? 'SÍ' : 'NO';
+            s.preguntasHechas.push({ texto, respuesta });
+            s.intentosRestantes -= 1;
+            if (s.intentosRestantes <= 0) s.estadoJuego = 'adivinar';
+            render();
+        }
+
+        function enviarPreguntaSeleccionada() {
+            const select = document.getElementById('select-pregunta');
+            if (!select || !select.value) return;
+            const pregunta = datosActivos().preguntas.find(p => p.clave === select.value);
+            if (!pregunta) return;
+            hacerPregunta(pregunta.clave, pregunta.texto);
+        }
+
+        function toggleTacharItem(idItem) {
+            const i = s.itemsTachados.indexOf(idItem);
+            if (i >= 0) s.itemsTachados.splice(i, 1);
+            else s.itemsTachados.push(idItem);
+            render();
+        }
+
+        function toggleModoArriesgar() {
+            s.modoArriesgar = !s.modoArriesgar;
+            render();
+        }
+
+        function arriesgarIncognita(idItem) {
+            s.estadoJuego = (idItem === s.incognitaSecreta.id) ? 'ganado' : 'perdido';
+            render();
+        }
+
+        function volverAlMenu() {
+            s.modoJuego = null;
+            s.estadoJuego = 'seleccion_modo';
+            render();
+        }
+
+        function jugarDeNuevo() {
+            s.estadoJuego = 'inicio';
+            render();
+        }
+
+        // 3. RENDER
+        function render() {
+            const root = document.getElementById('juego-root');
+            root.innerHTML = renderEstado();
+            lucide.createIcons();
+        }
+
+        function renderEstado() {
+            if (s.estadoJuego === 'seleccion_modo') return renderSeleccionModo();
+
+            const d = datosActivos();
+            let cuerpo = '';
+            if (s.estadoJuego === 'inicio') cuerpo = renderInicio(d);
+            else if (s.estadoJuego === 'jugando' || s.estadoJuego === 'adivinar') cuerpo = renderPartida(d);
+            else if (s.estadoJuego === 'ganado' || s.estadoJuego === 'perdido') cuerpo = renderResultado(d);
+
+            return `
+                <div class="mb-6">
+                    <button onclick="volverAlMenu()" class="font-bold border-2 border-xul_ink px-4 py-2 bg-white hover:bg-xul_ink hover:text-white uppercase text-sm shadow-[3px_3px_0px_#2A2A2A] transition-all">
+                        ← Volver al menú
+                    </button>
+                </div>
+                <div class="bg-white border-[3px] border-xul_ink p-6 md:p-10 shadow-[10px_10px_0px_#2A2A2A]">
+                    <header class="text-center mb-10 border-b-[3px] border-xul_ink pb-6">
+                        <h2 class="xul-title text-3xl md:text-4xl font-black text-xul_ink text-shadow-xul">${d.titulo}</h2>
+                        <span class="inline-block mt-4 font-sans font-black text-sm uppercase tracking-widest px-4 py-2 border-[3px] border-xul_ink ${d.colorHeader}">${d.subtitulo}</span>
+                    </header>
+                    ${cuerpo}
+                </div>
+            `;
+        }
+
+        function renderSeleccionModo() {
+            return `
+                <div class="border-[3px] border-xul_ink bg-white p-8 md:p-14 shadow-[10px_10px_0px_#2A2A2A] text-center">
+                    <h2 class="font-sans font-black text-2xl uppercase mb-8 text-xul_ink">Selecciona el paradigma de simulación</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <button onclick="seleccionarModo('animales')" class="p-10 bg-xul_yellow border-[3px] border-xul_ink shadow-[6px_6px_0px_#2A2A2A] hover:-translate-y-1 hover:translate-x-0 hover:shadow-[9px_9px_0px_#2A2A2A] transition-all flex flex-col items-center group">
+                            <i data-lucide="paw-print" class="w-10 h-10 mb-4 text-xul_ink group-hover:scale-110 transition-transform"></i>
+                            <span class="xul-title text-2xl font-bold text-xul_ink">Modo Práctica</span>
+                            <span class="font-sans text-xs font-black mt-3 bg-xul_ink text-white px-3 py-1 uppercase tracking-widest">Taxonomía Animal</span>
+                        </button>
+                        <button onclick="seleccionarModo('valores')" class="p-10 bg-xul_purple border-[3px] border-xul_ink shadow-[6px_6px_0px_#2A2A2A] hover:-translate-y-1 hover:translate-x-0 hover:shadow-[9px_9px_0px_#2A2A2A] transition-all flex flex-col items-center group">
+                            <i data-lucide="scale" class="w-10 h-10 mb-4 text-white group-hover:scale-110 transition-transform"></i>
+                            <span class="xul-title text-2xl font-bold text-white">Modo Mayéutica</span>
+                            <span class="font-sans text-xs font-black mt-3 bg-xul_ink text-white px-3 py-1 uppercase tracking-widest">Valores Éticos</span>
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderInicio(d) {
+            return `
+                <h3 class="font-sans font-black text-xl uppercase text-center mb-8 text-xul_ink">Selecciona tu nivel de desafío</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    ${Object.entries(NIVELES).map(([clave, datos]) => `
+                        <button onclick="iniciarJuego('${clave}')" class="p-8 bg-xul_blue text-white font-black text-xl border-[3px] border-xul_ink shadow-[5px_5px_0px_#2A2A2A] hover:-translate-y-1 hover:shadow-[8px_8px_0px_#2A2A2A] hover:bg-xul_terra transition-all uppercase flex flex-col items-center justify-center text-center gap-1">
+                            <span class="xul-title text-2xl">${datos.nombre}</span>
+                            <span class="block font-sans text-xs font-bold mt-3 bg-xul_ink text-white px-3 py-1 normal-case tracking-wide">${datos.desc}</span>
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function renderPartida(d) {
+            const preguntasPendientes = d.preguntas.filter(p => !s.preguntasHechas.some(ph => ph.texto === p.texto));
+            const selectorPreguntas = `
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <select id="select-pregunta" class="flex-1 p-4 border-2 border-xul_ink bg-white font-bold shadow-[3px_3px_0px_#2A2A2A] focus:outline-none focus:border-xul_terra text-sm md:text-base" ${preguntasPendientes.length === 0 ? 'disabled' : ''}>
+                        ${preguntasPendientes.length === 0
+                            ? '<option>No quedan preguntas disponibles</option>'
+                            : preguntasPendientes.map(p => `<option value="${p.clave}">${p.texto}</option>`).join('')}
+                    </select>
+                    <button onclick="enviarPreguntaSeleccionada()" ${preguntasPendientes.length === 0 ? 'disabled' : ''}
+                        class="bg-xul_ink text-white font-black uppercase tracking-widest px-6 py-3 border-2 border-xul_ink shadow-[3px_3px_0px_#2A2A2A] hover:bg-xul_terra disabled:opacity-40 disabled:hover:bg-xul_ink disabled:cursor-not-allowed active:translate-y-1 active:translate-x-1 active:shadow-none transition-all text-sm">
+                        Preguntar
+                    </button>
+                </div>
+            `;
+
+            const historial = s.preguntasHechas.length > 0 ? `
+                <div class="mt-8 border-t-[3px] border-xul_ink pt-6">
+                    <h4 class="font-sans font-black uppercase text-sm mb-4 bg-xul_ink text-white inline-block px-3 py-1 tracking-widest">Historial</h4>
+                    <div class="space-y-2">
+                        ${s.preguntasHechas.map(ph => `
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-3 bg-white border-2 border-xul_ink font-bold text-sm gap-2">
+                                <span class="pr-4">${ph.texto}</span>
+                                <span class="font-black px-3 py-1 border-2 border-xul_ink self-end sm:self-auto ${ph.respuesta === 'SÍ' ? 'bg-xul_green text-white' : 'bg-xul_terra text-white'}">${ph.respuesta}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : '';
+
+            const candidatos = d.items.map(item => {
+                const tachado = s.itemsTachados.includes(item.id);
+                const puedeArriesgar = s.estadoJuego === 'adivinar' || s.modoArriesgar;
+                return `
+                    <button onclick="${puedeArriesgar ? `arriesgarIncognita(${item.id})` : `toggleTacharItem(${item.id})`}"
+                        class="p-3 sm:p-4 border-2 border-xul_ink font-black text-sm sm:text-base text-center uppercase shadow-[3px_3px_0px_#2A2A2A] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all ${tachado ? 'line-through opacity-40 bg-gray-200 hover:bg-gray-300 text-gray-500' : 'bg-white hover:bg-xul_blue hover:text-white'}">
+                        ${item.nombre}
+                    </button>
+                `;
+            }).join('');
+
+            return `
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <!-- Panel de preguntas -->
+                    <div class="flex-1 border-[3px] border-xul_ink p-6 bg-xul_paper">
+                        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 border-b-[3px] border-xul_ink pb-4 gap-4">
+                            <h3 class="font-sans font-black text-lg uppercase text-xul_ink">Preguntar</h3>
+                            <span class="bg-xul_terra text-white px-4 py-2 font-black border-2 border-xul_ink shadow-[3px_3px_0px_#2A2A2A] text-lg">
+                                QUEDAN: ${s.intentosRestantes > 100 ? '∞' : s.intentosRestantes}
+                            </span>
+                        </div>
+
+                        ${s.estadoJuego === 'jugando'
+                            ? selectorPreguntas
+                            : `<div class="bg-xul_terra text-white p-6 font-black text-lg border-[3px] border-xul_ink text-center uppercase pulse-soft">¡Límite alcanzado!<br/>Debes arriesgar ahora.</div>`}
+
+                        ${historial}
+                    </div>
+
+                    <!-- Panel de candidatos -->
+                    <div class="flex-1 border-[3px] border-xul_ink p-6 bg-white">
+                        <h3 class="font-sans font-black text-lg uppercase mb-6 border-b-[3px] border-xul_ink pb-4 text-xul_ink">
+                            Candidatos (${s.modoJuego === 'animales' ? 'Fauna' : 'Conceptos'})
+                        </h3>
+
+                        ${s.estadoJuego === 'jugando' ? `
+                            <button onclick="toggleModoArriesgar()" class="w-full p-3 mb-6 font-black uppercase text-sm border-[3px] border-xul_ink shadow-[3px_3px_0px_#2A2A2A] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all ${s.modoArriesgar ? 'bg-xul_terra text-white pulse-soft' : 'bg-xul_yellow text-xul_ink'}">
+                                ${s.modoArriesgar ? 'Cancelar modo arriesgar' : 'Activar modo arriesgar'}
+                            </button>
+                        ` : ''}
+
+                        <div class="grid grid-cols-2 gap-3 sm:gap-4">${candidatos}</div>
+
+                        ${(!s.modoArriesgar && s.estadoJuego === 'jugando') ? `
+                            <p class="text-xs font-bold mt-6 text-xul_ink text-center bg-xul_paper border-2 border-xul_ink p-2">
+                                Haz clic en un concepto para tacharlo o destacharlo y reducir tus opciones.
+                            </p>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderResultado(d) {
+            const gano = s.estadoJuego === 'ganado';
+            return `
+                <div class="p-8 md:p-10 border-[3px] border-xul_ink text-center shadow-[8px_8px_0px_#2A2A2A] ${gano ? 'bg-xul_green' : 'bg-xul_terra'}">
+                    <h2 class="xul-title text-3xl md:text-4xl font-black uppercase text-white mb-6">
+                        ${gano ? '¡Deducción perfecta!' : '¡Error de lógica!'}
+                    </h2>
+                    <div class="bg-white border-[3px] border-xul_ink p-6 inline-block mb-8">
+                        <p class="font-sans text-sm font-bold text-gray-500 mb-2 uppercase tracking-widest">
+                            ${s.modoJuego === 'animales' ? 'El animal' : 'El valor'} secreto era:
+                        </p>
+                        <p class="xul-title text-3xl md:text-4xl font-black text-xul_ink">${s.incognitaSecreta.nombre}</p>
+                    </div>
+                    <br />
+                    <button onclick="jugarDeNuevo()" class="px-8 py-4 bg-xul_yellow border-[3px] border-xul_ink font-black text-lg hover:bg-white text-xul_ink uppercase shadow-[5px_5px_0px_#2A2A2A] active:translate-y-1 active:translate-x-1 active:shadow-none transition-all">
+                        Jugar de nuevo
+                    </button>
+                </div>
+            `;
+        }
+
+        render();
+    </script>
+
+    <!-- FIREBASE: navbar + perfil -->
+    <script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const btnMenu = document.getElementById('mobile-menu-btn');
+        const menuMobile = document.getElementById('mobile-menu');
+        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+
+        const loginBtnDesktop = document.getElementById('login-btn-desktop');
+        const loginBtnMobile = document.getElementById('login-btn-mobile');
+        const profileModal = document.getElementById('profile-modal');
+
+        function toggleProfileModal() {
+            profileModal.classList.toggle('hidden');
+            if (menuMobile && !menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
+        }
+
+        function updateUIWithRole(rol) {
+            const r = (rol || '').toUpperCase().trim();
+            let iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+            if (r === 'FUNDADOR') iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            else if (r === 'SOCIO') iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            const deskBadge = document.getElementById('badge-container-desktop');
+            if (deskBadge) { deskBadge.innerHTML = iconHtml; deskBadge.style.display = 'flex'; }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) return;
+
+            const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+            document.getElementById('login-text-desktop').innerText = nombre.toUpperCase();
+            if (document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = nombre.toUpperCase();
+            loginBtnDesktop.onclick = toggleProfileModal;
+            if (loginBtnMobile) loginBtnMobile.onclick = toggleProfileModal;
+            document.getElementById('profile-email').innerText = user.email;
+
+            try {
+                const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                if (docSnap.exists()) {
+                    const rol = (docSnap.data().rol || '').toUpperCase();
+                    document.getElementById('profile-role').innerText = rol;
+                    updateUIWithRole(rol);
+                }
+            } catch (e) { console.error(e); }
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.reload());
+        });
+    </script>
+</body>
+</html>
