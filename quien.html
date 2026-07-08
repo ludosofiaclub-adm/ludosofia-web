@@ -43,6 +43,7 @@
         @keyframes modalFadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
         @keyframes pulseSoft { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
         .pulse-soft { animation: pulseSoft 1.6s ease-in-out infinite; }
     </style>
 
@@ -256,7 +257,9 @@
             intentosRestantes: 0,
             estadoJuego: 'seleccion_modo',
             itemsTachados: [],
-            modoArriesgar: false
+            modoArriesgar: false,
+            preguntaSeleccionada: null,
+            dropdownAbierto: false
         };
 
         function datosActivos() { return s.modoJuego === 'animales' ? DATA_ANIMALES : DATA_VALORES; }
@@ -275,6 +278,8 @@
             s.preguntasHechas = [];
             s.itemsTachados = [];
             s.modoArriesgar = false;
+            s.preguntaSeleccionada = null;
+            s.dropdownAbierto = false;
             s.estadoJuego = 'jugando';
             render();
         }
@@ -285,17 +290,36 @@
             const respuesta = s.incognitaSecreta[clave] ? 'SÍ' : 'NO';
             s.preguntasHechas.push({ texto, respuesta });
             s.intentosRestantes -= 1;
+            s.preguntaSeleccionada = null;
+            s.dropdownAbierto = false;
             if (s.intentosRestantes <= 0) s.estadoJuego = 'adivinar';
             render();
         }
 
+        function toggleDropdownPreguntas() {
+            s.dropdownAbierto = !s.dropdownAbierto;
+            render();
+        }
+
+        function seleccionarPreguntaDropdown(clave) {
+            s.preguntaSeleccionada = clave;
+            s.dropdownAbierto = false;
+            render();
+        }
+
         function enviarPreguntaSeleccionada() {
-            const select = document.getElementById('select-pregunta');
-            if (!select || !select.value) return;
-            const pregunta = datosActivos().preguntas.find(p => p.clave === select.value);
+            if (!s.preguntaSeleccionada) return;
+            const pregunta = datosActivos().preguntas.find(p => p.clave === s.preguntaSeleccionada);
             if (!pregunta) return;
             hacerPregunta(pregunta.clave, pregunta.texto);
         }
+
+        document.addEventListener('click', (e) => {
+            if (s.dropdownAbierto && !e.target.closest('#pregunta-dropdown')) {
+                s.dropdownAbierto = false;
+                render();
+            }
+        });
 
         function toggleTacharItem(idItem) {
             const i = s.itemsTachados.indexOf(idItem);
@@ -393,14 +417,29 @@
 
         function renderPartida(d) {
             const preguntasPendientes = d.preguntas.filter(p => !s.preguntasHechas.some(ph => ph.texto === p.texto));
+            const sinPreguntas = preguntasPendientes.length === 0;
+            const preguntaActual = s.preguntaSeleccionada && preguntasPendientes.find(p => p.clave === s.preguntaSeleccionada);
+
             const selectorPreguntas = `
                 <div class="flex flex-col sm:flex-row gap-3">
-                    <select id="select-pregunta" class="flex-1 p-4 border-2 border-xul_ink bg-white font-bold shadow-[3px_3px_0px_#2A2A2A] focus:outline-none focus:border-xul_terra text-sm md:text-base" ${preguntasPendientes.length === 0 ? 'disabled' : ''}>
-                        ${preguntasPendientes.length === 0
-                            ? '<option>No quedan preguntas disponibles</option>'
-                            : preguntasPendientes.map(p => `<option value="${p.clave}">${p.texto}</option>`).join('')}
-                    </select>
-                    <button onclick="enviarPreguntaSeleccionada()" ${preguntasPendientes.length === 0 ? 'disabled' : ''}
+                    <div id="pregunta-dropdown" class="relative flex-1">
+                        <button type="button" onclick="toggleDropdownPreguntas()" ${sinPreguntas ? 'disabled' : ''}
+                            class="w-full flex items-center justify-between gap-3 text-left p-4 border-2 border-xul_ink bg-white font-bold shadow-[3px_3px_0px_#2A2A2A] focus:outline-none disabled:opacity-40 disabled:cursor-not-allowed text-sm md:text-base">
+                            <span class="line-clamp-2 leading-snug">${sinPreguntas ? 'No quedan preguntas disponibles' : (preguntaActual ? preguntaActual.texto : 'Selecciona una pregunta...')}</span>
+                            <i data-lucide="chevron-down" class="w-4 h-4 flex-shrink-0 transition-transform ${s.dropdownAbierto ? 'rotate-180' : ''}"></i>
+                        </button>
+                        ${s.dropdownAbierto && !sinPreguntas ? `
+                            <div class="absolute z-20 top-full left-0 right-0 mt-2 bg-white border-2 border-xul_ink shadow-[4px_4px_0px_#2A2A2A] max-h-64 overflow-y-auto">
+                                ${preguntasPendientes.map(p => `
+                                    <button type="button" onclick="seleccionarPreguntaDropdown('${p.clave}')"
+                                        class="w-full text-left p-3 border-b-2 border-xul_ink/10 last:border-b-0 hover:bg-xul_yellow font-bold text-sm leading-snug line-clamp-2 transition-colors">
+                                        ${p.texto}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    <button onclick="enviarPreguntaSeleccionada()" ${(sinPreguntas || !s.preguntaSeleccionada) ? 'disabled' : ''}
                         class="bg-xul_ink text-white font-black uppercase tracking-widest px-6 py-3 border-2 border-xul_ink shadow-[3px_3px_0px_#2A2A2A] hover:bg-xul_terra disabled:opacity-40 disabled:hover:bg-xul_ink disabled:cursor-not-allowed active:translate-y-1 active:translate-x-1 active:shadow-none transition-all text-sm">
                         Preguntar
                     </button>
