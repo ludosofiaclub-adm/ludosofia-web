@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Juego de las Condiciones | LUDOSOFÍA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        xul_paper: '#FDF8ED',
+                        xul_ink: '#2A2A2A',
+                        xul_blue: '#6BA4C4',
+                        xul_terra: '#D1623A',
+                        xul_yellow: '#EBB134',
+                        xul_green: '#75B07E',
+                        xul_pink: '#C96B8C',
+                        xul_silver: '#C4CAD0',
+                        xul_orange: '#E87524'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['"Outfit"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #FDF8ED;
+            color: #2A2A2A;
+            background-image: url('data:image/svg+xml,%3Csvg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noise"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100" height="100" filter="url(%23noise)" opacity="0.06"/%3E%3C/svg%3E');
+        }
+        .xul-title { font-family: 'Cormorant Garamond', serif; }
+        .text-shadow-xul { text-shadow: 2px 2px 0px #6BA4C4; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #FDF8ED; border-left: 1px solid #2A2A2A; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #2A2A2A; }
+        @keyframes modalFadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-animate { animation: modalFadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .ring {
+            transition: transform 3000ms cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform-box: view-box;
+            transform-origin: 200px 200px;
+        }
+        #selector-tema { appearance: none; -webkit-appearance: none; }
+    </style>
+
+    <script>
+        window.CONFIG_ACCESO = {
+            PUBLICO: false,
+            SOCIO: true,
+            SOCIO_FUNDADOR: true
+        };
+    </script>
+    <script type="module" src="seguridad.js"></script>
+</head>
+<body class="antialiased selection:bg-xul_green selection:text-white relative overflow-x-hidden">
+
+    <!-- Navbar Unificado -->
+    <nav class="fixed w-full z-50 bg-[#FDF8ED] border-b-[3px] border-xul_ink transition-all duration-300">
+        <div class="max-w-6xl mx-auto flex justify-between items-center py-3 px-6">
+            <a href="index.html" class="flex items-center space-x-3 cursor-pointer group">
+                <svg viewBox="0 0 100 100" class="w-10 h-10 group-hover:scale-110 transition-transform">
+                    <polygon points="50,20 85,35 50,50 15,35" fill="#6BA4C4" stroke="#2A2A2A" stroke-width="2"/>
+                    <polygon points="20,45 45,45 45,85 20,85" fill="#D1623A" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="6" fill="#FDF8ED" stroke="#2A2A2A" stroke-width="2"/>
+                    <circle cx="32.5" cy="65" r="2" fill="#2A2A2A"/>
+                </svg>
+                <div class="flex flex-col">
+                    <span class="xul-title font-bold text-xl leading-none">LUDOSOFÍA</span>
+                    <span class="text-[9px] font-bold uppercase tracking-widest text-xul_terra">Club de Filosofía</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase tracking-wider">
+                <a href="ejercicios.html" class="text-xul_ink hover:text-xul_terra transition-colors">Ejercicios</a>
+                <a href="schole.html" class="text-xul_ink hover:text-xul_terra transition-colors">Scholē</a>
+                <a href="index_hack.html" class="text-xul_ink hover:text-xul_terra transition-colors">Hackeados</a>
+
+                <div id="badge-container-desktop" style="display: none;" class="items-center justify-center w-10 h-10 bg-white border-2 border-xul_ink rounded-full shadow-[2px_2px_0px_#2A2A2A]" title="Tu Membresía"></div>
+
+                <button id="login-btn-desktop" class="bg-xul_yellow border-2 border-xul_ink px-6 py-2 shadow-[2px_2px_0px_#2A2A2A] hover:translate-y-[-1px] transition-all uppercase flex items-center justify-center gap-2">
+                    <span id="login-text-desktop">Ingresar</span>
+                </button>
+            </div>
+
+            <div class="md:hidden">
+                <button id="mobile-menu-btn" class="focus:outline-none active:scale-95 transition-transform">
+                    <i data-lucide="menu" class="w-8 h-8 text-xul_ink"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-[#FDF8ED] border-t-[3px] border-xul_ink px-6 py-6 flex flex-col space-y-6 font-bold text-sm uppercase tracking-wider shadow-xl absolute w-full left-0 top-[100%]">
+            <a href="ejercicios.html" class="mobile-link hover:text-xul_terra transition block">Ejercicios</a>
+            <a href="schole.html" class="mobile-link hover:text-xul_terra transition block">Scholē</a>
+            <a href="index_hack.html" class="mobile-link hover:text-xul_terra transition block">Hackeados</a>
+            <button id="login-btn-mobile" class="mobile-link bg-xul_yellow border-2 border-xul_ink px-6 py-3 text-center w-full uppercase flex items-center justify-center gap-2">
+                <span id="login-text-mobile">Ingresar</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="pt-32 pb-10 px-6 border-b-[3px] border-xul_ink bg-white relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(#75B07E 1px, transparent 1px), linear-gradient(90deg, #75B07E 1px, transparent 1px); background-size: 40px 40px;"></div>
+
+        <div class="max-w-5xl mx-auto relative z-10 flex flex-col md:flex-row items-center gap-8">
+            <div class="w-16 h-16 md:w-20 md:h-20 bg-xul_green border-[3px] border-xul_ink flex-shrink-0 flex items-center justify-center shadow-[6px_6px_0px_#2A2A2A] transform -rotate-3">
+                <i data-lucide="rotate-cw" class="w-8 h-8 md:w-10 md:h-10 text-xul_ink"></i>
+            </div>
+            <div class="text-center md:text-left">
+                <div class="flex flex-wrap justify-center md:justify-start gap-3 mb-3">
+                    <div class="inline-block bg-xul_paper border-2 border-xul_ink px-3 py-1">
+                        <span class="font-sans font-black text-[10px] uppercase tracking-widest text-black">Módulo I · Lógica Formal</span>
+                    </div>
+                    <div class="inline-block bg-xul_terra border-2 border-xul_ink px-3 py-1">
+                        <span id="tema-actual-badge" class="font-sans font-black text-[10px] uppercase tracking-widest text-white">Tema actual: LA LIBERTAD</span>
+                    </div>
+                </div>
+                <h1 class="xul-title text-4xl md:text-5xl font-black text-black tracking-tight mb-2 text-shadow-xul uppercase">
+                    El Juego de las Condiciones
+                </h1>
+                <p class="font-serif text-lg md:text-xl max-w-2xl text-gray-700 italic">
+                    Mecanismo analítico para la generación de silogismos y la exploración de sus consecuencias estructurales, aplicado al debate sobre la libertad.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-6 py-16">
+
+        <!-- 1. RULETA GENERADORA -->
+        <section class="mb-20">
+            <div class="flex items-center gap-4 mb-10">
+                <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#75B07E] flex-shrink-0">
+                    <span class="text-white font-black text-xl font-sans">1</span>
+                </div>
+                <h2 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">La Ruleta Generadora</h2>
+                <span class="ml-auto text-xs font-bold text-xul_terra tracking-widest uppercase hidden sm:inline" id="estado-ruleta">EN REPOSO</span>
+            </div>
+
+            <div class="bg-white border-[3px] border-xul_ink p-8 md:p-12 shadow-[8px_8px_0px_#2A2A2A] flex flex-col items-center">
+
+                <!-- CARTEL SELECTOR DE TEMAS -->
+                <div class="w-full flex justify-center mb-8">
+                    <div class="inline-flex items-center gap-3 bg-xul_ink border-[3px] border-xul_ink px-5 py-3 shadow-[5px_5px_0px_#75B07E] transform -rotate-1">
+                        <i data-lucide="scroll" class="w-5 h-5 text-xul_yellow flex-shrink-0"></i>
+                        <label for="selector-tema" class="text-white font-black text-[10px] uppercase tracking-widest">Temática:</label>
+                        <select id="selector-tema" onchange="cambiarTema(this.value)" class="bg-xul_yellow text-xul_ink font-black text-sm uppercase tracking-widest border-2 border-xul_ink px-3 py-1 focus:outline-none cursor-pointer"></select>
+                    </div>
+                </div>
+
+                <!-- RULETA (SVG: 4 anillos concéntricos con las opciones escritas en cada gajo) -->
+                <div class="relative w-full max-w-[420px] sm:max-w-[560px] aspect-square mb-6 rounded-full shadow-[8px_8px_0px_#2A2A2A]">
+                    <div class="absolute -top-4 left-1/2 -translate-x-1/2 z-20 w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-t-[20px] border-t-xul_ink"></div>
+
+                    <svg id="ruleta-svg" viewBox="0 0 400 400" class="w-full h-full">
+                        <g id="g-sujeto" class="ring"></g>
+                        <g id="g-predicado" class="ring"></g>
+                        <g id="g-cuantificador" class="ring"></g>
+                        <g id="g-operador" class="ring"></g>
+                        <circle cx="200" cy="200" r="198" fill="none" stroke="#2A2A2A" stroke-width="6"/>
+                        <circle cx="200" cy="200" r="34" fill="#2A2A2A" stroke="#FDF8ED" stroke-width="4"/>
+                    </svg>
+
+                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+                        <i data-lucide="settings-2" class="w-6 h-6 text-xul_paper"></i>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap justify-center gap-3 mb-8 text-[10px] font-black uppercase tracking-widest">
+                    <span class="flex items-center gap-1"><i class="w-3 h-3 inline-block rounded-full" style="background:#6BA4C4"></i>Círculo 3 · Sujeto</span>
+                    <span class="flex items-center gap-1"><i class="w-3 h-3 inline-block rounded-full" style="background:#EBB134"></i>Círculo 4 · Predicado</span>
+                    <span class="flex items-center gap-1"><i class="w-3 h-3 inline-block rounded-full" style="background:#D1623A"></i>Círculo 2 · Cuantificador</span>
+                    <span class="flex items-center gap-1"><i class="w-3 h-3 inline-block rounded-full" style="background:#2A2A2A"></i>Círculo 1 · El Hechizo</span>
+                </div>
+                <p class="text-[11px] text-gray-500 italic text-center max-w-md mb-8">
+                    Cada gajo esconde su opción tras un símbolo enigmático. Recién al detenerse la ruleta se descifra en la lectura de resultados.
+                </p>
+
+                <!-- Girar por partes -->
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 w-full mb-6">
+                    <button onclick="girarAnillo('operador')" id="btn-operador" class="bg-white border-2 border-xul_ink py-2 font-black uppercase tracking-widest text-xs hover:bg-xul_ink hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-[3px_3px_0px_#2A2A2A]">
+                        Tirar el Hechizo
+                    </button>
+                    <button onclick="girarAnillo('cuantificador')" id="btn-cuantificador" class="bg-white border-2 border-xul_ink py-2 font-black uppercase tracking-widest text-xs hover:bg-xul_ink hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-[3px_3px_0px_#2A2A2A]">
+                        Tirar Cuantificador
+                    </button>
+                    <button onclick="girarAnillo('sujeto')" id="btn-sujeto" class="bg-white border-2 border-xul_ink py-2 font-black uppercase tracking-widest text-xs hover:bg-xul_ink hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-[3px_3px_0px_#2A2A2A]">
+                        Tirar Sujeto
+                    </button>
+                    <button onclick="girarAnillo('predicado')" id="btn-predicado" class="bg-white border-2 border-xul_ink py-2 font-black uppercase tracking-widest text-xs hover:bg-xul_ink hover:text-white transition-colors disabled:opacity-40 disabled:cursor-not-allowed shadow-[3px_3px_0px_#2A2A2A]">
+                        Tirar Predicado
+                    </button>
+                </div>
+
+                <button id="btn-girar-todo" onclick="girarTodo()" class="w-full md:w-auto bg-xul_terra text-white border-[3px] border-xul_ink px-10 py-4 font-black uppercase tracking-widest text-lg hover:bg-xul_ink transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-[6px_6px_0px_#2A2A2A] hover:-translate-y-1">
+                    Engranar Matriz Completa
+                </button>
+
+                <!-- LECTURA DE RESULTADOS -->
+                <div id="lectura-resultado" class="hidden w-full mt-10 animate-fade-in">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        <div class="relative bg-xul_paper border-[3px] border-xul_ink p-4 h-24 flex flex-col justify-center items-center shadow-[4px_4px_0px_#2A2A2A]">
+                            <span class="absolute top-2 left-2 text-[9px] font-bold text-xul_terra tracking-widest">EL HECHIZO</span>
+                            <span id="val-operador" class="text-center font-bold uppercase text-sm xul-title">---</span>
+                        </div>
+                        <div class="relative bg-xul_paper border-[3px] border-xul_ink p-4 h-24 flex flex-col justify-center items-center shadow-[4px_4px_0px_#D1623A]">
+                            <span class="absolute top-2 left-2 text-[9px] font-bold text-xul_terra tracking-widest">CUANTIF.</span>
+                            <span id="val-cuantificador" class="text-center font-bold uppercase text-sm xul-title">---</span>
+                        </div>
+                        <div class="relative bg-xul_paper border-[3px] border-xul_ink p-4 h-24 flex flex-col justify-center items-center shadow-[4px_4px_0px_#6BA4C4]">
+                            <span class="absolute top-2 left-2 text-[9px] font-bold text-xul_terra tracking-widest">SUJETO</span>
+                            <span id="val-sujeto" class="text-center font-bold uppercase text-sm xul-title">---</span>
+                        </div>
+                        <div class="relative bg-xul_paper border-[3px] border-xul_ink p-4 h-24 flex flex-col justify-center items-center shadow-[4px_4px_0px_#EBB134]">
+                            <span class="absolute top-2 left-2 text-[9px] font-bold text-xul_terra tracking-widest">PREDICADO</span>
+                            <span id="val-predicado" class="text-center font-bold uppercase text-sm xul-title">---</span>
+                        </div>
+                    </div>
+
+                    <div class="text-center border-y-2 border-xul_ink py-6 bg-xul_paper">
+                        <p class="text-xs font-bold tracking-widest text-xul_terra mb-2 uppercase">Premisa Obtenida</p>
+                        <h3 id="val-premisa" class="xul-title text-2xl md:text-4xl font-black uppercase text-xul_ink"></h3>
+                        <div class="mt-4 inline-block border-[2px] border-xul_ink px-4 py-1 font-bold text-sm tracking-widest bg-xul_ink text-white uppercase">
+                            El Hechizo: <span id="val-instruccion"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. ZONA DE ANÁLISIS -->
+        <section id="zona-analisis" class="hidden mb-20 animate-fade-in">
+            <div class="flex items-center gap-4 mb-10">
+                <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#75B07E] flex-shrink-0">
+                    <span class="text-white font-black text-xl font-sans">2</span>
+                </div>
+                <h2 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Zona de Análisis</h2>
+            </div>
+
+            <div class="bg-white border-[4px] border-xul_ink p-8 md:p-12 shadow-[10px_10px_0px_#6BA4C4]">
+                <form id="form-analisis" class="space-y-8" onsubmit="handlePublish(event)">
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-widest text-xul_terra mb-2">I. Transformación estructural</label>
+                        <p class="text-xs mb-3 text-gray-500">Reescribí la premisa aplicando el hechizo indicado en la matriz.</p>
+                        <input type="text" id="input-transformacion" placeholder="Escribí la oración transformada..."
+                            class="w-full bg-transparent border-b-[3px] border-xul_ink py-3 text-lg font-bold placeholder-xul_silver focus:outline-none focus:border-xul_terra transition-colors">
+                    </div>
+
+                    <div class="pt-6 border-t border-dashed border-xul_silver">
+                        <label class="block text-xs font-black uppercase tracking-widest text-xul_terra mb-2">II. Proyección de Consecuencias</label>
+                        <p class="text-xs mb-6 text-gray-500">Asumiendo la premisa generada como una verdad universal, redactá tres silogismos condicionales estrictos (Si X, entonces Y).</p>
+
+                        <div class="space-y-6 pl-4 md:pl-8 border-l-[3px] border-xul_terra">
+                            <div class="relative">
+                                <span class="absolute -left-10 md:-left-14 top-3 font-black text-xul_terra text-lg">1.</span>
+                                <input type="text" id="input-consecuencia1" placeholder="Si..., entonces..." class="w-full bg-transparent border-b-2 border-xul_ink py-3 text-lg placeholder-xul_silver focus:outline-none focus:border-xul_terra transition-colors">
+                            </div>
+                            <div class="relative">
+                                <span class="absolute -left-10 md:-left-14 top-3 font-black text-xul_terra text-lg">2.</span>
+                                <input type="text" id="input-consecuencia2" placeholder="Si..., entonces..." class="w-full bg-transparent border-b-2 border-xul_ink py-3 text-lg placeholder-xul_silver focus:outline-none focus:border-xul_terra transition-colors">
+                            </div>
+                            <div class="relative">
+                                <span class="absolute -left-10 md:-left-14 top-3 font-black text-xul_terra text-lg">3.</span>
+                                <input type="text" id="input-consecuencia3" placeholder="Si..., entonces..." class="w-full bg-transparent border-b-2 border-xul_ink py-3 text-lg placeholder-xul_silver focus:outline-none focus:border-xul_terra transition-colors">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-10 flex flex-col md:flex-row justify-between items-center gap-6 border-t-2 border-xul_ink">
+                        <button type="submit" id="btn-publicar" disabled
+                            class="w-full md:w-auto bg-xul_ink text-white border-[3px] border-xul_ink px-10 py-3 font-black uppercase tracking-widest hover:bg-xul_terra hover:border-xul_terra transition-colors disabled:opacity-50 shadow-[4px_4px_0px_#C4CAD0] mt-6">
+                            Fijar en el Mural
+                        </button>
+                        <p class="text-xs text-gray-500 font-bold uppercase tracking-widest">
+                            Firmando como <span id="firma-autor" class="text-xul_terra"></span>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- 3. MURAL CARTOGRÁFICO -->
+        <section id="mural-section" class="pt-4 border-t-[3px] border-xul_ink mb-20">
+            <div class="flex flex-col md:flex-row justify-between items-baseline mb-10 gap-4 mt-10">
+                <div class="flex items-center gap-4">
+                    <div class="w-10 h-10 bg-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#75B07E] flex-shrink-0">
+                        <span class="text-white font-black text-xl font-sans">3</span>
+                    </div>
+                    <h2 class="xul-title text-3xl md:text-4xl font-bold text-xul_ink">Mural Cartográfico</h2>
+                </div>
+
+                <div id="filtro-chip" class="hidden items-center gap-4 bg-white border-2 border-xul_ink px-4 py-2 shadow-[3px_3px_0px_#C4CAD0]">
+                    <span class="text-xs font-bold uppercase tracking-widest">Filtrando: <span id="filtro-nombre" class="text-xul_terra"></span></span>
+                    <button onclick="limpiarFiltro()" class="text-xs font-bold border border-xul_ink px-2 hover:bg-xul_terra hover:text-white transition-colors">X</button>
+                </div>
+                <span id="contador-mural" class="text-xs font-bold uppercase tracking-widest text-xul_terra"></span>
+            </div>
+
+            <div id="mural-vacio" class="text-center py-20 border-2 border-dashed border-xul_silver">
+                <p class="text-lg font-bold text-xul_silver tracking-widest uppercase">El mural aguarda proyecciones lógicas.</p>
+            </div>
+
+            <div id="mural-grid" class="hidden columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8"></div>
+        </section>
+
+        <!-- 4. SUGERENCIA DE NUEVOS TEMAS (SOLO FUNDADORES) -->
+        <section id="sugerencia-tema" class="hidden pt-4 border-t-[3px] border-xul_ink">
+            <div class="flex items-center gap-4 mb-6 mt-10">
+                <div class="w-10 h-10 bg-xul_yellow border-2 border-xul_ink flex items-center justify-center shadow-[4px_4px_0px_#2A2A2A] flex-shrink-0">
+                    <i data-lucide="crown" class="w-5 h-5 text-xul_ink"></i>
+                </div>
+                <h2 class="xul-title text-2xl md:text-3xl font-bold text-xul_ink">Sugerí una nueva temática</h2>
+            </div>
+            <div class="bg-xul_paper border-[3px] border-xul_ink p-6 md:p-8 shadow-[6px_6px_0px_#EBB134]">
+                <p class="text-sm text-gray-600 mb-6">Espacio exclusivo para Fundadores: proponé un nuevo tema para los Círculos 3 y 4 (por ejemplo, "Justicia" o "Identidad"). El equipo de Ludosofía revisará la propuesta para incorporarla como una nueva ruleta temática.</p>
+                <form id="form-sugerencia" onsubmit="handleSugerencia(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-black uppercase tracking-widest text-xul_terra mb-2">Nombre del tema</label>
+                        <input type="text" id="input-tema" placeholder="Ej: Justicia" class="w-full border-2 border-xul_ink bg-white p-3 font-bold focus:outline-none focus:border-xul_terra transition-colors">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-black uppercase tracking-widest text-xul_terra mb-2">Círculo 3 · Sujetos sugeridos (uno por línea)</label>
+                            <textarea id="input-sujetos-sugeridos" rows="4" class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-sm focus:outline-none focus:border-xul_terra transition-colors resize-none"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-black uppercase tracking-widest text-xul_terra mb-2">Círculo 4 · Predicados sugeridos (uno por línea)</label>
+                            <textarea id="input-predicados-sugeridos" rows="4" class="w-full border-2 border-xul_ink bg-white p-3 font-sans text-sm focus:outline-none focus:border-xul_terra transition-colors resize-none"></textarea>
+                        </div>
+                    </div>
+                    <div class="flex justify-end items-center gap-4">
+                        <span id="sugerencia-status" class="text-xs font-bold uppercase tracking-widest text-xul_green"></span>
+                        <button type="submit" id="btn-sugerencia" class="bg-xul_ink text-white font-black text-sm py-3 px-6 uppercase tracking-widest hover:bg-xul_terra transition-colors border-[3px] border-xul_ink shadow-[4px_4px_0px_#2A2A2A] flex items-center gap-2">
+                            <i data-lucide="send" class="w-4 h-4"></i> Enviar Sugerencia
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL DE PERFIL -->
+    <div id="profile-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-xul_ink/80 backdrop-blur-sm" onclick="document.getElementById('profile-modal').classList.add('hidden')"></div>
+        <div class="modal-animate relative bg-xul_paper border-[3px] border-xul_ink p-8 max-w-sm w-full shadow-[12px_12px_0px_#6BA4C4] text-center">
+            <button onclick="document.getElementById('profile-modal').classList.add('hidden')" class="absolute top-4 right-4 text-xul_ink hover:text-xul_terra focus:outline-none"><i data-lucide="x" class="w-8 h-8"></i></button>
+            <div class="w-16 h-16 bg-xul_blue border-2 border-xul_ink flex items-center justify-center mx-auto mb-4 rounded-full shadow-[4px_4px_0px_#2A2A2A]">
+                <i data-lucide="user" class="w-8 h-8 text-xul_ink"></i>
+            </div>
+            <h3 class="xul-title text-3xl font-black text-xul_ink uppercase mb-1">Mi Perfil</h3>
+            <p id="profile-email" class="font-sans text-sm text-gray-500 mb-4"></p>
+            <div class="bg-white border-2 border-xul_ink p-3 mb-6">
+                <p class="font-bold text-xs uppercase tracking-widest text-gray-500">Membresía</p>
+                <p id="profile-role" class="font-black text-xl text-xul_terra uppercase tracking-wider"></p>
+            </div>
+            <button id="btn-logout" class="w-full bg-xul_paper border-[3px] border-xul_ink py-3 font-black text-xul_ink uppercase tracking-widest hover:bg-xul_terra hover:text-white transition-colors shadow-[4px_4px_0px_#2A2A2A]">Cerrar Sesión</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="bg-xul_ink text-[#FDF8ED] py-8 px-6 mt-12 border-t-[3px] border-xul_ink">
+        <div class="max-w-6xl mx-auto flex justify-between items-center text-sm font-sans">
+            <span class="font-bold tracking-widest uppercase">La Scholē de Ludosofía</span>
+            <span class="text-gray-400">&copy; 2026. Herramienta Pedagógica.</span>
+        </div>
+    </footer>
+
+    <!-- LÓGICA DEL JUEGO -->
+    <script>
+        const OPERATORS = ["CONTRADECIR LA ORACIÓN", "INVERTIR LA ORACIÓN"];
+        const QUANTIFIERS = ["TODOS", "ALGUNOS... SON", "NINGÚN", "ALGUNOS... NO SON"];
+
+        // Cartel selector de temáticas: cada clave alimenta los Círculos 3 y 4.
+        // Los Fundadores pueden sugerir nuevas (ver sección "Sugerí una nueva temática");
+        // para incorporarlas, un editor solo tiene que agregar una entrada acá.
+        const TEMAS = {
+            libertad: {
+                nombre: 'LA LIBERTAD',
+                // Círculo 3 — Sujetos (núcleos del sujeto gramatical).
+                sujetos: [
+                    "Los ciudadanos", "Las voluntades", "Los seres racionales", "Los actos morales",
+                    "Las repúblicas", "Las decisiones", "Los libres albedríos", "Los determinismos",
+                    "Los instintos", "Las cadenas", "Los tiranos", "Los condicionamientos",
+                    "Las acciones políticas", "Los derechos inalienables", "Las rebeliones"
+                ],
+                // Círculo 4 — Predicados (conceptos o atributos).
+                predicados: [
+                    "Autónomos", "Esclavos de las pasiones", "Ilusiones de la mente", "Fines en sí mismos",
+                    "Cargas insoportables", "Totalmente impredecibles", "Frutos del azar", "Responsables de su destino",
+                    "Leyes universales", "Condicionados por el entorno", "Absolutamente necesarios", "Entidades racionales",
+                    "Inevitables", "Actos de pura espontaneidad", "Limitados por el otro"
+                ]
+            }
+        };
+        let temaActual = 'libertad';
+
+        const state = {
+            rollers: { o: null, q: null, s: null, p: null },
+            spinning: { operador: false, cuantificador: false, sujeto: false, predicado: false },
+            angulos: { sujeto: 0, predicado: 0, cuantificador: 0, operador: 0 },
+            filterAuthor: null
+        };
+
+        const RING_DATA = {
+            operador: { key: 'o', base: -1260, gId: 'g-operador', valId: 'val-operador', btnId: 'btn-operador', label: 'Tirar el Hechizo' },
+            cuantificador: { key: 'q', base: 1800, gId: 'g-cuantificador', valId: 'val-cuantificador', btnId: 'btn-cuantificador', label: 'Tirar Cuantificador' },
+            sujeto: { key: 's', base: 1440, gId: 'g-sujeto', valId: 'val-sujeto', btnId: 'btn-sujeto', label: 'Tirar Sujeto' },
+            predicado: { key: 'p', base: -1080, gId: 'g-predicado', valId: 'val-predicado', btnId: 'btn-predicado', label: 'Tirar Predicado' }
+        };
+
+        // Geometría de cada anillo dentro del viewBox 400x400 (centro en 200,200).
+        const RING_GEOM = {
+            sujeto: { rIn: 158, rOut: 198, colors: ['#6BA4C4', '#D1623A'] },
+            predicado: { rIn: 116, rOut: 156, colors: ['#EBB134', '#75B07E'] },
+            cuantificador: { rIn: 76, rOut: 114, colors: ['#D1623A', '#2A2A2A'] },
+            operador: { rIn: 36, rOut: 74, colors: ['#6BA4C4', '#EBB134'] }
+        };
+
+        // La ruleta no muestra las palabras reales: cada gajo lleva un glifo de un
+        // alfabeto arcano inventado (al estilo del Panajedrez de Xul Solar, no símbolos
+        // zodiacales ni de ningún sistema existente). El significado solo se revela en
+        // la lectura de resultados y en la premisa, una vez que la tirada se resuelve.
+        // GLYPHS define las 19 formas base (trazos geométricos propios); SIMBOLOS asigna
+        // qué formas usa cada anillo, por índice.
+        const GLYPHS = [
+            '<line x1="0" y1="-1" x2="0" y2="1"/><line x1="-0.55" y1="-0.5" x2="0.55" y2="-0.5"/><line x1="-0.55" y1="0" x2="0.55" y2="0"/><line x1="-0.55" y1="0.5" x2="0.55" y2="0.5"/>',
+            '<path d="M 0,0 Q 0.3,-0.35 0.6,0 Q 0.9,0.35 0.5,0.65 Q 0.05,0.95 -0.45,0.6 Q -0.9,0.3 -0.55,-0.35" fill="none"/>',
+            '<ellipse cx="0" cy="0" rx="0.9" ry="0.5" fill="none"/><circle cx="0" cy="0" r="0.16"/>',
+            '<polygon points="0,-0.9 0.8,0.6 -0.8,0.6" fill="none"/><circle cx="0" cy="-1.15" r="0.12"/>',
+            '<polyline points="-0.3,-1 0.3,-0.2 -0.2,0 0.4,1" fill="none"/>',
+            '<path d="M 0.35,-0.9 A 0.9 0.9 0 1 0 0.35,0.9 A 0.68 0.68 0 1 1 0.35,-0.9 Z"/>',
+            '<line x1="0" y1="-0.9" x2="0" y2="0.9"/><line x1="-0.9" y1="0" x2="0.9" y2="0"/><circle cx="0" cy="-0.9" r="0.12"/><circle cx="0" cy="0.9" r="0.12"/><circle cx="-0.9" cy="0" r="0.12"/><circle cx="0.9" cy="0" r="0.12"/>',
+            '<polygon points="0,-1 0.5,-0.3 -0.5,-0.3" fill="none"/><polygon points="0,-0.25 0.7,0.55 -0.7,0.55" fill="none"/>',
+            '<circle cx="0" cy="0" r="0.9" fill="none"/><line x1="0" y1="0.45" x2="0" y2="-0.45"/><polyline points="-0.28,-0.15 0,-0.5 0.28,-0.15" fill="none"/>',
+            '<polygon points="-0.7,-0.9 0.7,-0.9 0,0" fill="none"/><polygon points="-0.7,0.9 0.7,0.9 0,0" fill="none"/>',
+            '<circle cx="0" cy="0" r="0.9" fill="none"/><line x1="0" y1="-0.55" x2="0" y2="0.55"/><line x1="-0.55" y1="0" x2="0.55" y2="0"/>',
+            '<path d="M -0.9,0.2 Q -0.45,-0.6 0,0.2 Q 0.45,1 0.9,0.2" fill="none"/>',
+            '<rect x="-0.7" y="-0.7" width="1.4" height="1.4" fill="none"/><line x1="-0.7" y1="-0.7" x2="0.7" y2="0.7"/>',
+            '<path d="M 0,-1 L 0.22,-0.22 L 1,0 L 0.22,0.22 L 0,1 L -0.22,0.22 L -1,0 L -0.22,-0.22 Z"/>',
+            '<circle cx="0" cy="0" r="0.9" fill="none"/><circle cx="0" cy="0" r="0.45" fill="none"/><circle cx="0" cy="0" r="0.12"/>',
+            '<polygon points="0,-1 0.9,0.75 -0.9,0.75"/>',
+            '<polygon points="0,1 0.9,-0.75 -0.9,-0.75"/>',
+            '<polygon points="0,-1 0.8,0 0,1 -0.8,0"/>',
+            '<circle cx="0" cy="0" r="0.85" fill="none"/><circle cx="0" cy="0" r="0.15"/>'
+        ];
+
+        const SIMBOLOS = {
+            operador: [1, 4],
+            cuantificador: [15, 16, 17, 18],
+            sujeto: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+            predicado: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 0, 1, 2, 3, 4]
+        };
+
+        function obtenerLista(tipo) {
+            if (tipo === 'sujeto') return TEMAS[temaActual].sujetos;
+            if (tipo === 'predicado') return TEMAS[temaActual].predicados;
+            if (tipo === 'operador') return OPERATORS;
+            return QUANTIFIERS;
+        }
+
+        function polarToCartesian(cx, cy, r, angDeg) {
+            const rad = (angDeg - 90) * Math.PI / 180;
+            return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+        }
+
+        function wedgePath(cx, cy, rIn, rOut, startAngle, endAngle) {
+            const p1 = polarToCartesian(cx, cy, rOut, endAngle);
+            const p2 = polarToCartesian(cx, cy, rOut, startAngle);
+            const p3 = polarToCartesian(cx, cy, rIn, startAngle);
+            const p4 = polarToCartesian(cx, cy, rIn, endAngle);
+            const largeArc = (endAngle - startAngle) > 180 ? 1 : 0;
+            return `M ${p1.x} ${p1.y} A ${rOut} ${rOut} 0 ${largeArc} 0 ${p2.x} ${p2.y} L ${p3.x} ${p3.y} A ${rIn} ${rIn} 0 ${largeArc} 1 ${p4.x} ${p4.y} Z`;
+        }
+
+        const SVG_NS = 'http://www.w3.org/2000/svg';
+
+        function dibujarAnillo(tipo) {
+            const geom = RING_GEOM[tipo];
+            const lista = obtenerLista(tipo);
+            const simbolos = SIMBOLOS[tipo];
+            const g = document.getElementById(RING_DATA[tipo].gId);
+            g.innerHTML = '';
+
+            const n = lista.length;
+            const cx = 200, cy = 200;
+            const rMid = (geom.rIn + geom.rOut) / 2;
+            const bandWidth = geom.rOut - geom.rIn;
+            const glyphScale = bandWidth * 0.34;
+
+            for (let i = 0; i < n; i++) {
+                const startAngle = i * (360 / n);
+                const endAngle = (i + 1) * (360 / n);
+                const midAngle = (startAngle + endAngle) / 2;
+                const color = geom.colors[i % geom.colors.length];
+
+                const path = document.createElementNS(SVG_NS, 'path');
+                path.setAttribute('d', wedgePath(cx, cy, geom.rIn, geom.rOut, startAngle, endAngle));
+                path.setAttribute('fill', color);
+                path.setAttribute('stroke', '#FDF8ED');
+                path.setAttribute('stroke-width', '1.5');
+                g.appendChild(path);
+
+                // Un único glifo inventado por gajo, centrado y siempre en posición
+                // vertical (no rotado) para que se lea igual en cualquier punto de la rueda.
+                const pos = polarToCartesian(cx, cy, rMid, midAngle);
+                const glyphIdx = simbolos[i % simbolos.length];
+                const glyph = document.createElementNS(SVG_NS, 'g');
+                glyph.setAttribute('transform', `translate(${pos.x}, ${pos.y}) scale(${glyphScale})`);
+                glyph.setAttribute('fill', '#2A2A2A');
+                glyph.setAttribute('stroke', '#2A2A2A');
+                glyph.setAttribute('stroke-width', (1.7 / glyphScale).toFixed(3));
+                glyph.setAttribute('stroke-linecap', 'round');
+                glyph.setAttribute('stroke-linejoin', 'round');
+                glyph.innerHTML = GLYPHS[glyphIdx];
+                g.appendChild(glyph);
+            }
+        }
+
+        function dibujarRueda() {
+            ['sujeto', 'predicado', 'cuantificador', 'operador'].forEach(dibujarAnillo);
+        }
+
+        function poblarSelectorTemas() {
+            const sel = document.getElementById('selector-tema');
+            sel.innerHTML = Object.keys(TEMAS).map(k => `<option value="${k}">${TEMAS[k].nombre}</option>`).join('');
+            sel.value = temaActual;
+        }
+
+        window.cambiarTema = function (key) {
+            if (!TEMAS[key] || key === temaActual) return;
+            temaActual = key;
+            state.rollers = { o: null, q: null, s: null, p: null };
+            document.getElementById('lectura-resultado').classList.add('hidden');
+            document.getElementById('zona-analisis').classList.add('hidden');
+            document.getElementById('estado-ruleta').innerText = 'EN REPOSO';
+            dibujarRueda();
+            const badge = document.getElementById('tema-actual-badge');
+            if (badge) badge.innerText = `Tema actual: ${TEMAS[key].nombre}`;
+        };
+
+        // Separa el artículo ("Los"/"Las") del núcleo del sujeto para poder combinarlo
+        // con cuantificadores que no admiten artículo (Algunos/Ningún).
+        function splitArticulo(frase) {
+            const m = frase.match(/^(Los|Las)\s+(.+)$/i);
+            return m ? { articulo: m[1], nucleo: m[2] } : { articulo: 'Los', nucleo: frase };
+        }
+
+        function buildPremise(q, s, p) {
+            if (!q || !s || !p) return "";
+            const { articulo, nucleo } = splitArticulo(s);
+            switch (q) {
+                case "TODOS": return `TODOS ${articulo.toUpperCase()} ${nucleo.toUpperCase()} SON ${p.toUpperCase()}`;
+                case "ALGUNOS... SON": return `ALGUNOS ${nucleo.toUpperCase()} SON ${p.toUpperCase()}`;
+                case "NINGÚN": return `NINGÚN ${nucleo.toUpperCase()} ES ${p.toUpperCase()}`;
+                case "ALGUNOS... NO SON": return `ALGUNOS ${nucleo.toUpperCase()} NO SON ${p.toUpperCase()}`;
+                default: return "";
+            }
+        }
+
+        function estaCompleto() {
+            return !!(state.rollers.o && state.rollers.q && state.rollers.s && state.rollers.p);
+        }
+
+        function anySpinning() {
+            return Object.values(state.spinning).some(v => v);
+        }
+
+        function girarAnillo(tipo) {
+            const cfg = RING_DATA[tipo];
+            if (state.spinning[tipo]) return;
+            state.spinning[tipo] = true;
+
+            document.getElementById('zona-analisis').classList.add('hidden');
+            const btn = document.getElementById(cfg.btnId);
+            btn.disabled = true;
+            btn.innerText = 'Girando...';
+            document.getElementById('estado-ruleta').innerText = 'CALCULANDO...';
+
+            state.angulos[tipo] += cfg.base + Math.floor(Math.random() * 360);
+            document.getElementById(cfg.gId).style.transform = `rotate(${state.angulos[tipo]}deg)`;
+
+            setTimeout(() => {
+                const lista = obtenerLista(tipo);
+                const valor = lista[Math.floor(Math.random() * lista.length)];
+                state.rollers[cfg.key] = valor;
+                document.getElementById(cfg.valId).innerText = valor;
+
+                state.spinning[tipo] = false;
+                btn.disabled = false;
+                btn.innerText = cfg.label;
+
+                if (!anySpinning()) document.getElementById('estado-ruleta').innerText = 'EN REPOSO';
+
+                if (estaCompleto()) {
+                    resetForm();
+                    renderResultado();
+                } else {
+                    document.getElementById('lectura-resultado').classList.remove('hidden');
+                }
+            }, 3000);
+        }
+
+        function girarTodo() {
+            if (anySpinning()) return;
+            document.getElementById('lectura-resultado').classList.add('hidden');
+            document.getElementById('zona-analisis').classList.add('hidden');
+            state.rollers = { o: null, q: null, s: null, p: null };
+            ['operador', 'cuantificador', 'sujeto', 'predicado'].forEach(tipo => girarAnillo(tipo));
+        }
+
+        function renderResultado() {
+            document.getElementById('val-premisa').innerText = buildPremise(state.rollers.q, state.rollers.s, state.rollers.p);
+            document.getElementById('val-instruccion').innerText = state.rollers.o;
+            document.getElementById('lectura-resultado').classList.remove('hidden');
+            document.getElementById('zona-analisis').classList.remove('hidden');
+        }
+
+        function resetForm() {
+            ['input-transformacion', 'input-consecuencia1', 'input-consecuencia2', 'input-consecuencia3'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+            actualizarValidacion();
+        }
+
+        function actualizarValidacion() {
+            const val = id => document.getElementById(id).value.trim() !== '';
+            const valido = estaCompleto() &&
+                val('input-transformacion') && val('input-consecuencia1') &&
+                val('input-consecuencia2') && val('input-consecuencia3');
+            document.getElementById('btn-publicar').disabled = !valido;
+        }
+
+        document.addEventListener('input', (e) => {
+            if (['input-transformacion', 'input-consecuencia1', 'input-consecuencia2', 'input-consecuencia3'].includes(e.target.id)) {
+                actualizarValidacion();
+            }
+        });
+
+        async function handlePublish(e) {
+            e.preventDefault();
+            const user = window.getCurrentUser ? window.getCurrentUser() : null;
+            if (!user) return;
+
+            const data = {
+                premise: buildPremise(state.rollers.q, state.rollers.s, state.rollers.p),
+                operator: state.rollers.o,
+                transformacion: document.getElementById('input-transformacion').value.trim(),
+                consecuencia1: document.getElementById('input-consecuencia1').value.trim(),
+                consecuencia2: document.getElementById('input-consecuencia2').value.trim(),
+                consecuencia3: document.getElementById('input-consecuencia3').value.trim()
+            };
+
+            const btn = document.getElementById('btn-publicar');
+            btn.disabled = true;
+            btn.innerText = 'Publicando...';
+
+            const ok = await window.publicarEnMural(data);
+
+            btn.innerText = 'Fijar en el Mural';
+            state.rollers = { o: null, q: null, s: null, p: null };
+            document.getElementById('zona-analisis').classList.add('hidden');
+            if (!ok) btn.disabled = false;
+        }
+
+        async function handleSugerencia(e) {
+            e.preventDefault();
+            const tema = document.getElementById('input-tema').value.trim();
+            const sujetos = document.getElementById('input-sujetos-sugeridos').value.trim();
+            const predicados = document.getElementById('input-predicados-sugeridos').value.trim();
+            if (!tema) return;
+
+            const status = document.getElementById('sugerencia-status');
+            const btn = document.getElementById('btn-sugerencia');
+            btn.disabled = true;
+
+            const ok = await window.enviarSugerenciaTema({ tema, sujetos, predicados });
+            status.innerText = ok ? '¡Gracias! La propuesta fue enviada.' : 'Error al enviar. Intentá de nuevo.';
+            if (ok) document.getElementById('form-sugerencia').reset();
+            btn.disabled = false;
+            setTimeout(() => status.innerText = '', 4000);
+        }
+
+        function limpiarFiltro() {
+            state.filterAuthor = null;
+            window.renderMuralUI();
+        }
+
+        function filtrarPorAutor(nombre) {
+            state.filterAuthor = nombre;
+            window.renderMuralUI();
+        }
+
+        function escapeHtml(str) {
+            return (str || '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        window.renderMuralUI = function () {
+            const items = window.muralItems || [];
+            const filtered = state.filterAuthor ? items.filter(i => i.authorName === state.filterAuthor) : items;
+
+            const chip = document.getElementById('filtro-chip');
+            const chipNombre = document.getElementById('filtro-nombre');
+            const contador = document.getElementById('contador-mural');
+            const vacio = document.getElementById('mural-vacio');
+            const grid = document.getElementById('mural-grid');
+
+            if (state.filterAuthor) {
+                chip.classList.remove('hidden'); chip.classList.add('flex');
+                chipNombre.innerText = state.filterAuthor;
+                contador.classList.add('hidden');
+            } else {
+                chip.classList.add('hidden'); chip.classList.remove('flex');
+                contador.classList.remove('hidden');
+                contador.innerText = `REGISTRO ACUMULADO: ${items.length} ENTRADAS`;
+            }
+
+            if (items.length === 0) {
+                vacio.classList.remove('hidden');
+                grid.classList.add('hidden');
+                return;
+            }
+            vacio.classList.add('hidden');
+            grid.classList.remove('hidden');
+
+            grid.innerHTML = filtered.map(post => `
+                <article class="break-inside-avoid bg-white border-[3px] border-xul_ink p-6 relative shadow-[6px_6px_0px_#C4CAD0] hover:shadow-[6px_6px_0px_#D1623A] transition-all">
+                    <div class="mb-4 pb-4 border-b-2 border-dashed border-xul_silver">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-xul_terra mb-1">Premisa Base</p>
+                        <p class="font-bold uppercase text-lg leading-tight xul-title">${escapeHtml(post.premise)}</p>
+                        <div class="mt-2 text-xs bg-xul_paper inline-block px-2 py-1 font-bold border border-xul_silver uppercase">
+                            Hechizo: ${escapeHtml(post.operator)}
+                        </div>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-xul_terra mb-2">I. Transformación</p>
+                        <p class="text-sm border-l-2 border-xul_ink pl-3 italic">"${escapeHtml(post.transformacion)}"</p>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="text-[10px] font-bold uppercase tracking-widest text-xul_terra mb-2">II. Consecuencias Deducidas</p>
+                        <ul class="text-sm space-y-2 list-none">
+                            <li class="flex gap-2"><span class="text-xul_terra font-bold">1.</span> ${escapeHtml(post.consecuencia1)}</li>
+                            <li class="flex gap-2"><span class="text-xul_terra font-bold">2.</span> ${escapeHtml(post.consecuencia2)}</li>
+                            <li class="flex gap-2"><span class="text-xul_terra font-bold">3.</span> ${escapeHtml(post.consecuencia3)}</li>
+                        </ul>
+                    </div>
+
+                    <div class="pt-4 border-t-2 border-xul_ink flex justify-between items-baseline">
+                        <span class="text-[9px] font-bold tracking-widest text-xul_silver">${post.timestamp ? new Date(post.timestamp).toLocaleDateString() : ''}</span>
+                        <button onclick="filtrarPorAutor('${escapeHtml(post.authorName)}')" class="text-xl hover:text-xul_terra transition-colors focus:outline-none xul-title italic" title="Filtrar estudios de ${escapeHtml(post.authorName)}">
+                            ${escapeHtml(post.authorName) || 'Anónimo'}
+                        </button>
+                    </div>
+                </article>
+            `).join('');
+        };
+
+        poblarSelectorTemas();
+        dibujarRueda();
+        lucide.createIcons();
+    </script>
+
+    <!-- FIREBASE: navbar + perfil + mural + sugerencias -->
+    <script type="module">
+        import { initializeApp, getApps, getApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, addDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBbvpUaTAyeRGT0yxY-YswQab5dRalx5uc",
+            authDomain: "ludosofia-1cdc7.firebaseapp.com",
+            projectId: "ludosofia-1cdc7"
+        };
+
+        const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const muralCollection = collection(db, 'artifacts', 'ludosofia-condiciones', 'public', 'data', 'comentarios');
+        const sugerenciasCollection = collection(db, 'artifacts', 'ludosofia-condiciones', 'public', 'data', 'sugerencias_tematicas');
+
+        let currentUser = null;
+        window.getCurrentUser = () => currentUser;
+
+        const btnMenu = document.getElementById('mobile-menu-btn');
+        const menuMobile = document.getElementById('mobile-menu');
+        if (btnMenu) btnMenu.addEventListener('click', () => menuMobile.classList.toggle('hidden'));
+
+        function toggleProfileModal() {
+            document.getElementById('profile-modal').classList.toggle('hidden');
+            if (menuMobile && !menuMobile.classList.contains('hidden')) menuMobile.classList.add('hidden');
+        }
+
+        function updateUIWithRole(rol) {
+            const r = (rol || '').toUpperCase().trim();
+            let iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6BA4C4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+            if (r === 'FUNDADOR') iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#EBB134" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg>';
+            else if (r === 'SOCIO') iconHtml = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E87524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg>';
+            const deskBadge = document.getElementById('badge-container-desktop');
+            if (deskBadge) { deskBadge.innerHTML = iconHtml; deskBadge.style.display = 'flex'; }
+        }
+
+        onAuthStateChanged(auth, async (user) => {
+            currentUser = user;
+            if (!user) return;
+
+            const nombre = user.displayName ? user.displayName.split(' ')[0] : user.email.split('@')[0];
+            document.getElementById('login-text-desktop').innerText = nombre.toUpperCase();
+            if (document.getElementById('login-text-mobile')) document.getElementById('login-text-mobile').innerText = nombre.toUpperCase();
+            document.getElementById('login-btn-desktop').onclick = toggleProfileModal;
+            const loginBtnMobile = document.getElementById('login-btn-mobile');
+            if (loginBtnMobile) loginBtnMobile.onclick = toggleProfileModal;
+            document.getElementById('profile-email').innerText = user.email;
+            const firmaLabel = document.getElementById('firma-autor');
+            if (firmaLabel) firmaLabel.innerText = nombre;
+
+            try {
+                const docSnap = await getDoc(doc(db, "usuarios", user.uid));
+                if (docSnap.exists()) {
+                    const rol = (docSnap.data().rol || '').toUpperCase();
+                    document.getElementById('profile-role').innerText = rol;
+                    updateUIWithRole(rol);
+
+                    // Espacio para sugerir nuevas temáticas: exclusivo de Fundadores
+                    if (rol === 'FUNDADOR') {
+                        document.getElementById('sugerencia-tema').classList.remove('hidden');
+                    }
+                }
+            } catch (e) { console.error(e); }
+
+            onSnapshot(muralCollection, (snapshot) => {
+                let items = [];
+                snapshot.forEach(d => items.push({ id: d.id, ...d.data() }));
+                items.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                window.muralItems = items;
+                if (window.renderMuralUI) window.renderMuralUI();
+            }, (error) => console.error('Error cargando el mural:', error));
+        });
+
+        document.getElementById('btn-logout').addEventListener('click', () => {
+            signOut(auth).then(() => window.location.reload());
+        });
+
+        window.publicarEnMural = async function (data) {
+            if (!currentUser) return false;
+            const nombre = currentUser.displayName ? currentUser.displayName.split(' ')[0] : currentUser.email.split('@')[0];
+            try {
+                await addDoc(muralCollection, {
+                    ...data,
+                    authorId: currentUser.uid,
+                    authorName: nombre,
+                    timestamp: Date.now()
+                });
+                return true;
+            } catch (error) {
+                console.error('Error publicando en el mural:', error);
+                return false;
+            }
+        };
+
+        window.enviarSugerenciaTema = async function (data) {
+            if (!currentUser) return false;
+            const nombre = currentUser.displayName ? currentUser.displayName.split(' ')[0] : currentUser.email.split('@')[0];
+            try {
+                await addDoc(sugerenciasCollection, {
+                    ...data,
+                    authorId: currentUser.uid,
+                    authorName: nombre,
+                    timestamp: Date.now()
+                });
+                return true;
+            } catch (error) {
+                console.error('Error enviando sugerencia:', error);
+                return false;
+            }
+        };
+    </script>
+</body>
+</html>
